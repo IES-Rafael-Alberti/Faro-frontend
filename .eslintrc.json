@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "standard"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/react-in-tsx-scope": "off",
+    "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "off" 
+  }
 }
