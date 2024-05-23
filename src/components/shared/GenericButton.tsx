@@ -7,7 +7,7 @@ interface GenericButtonProps {
   className?: string;
 }
 
-const GenericButton: React.FC<GenericButtonProps> = ({ label, onClick, disabled = false, className = '' }) => {
+const GenericButton = ({ label, onClick, disabled = false, className = '' }: GenericButtonProps): React.JSX.Element => {
   return (
     <button
       onClick={onClick}
