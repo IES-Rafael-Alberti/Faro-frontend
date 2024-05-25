@@ -1,13 +1,15 @@
+'use client'
+
 import React from 'react'
 
 interface GenericButtonProps {
   label: string;
-  onClick: () => void;
+  onClick: (e:any) => void;
   disabled?: boolean;
   className?: string;
 }
 
-const GenericButton: React.FC<GenericButtonProps> = ({ label, onClick, disabled = false, className = '' }) => {
+const GenericButton = ({ label, onClick, disabled = false, className = '' }: GenericButtonProps): React.JSX.Element => {
   return (
     <button
       onClick={onClick}
