@@ -38,3 +38,12 @@ export async function fetchFeedData (url: string, token: string): Promise<FeedDa
     return Promise.reject(error)
   }
 }
+
+export async function fetchBasicUserInfo (url: string, token: string): Promise<any> {
+  try {
+    return await fetchData(url, token)
+  } catch (error) {
+    console.error(`Error fetching basic user info from ${url}:`, error)
+    return Promise.reject(error)
+  }
+}
