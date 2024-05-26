@@ -1,3 +1,5 @@
+import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
+
 // TODO: Implemente logs
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string): Promise<T> {
@@ -16,29 +18,16 @@ export async function fetchData<T = any> (url: string, token: string): Promise<T
   }
 }
 
-// FIXME: Move this to an apropiate file
-interface FeedData {
-  data: Array<{
-    id: string;
-    msg: string;
-    created_at: string;
-    user_id: string;
-    name: string;
-    user_role: string;
-  }>;
-  currentPage: number;
-  totalPages: number;
-}
-
-export async function fetchFeedData (url: string, token: string): Promise<FeedData> {
+export async function fetchFeedData (url: string, token: string): Promise<FeedPublicationInterface> {
   try {
-    return await fetchData<FeedData>(url, token)
+    return await fetchData<FeedPublicationInterface>(url, token)
   } catch (error) {
     console.error(`Error fetching feed data from ${url}:`, error)
     return Promise.reject(error)
   }
 }
 
+// TODO: Implement the data interface
 export async function fetchBasicUserInfo (url: string, token: string): Promise<any> {
   try {
     return await fetchData(url, token)
