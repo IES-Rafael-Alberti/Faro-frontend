@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
-import FeedPublications from '../../components/Feed/FeedPublications'
-import BasicUserInfoCard from '@/components/BasicUserInfoCard'
+import FeedPublications from '@/components/Feed/FeedPublications'
+import BasicUserInfoCard from '@/components/Feed/BasicUserInfoCard'
 
 interface Props {}
 

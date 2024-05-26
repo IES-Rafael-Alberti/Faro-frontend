@@ -5,6 +5,7 @@ import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { authPost } from "@/utils/authApi";
 export default function Register() {
 
   const [name, setName] = useState(""); 
@@ -57,6 +58,14 @@ export default function Register() {
     setErrors(errors);
 
     if (valid) {
+      const data = {
+        "name": name,
+        "first_surname": lastName,
+        "email": email,
+        "password": password,
+        "user_role": "user",
+      }
+      authPost("auth/register", data)
       console.log("Formulario válido, enviar datos");
     }
   };
