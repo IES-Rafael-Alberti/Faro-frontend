@@ -16,7 +16,7 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      {/* SupressHydrationsWarning elimina los hydration warning debidos a los componentes renderizados en el servidor */}
+      {/* SupressHydrationsWarning remove hydration warnings caused by server-rendered components */}
       <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
         
         {/* <Navbar /> */}

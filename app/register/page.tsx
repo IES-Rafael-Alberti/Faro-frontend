@@ -69,12 +69,12 @@ export default function Register() {
           <h2 className={styles.authSubtitle}>una nueva cuenta</h2>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
             <div className={styles.dobleInputContainer}>
-              {/* NOMBRE */}
+              {/* NAME */}
               <div className={styles.nameContainer}>
                 <input className={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')} minLength={3} type="text" id="name" name="name" placeholder="nombre" aria-label="name" value={name} onChange={(e) => setName(e.target.value)} required />
                 {errors.name && <small className={styles.error}>{errors.name}</small>}
               </div>
-              {/* APELLIDO */}
+              {/* LASTNAME */}
               <div className={styles.lastNameContainer}>
                 <input className={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')} minLength={3} type="text" id="last-name" name="last-name" placeholder="apellido" aria-label="last-name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                 {errors.lastName && <small className={styles.error}>{errors.lastName}</small>}
