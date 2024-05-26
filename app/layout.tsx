@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { montserrat } from "./ui/fonts";
+import Navbar from "@/components/navbar/navbar";
 
 export const metadata: Metadata = {
   title: "Faro",
@@ -12,10 +13,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       {/* SupressHydrationsWarning elimina los hydration warning debidos a los componentes renderizados en el servidor */}
-      <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>{children}</body>
+      <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
+        
+        {/* <Navbar /> */}
+        {children}
+      
+      </body>
     </html>
   );
 }
