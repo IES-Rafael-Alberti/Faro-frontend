@@ -1,24 +1,22 @@
-import axios from 'axios'
-
-export async function fetchData<T = any> (url: string, token: string): Promise<T | null> {
+// TODO: Implemente logs
+// FIXME: If the URL target is not reachable, the app will crash
+export async function fetchData<T = any> (url: string, token: string): Promise<T> {
+  let response
   try {
-    const response = await axios.get<T>(url, {
+    response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    return response.data
-  } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      console.error(`Resource not found at ${url}`)
-      return null
-    } else {
-      console.error(`Error fetching data from ${url}:`, error)
-      throw error
-    }
+
+    return await response.json() as T
+  } catch (error) {
+    console.error(`${response?.status} Error fetching data from ${url}: ${error}`)
+    return Promise.reject(error)
   }
 }
 
+// FIXME: Move this to an apropiate file
 interface FeedData {
   data: Array<{
     id: string;
@@ -32,10 +30,11 @@ interface FeedData {
   totalPages: number;
 }
 
-export async function fetchFeedData (url: string, token: string): Promise<FeedData | null | undefined> {
+export async function fetchFeedData (url: string, token: string): Promise<FeedData> {
   try {
-    return fetchData<FeedData>(url, token)
+    return await fetchData<FeedData>(url, token)
   } catch (error) {
     console.error(`Error fetching feed data from ${url}:`, error)
+    return Promise.reject(error)
   }
 }
