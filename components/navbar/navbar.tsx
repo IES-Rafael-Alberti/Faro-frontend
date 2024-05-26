@@ -2,10 +2,8 @@ import React from 'react';
 import styles from './navbar.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faHouse , faPowerOff, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
-import { montserrat } from '../../app/ui/fonts';
 import Link from 'next/link';
 import Image from 'next/image';
-import Icon from '../icons';
 
 const Navbar = () => (
     <aside className={styles.containerNav}>
