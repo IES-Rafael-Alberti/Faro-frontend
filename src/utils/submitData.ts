@@ -2,7 +2,6 @@ import Publication from '../types/Publication.interface'
 
 export const submitData = async <T>(url: string, data: T, token: string = ''): Promise<T> => {
   try {
-    console.log('submitData', url, data, token)
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -15,7 +14,6 @@ export const submitData = async <T>(url: string, data: T, token: string = ''): P
     const responseData = await response.json()
     return responseData
   } catch (error) {
-    console.error(`Error submitting data to ${url}:`, error)
     return Promise.reject(error)
   }
 }
