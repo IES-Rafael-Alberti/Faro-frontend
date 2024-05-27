@@ -24,7 +24,7 @@ const CreatePublication: NextPage<Props> = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    submitPublication(publication, '8359628a-1452-4563-866d-cc3f76f0a1e7', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODA0NzgzLCJleHAiOjE3MTY4MDgzODN9.-53qckkezCvsx8hRO6EgnfL1KBIjm2PvrL6XbhD6DCE')
+    submitPublication(publication, '8359628a-1452-4563-866d-cc3f76f0a1e7', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODA2MjQ3LCJleHAiOjE3MTY4MDk4NDd9.g6wghcgwxuxocqth1H4H0iViCsxAeZKhy8DlGonJozI')
   }
 
   return (

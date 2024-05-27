@@ -7,6 +7,7 @@ export async function fetchData<T = any> (url: string, token: string): Promise<T
   try {
     response = await fetch(url, {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       }
     })
