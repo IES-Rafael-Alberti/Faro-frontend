@@ -18,6 +18,7 @@ export async function fetchData<T = any> (url: string, token: string): Promise<T
   }
 }
 
+// TODO: Move url to an constant
 export async function fetchFeedData (url: string, token: string): Promise<FeedPublicationInterface> {
   try {
     return await fetchData<FeedPublicationInterface>(url, token)
