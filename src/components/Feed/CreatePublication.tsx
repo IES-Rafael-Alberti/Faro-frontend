@@ -1,13 +1,26 @@
 'use client'
 
 import { NextPage } from 'next'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { submitPublication } from '@/utils/submitData'
 
 interface Props {}
 
 const CreatePublication: NextPage<Props> = () => {
-  const [publication, setPublication] = useState('MARICONES TODOS')
+  const [publication, setPublication] = useState('')
+  const [isValid, setIsValid] = useState(false)
+
+  const validateInput = (input: string) => {
+    if (input.trim() !== '') {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
+  }
+
+  useEffect(() => {
+    validateInput(publication)
+  }, [publication])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -20,11 +33,14 @@ const CreatePublication: NextPage<Props> = () => {
         <input
           type="text"
           value={publication}
-          onChange={e => setPublication(e.target.value)}
+          onChange={e => {
+            setPublication(e.target.value)
+            validateInput(e.target.value)
+          }}
           placeholder="Create a new publication"
           required
         />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!isValid}>Submit</button>
       </form>
     </div>
   )
