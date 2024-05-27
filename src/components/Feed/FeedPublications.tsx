@@ -9,15 +9,22 @@ interface Props {}
 
 const FeedPublications: NextPage<Props> = () => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
+  const [page, setPage] = useState(1)
 
-  const fetchPublications = async () => {
-    const result = await fetchFeedData('http://localhost:3000/publications', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODA3MTkwLCJleHAiOjE3MTY4MTA3OTB9.P2HQLH_anb_7Wcna71agFANRZ89eEHNa5BGQwKQtTXw')
-    setPublications(result)
+  const fetchPublications = async (page: number) => {
+    const result = await fetchFeedData(`http://localhost:3000/publications/${page}`, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODA5OTk2LCJleHAiOjE3MTY4MTM1OTZ9.Xg3wWUj4gEdKHArbUauY9b21LOWYO2GKVDdx34zuJJ0')
+    setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
   }
 
   useEffect(() => {
-    fetchPublications()
-  }, [])
+    fetchPublications(page)
+  }, [page])
+
+  const loadMore = () => {
+    if (publications.currentPage < publications.totalPages) {
+      setPage(prevPage => prevPage + 1)
+    }
+  }
 
   return (
     <div>
@@ -37,6 +44,7 @@ const FeedPublications: NextPage<Props> = () => {
             <p>No publications available.</p>
           )
       }
+      {publications.currentPage < publications.totalPages && <button onClick={loadMore}>Load more</button>}
     </div>
   )
 }
