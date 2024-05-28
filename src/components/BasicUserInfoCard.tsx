@@ -6,7 +6,7 @@ interface Props {
 }
 
 const BasicUserInfoCard: NextPage<Props> = async ({ id }) => {
-  const user = await fetchBasicUserInfo(`http://localhost:3000/users/userBasicInfo/${id}`, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2NzQ0NDA1LCJleHAiOjE3MTY3NDgwMDV9.7a7RSq5K0oy3nNJ1OVKGxSYQ9q_BKYhFu6DTeBzq_cc')
+  const user = await fetchBasicUserInfo(id, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODg5MjA1LCJleHAiOjE3MTY4OTI4MDV9.oGZAhQMuui7zJwcB-smLh72xWklOl28aw_VbOko0ibk')
 
   return <div>
     <h1>{user.username}</h1>
