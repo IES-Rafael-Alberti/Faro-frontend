@@ -1,4 +1,5 @@
 import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
+import { PUBLICATIONS_URL } from '@/types/consts'
 
 // TODO: Implemente logs
 // FIXME: If the URL target is not reachable, the app will crash
@@ -19,12 +20,11 @@ export async function fetchData<T = any> (url: string, token: string): Promise<T
   }
 }
 
-// TODO: Move url to an constant
-export async function fetchFeedData (url: string, token: string): Promise<FeedPublicationInterface> {
+export async function fetchFeedData (page: number, token: string): Promise<FeedPublicationInterface> {
   try {
-    return await fetchData<FeedPublicationInterface>(url, token)
+    return await fetchData<FeedPublicationInterface>(`${PUBLICATIONS_URL}${page}`, token)
   } catch (error) {
-    console.error(`Error fetching feed data from ${url}:`, error)
+    console.error(`Error fetching feed data from ${PUBLICATIONS_URL}${page}:`, error)
     return Promise.reject(error)
   }
 }

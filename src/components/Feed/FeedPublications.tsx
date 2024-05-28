@@ -13,7 +13,7 @@ const FeedPublications: NextPage<Props> = () => {
   const [page, setPage] = useState(1)
 
   const fetchPublications = async (page: number) => {
-    const result = await fetchFeedData(`http://localhost:3000/publications/${page}`, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODM2NDIxLCJleHAiOjE3MTY4NDAwMjF9.2fqtTDY6pmGKwS7BimJZuZLKxeBdzwjOxdzj1I2YBtc')
+    const result = await fetchFeedData(page, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2ODg5MjA1LCJleHAiOjE3MTY4OTI4MDV9.oGZAhQMuui7zJwcB-smLh72xWklOl28aw_VbOko0ibk')
     setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
   }
 

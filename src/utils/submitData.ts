@@ -1,4 +1,5 @@
 import Publication from '../types/Publication.interface'
+import { PUBLICATIONS_URL } from '@/types/consts'
 
 export const submitData = async <T>(url: string, data: T, token: string = ''): Promise<T> => {
   try {
@@ -20,5 +21,5 @@ export const submitData = async <T>(url: string, data: T, token: string = ''): P
 
 // TODO: Move the endpoint to an constant
 export const submitPublication = async (publication: string, id: string, token: string = ''): Promise<Publication> => {
-  return submitData<Publication>('http://localhost:3000/publications', { msg: publication, user_id: id }, token)
+  return submitData<Publication>(PUBLICATIONS_URL, { msg: publication, user_id: id }, token)
 }
