@@ -8,7 +8,7 @@ import { AuthContext } from '@/context/auth'
 interface Props {}
 
 const CreatePublication: NextPage<Props> = () => {
-  const { token } = useContext(AuthContext)
+  const { token, id } = useContext(AuthContext)
 
   const [publication, setPublication] = useState('')
   const [isValid, setIsValid] = useState(false)
@@ -27,7 +27,7 @@ const CreatePublication: NextPage<Props> = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    submitPublication(publication, '8359628a-1452-4563-866d-cc3f76f0a1e7', token)
+    submitPublication(publication, id, token)
   }
 
   return (
