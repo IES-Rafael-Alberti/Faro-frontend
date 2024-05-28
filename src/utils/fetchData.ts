@@ -2,9 +2,8 @@ import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
 import { PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '@/types/consts'
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
 
-// TODO: Implemente logs
 // FIXME: If the URL target is not reachable, the app will crash
-export async function fetchData<T = any> (url: string, token: string): Promise<T> {
+export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
   let response
   try {
     response = await fetch(url, {
@@ -21,7 +20,9 @@ export async function fetchData<T = any> (url: string, token: string): Promise<T
   }
 }
 
-export async function fetchFeedData (page: number, token: string): Promise<FeedPublicationInterface> {
+export async function fetchFeedData (page: number, token: string = ''): Promise<FeedPublicationInterface> {
+  console.log('fetchFeedData', page)
+  console.log('fetchFeedData', token)
   try {
     return await fetchData<FeedPublicationInterface>(`${PUBLICATIONS_URL}${page}`, token)
   } catch (error) {
@@ -30,8 +31,7 @@ export async function fetchFeedData (page: number, token: string): Promise<FeedP
   }
 }
 
-// TODO: Implement the data interface
-export async function fetchBasicUserInfo (id: string, token: string): Promise<BasicUserInfoInterface> {
+export async function fetchBasicUserInfo (id: string, token: string = ''): Promise<BasicUserInfoInterface> {
   try {
     return await fetchData(`${USER_BASIC_INFO_URL}${id}`, token)
   } catch (error) {

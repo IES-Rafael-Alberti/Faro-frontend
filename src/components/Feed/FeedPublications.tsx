@@ -1,19 +1,22 @@
 'use client'
 
 import { NextPage } from 'next'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { fetchFeedData } from '@/utils/fetchData'
 import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { AuthContext } from '@/context/auth'
 
 interface Props {}
 
 const FeedPublications: NextPage<Props> = () => {
+  const { token } = useContext(AuthContext)
+
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
 
   const fetchPublications = async (page: number) => {
-    const result = await fetchFeedData(page, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2OTEyNDYwLCJleHAiOjE3MTY5MTYwNjB9.viid2uOqfrAmP5hUonQA5mdTeDw4ktRWKPGVibV8HNE')
+    const result = await fetchFeedData(page, token)
     setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
   }
 
