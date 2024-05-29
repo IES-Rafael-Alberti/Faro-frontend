@@ -1,6 +1,7 @@
-'use client'
-
-import React from 'react'
+// components/GenericInput.js
+import React from 'react';
+import classNames from 'classnames';
+import styles from './genericInput.module.css';
 
 const GenericInput = ({
   type = 'text',
@@ -8,27 +9,24 @@ const GenericInput = ({
   value = '',
   onChange = (e:any) => {},
   placeholder = '',
-  label = '',
   error = '',
-  className = '',
+  containerClass = '',
+  inputClass = '',
+  container = false,
   ...props
 }) => {
   return (
-        <div className="input-container">
-            {label && <label htmlFor={name}>{label}</label>}
-            <input
-                type={type}
-                name={name}
-                value={value}
-                onChange={onChange}
-                placeholder={placeholder}
-                id={name}
-                className={`generic-input ${className}`}
-                {...props}
-            />
-            {error && <span className="error">{error}</span>}
-        </div>
-  )
-}
+        <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            id={name}
+            className={inputClass}
+            {...props}
+        />
+  );
+};
 
-export default GenericInput
+export default GenericInput;
