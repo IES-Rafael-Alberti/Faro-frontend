@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 
 interface AuthResponse {
-    token: string;
-  }
+  access_token: string;
+}
 
 const URL = 'http://localhost:3000/'
 
@@ -18,9 +18,9 @@ export async function authPost( src: string, body: object ): Promise<AuthRespons
           }
       });
   
-      const { token } = response.data;
+      const { access_token } = response.data;
   
-      return { token };
+      return { access_token };
     } catch (error) {
       console.error('Error during auth:', error);
       throw error;
