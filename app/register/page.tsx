@@ -1,72 +1,101 @@
-"use client"
+// pages/register.js
+"use client";
+
+import { useState } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { authPost } from "@/utils/authApi";
+import GenericInput from "@/components/shared/GenericInput";
+import { postRegister } from "@/utils/postRegister";
+
 export default function Register() {
+  const [formData, setFormData] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
 
-  const [name, setName] = useState(""); 
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({ name: "", lastName: "", email: "", password: "", confirmPassword: ""});
+  const handleChange = (e:any) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
-  const validateEmail = (email : string) => {
+  const validateEmail = (email:string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validateNameOrLastName = (name : string) => {
+  const validateNameOrLastName = (name:string) => {
     const nameRegex = /^[a-zA-ZáÁéÉíÍóÓúÚ\s]+$/;
     return nameRegex.test(name);
   };
 
-  const handleSubmit = (e : any) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     let valid = true;
-    let errors = { name: "", lastName: "", email: "", password: "", confirmPassword: ""};
+    let validationErrors: { 
+      name?: string, 
+      lastName?: string 
+      email?: string,
+      password?: string,
+      confirmPassword?: string
+    } = {};
+    
 
-    if (!validateNameOrLastName(name)) {
-      errors.name = "Por favor, introduzca un nombre válido.";
+    if (!validateNameOrLastName(formData.name)) {
+      validationErrors.name = "Por favor, introduzca un nombre válido.";
       valid = false;
     }
 
-    if (!validateNameOrLastName(lastName)) {
-      errors.lastName = "Por favor, introduzca un apellido válido.";
+    if (!validateNameOrLastName(formData.lastName)) {
+      validationErrors.lastName = "Por favor, introduzca un apellido válido.";
       valid = false;
     }
 
-    if (!validateEmail(email)) {
-      errors.email = "Por favor, introduzca un email válido.";
+    if (!validateEmail(formData.email)) {
+      validationErrors.email = "Por favor, introduzca un email válido.";
       valid = false;
     }
 
-    if (password.length < 8) {
-      errors.password = "La contraseña debe tener al menos 8 caracteres.";
+    if (formData.password.length < 8) {
+      validationErrors.password = "La contraseña debe tener al menos 8 caracteres.";
       valid = false;
     }
 
-    if (password !== confirmPassword) {
-      errors.confirmPassword = "Las contraseñas no coinciden.";
+    if (formData.password !== formData.confirmPassword) {
+      validationErrors.confirmPassword = "Las contraseñas no coinciden.";
       valid = false;
     }
 
-    setErrors(errors);
+    setErrors({
+      name: validationErrors.name || "", // Provide a default value of an empty string
+      lastName: validationErrors.lastName|| "",
+      email: validationErrors.email || "",
+      password: validationErrors.password || "",
+      confirmPassword: validationErrors.confirmPassword || ""
+    });
 
     if (valid) {
       const data = {
-        "name": name,
-        "first_surname": lastName,
-        "email": email,
-        "password": password,
-        "user_role": "user",
-      }
-      authPost("auth/register", data)
-      console.log("Formulario válido, enviar datos");
+        name: formData.name,
+        first_surname: formData.lastName,
+        email: formData.email,
+        password: formData.password
+      };
+      const result = await authPost('auth/register/',data);
+      console.log("Formulario válido, enviar datos", result);
     }
   };
 
@@ -77,26 +106,68 @@ export default function Register() {
           <h1 className={styles.authTitle}>Registre</h1>
           <h2 className={styles.authSubtitle}>una nueva cuenta</h2>
           <form className={styles.registerForm} onSubmit={handleSubmit}>
-            <div className={styles.dobleInputContainer}>
-              {/* NAME */}
-              <div className={styles.nameContainer}>
-                <input className={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')} minLength={3} type="text" id="name" name="name" placeholder="nombre" aria-label="name" value={name} onChange={(e) => setName(e.target.value)} required />
-                {errors.name && <small className={styles.error}>{errors.name}</small>}
-              </div>
-              {/* LASTNAME */}
-              <div className={styles.lastNameContainer}>
-                <input className={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')} minLength={3} type="text" id="last-name" name="last-name" placeholder="apellido" aria-label="last-name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-                {errors.lastName && <small className={styles.error}>{errors.lastName}</small>}
-              </div>
-            </div>
-            {/* EMAIL */}
-            <input className={[styles.authInput, `${montserrat.className} antialiased`].join(' ')} type="text" id="email" name="email" placeholder="email" aria-label="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <section className={styles.dobleInputContainer}>
+              <GenericInput
+                containerClass={styles.nameContainer}
+                inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
+                type="text"
+                name="name"
+                placeholder="nombre"
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
+                minLength={3}
+                required
+              />
+              {errors.name && <small className={styles.error}>{errors.name}</small>}
+              <GenericInput
+                containerClass={styles.lastNameContainer}
+                inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
+                type="text"
+                name="lastName"
+                placeholder="apellido"
+                value={formData.lastName}
+                onChange={handleChange}
+                error={errors.lastName}
+                minLength={3}
+                required
+              />
+              {errors.lastName && <small className={styles.error}>{errors.lastName}</small>}
+            </section>
+            <GenericInput
+              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+              type="text"
+              name="email"
+              placeholder="email"
+              value={formData.email}
+              onChange={handleChange}
+              error={errors.email}
+              required
+            />
             {errors.email && <small className={styles.error}>{errors.email}</small>}
-            {/* PASSWORD */}
-            <input className={[styles.authInput, `${montserrat.className} antialiased`].join(' ')} type="password" id="password" name="password" minLength={8} placeholder="contraseña" aria-label="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <GenericInput
+              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+              type="password"
+              name="password"
+              placeholder="contraseña"
+              value={formData.password}
+              onChange={handleChange}
+              error={errors.password}
+              minLength={8}
+              required
+            />
             {errors.password && <small className={styles.error}>{errors.password}</small>}
-            {/* CONFIRM PASSWORD */}
-            <input className={[styles.authInput, `${montserrat.className} antialiased`].join(' ')} type="password" id="confirm-password" name="confirm-password" minLength={8} placeholder="confirmar contraseña" aria-label="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+            <GenericInput
+              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+              type="password"
+              name="confirmPassword"
+              placeholder="confirmar contraseña"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              error={errors.confirmPassword}
+              minLength={8}
+              required
+            />
             {errors.confirmPassword && <small className={styles.error}>{errors.confirmPassword}</small>}
             <Link className={styles.linkToRegister} href="/login">¿Ya está registrado? Conéctese</Link>
             <button type="submit" className={[styles.registerButton, `${montserrat.className} antialiased`].join(' ')}>REGÍSTRESE</button>
@@ -105,11 +176,10 @@ export default function Register() {
         <aside className={styles.authInfo}>
           <h3 className={styles.authInfoTitle}>¿Ya está registrado?</h3>
           <p className={styles.authInfoText}>Si ya está registrado inicie sesión para acceder a su cuenta</p>
-          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/login"/>
+          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/login" />
         </aside>
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
   );
-  
 }
