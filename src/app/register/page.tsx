@@ -1,8 +1,7 @@
 // pages/register.js
 "use client";
 
-import { useState } from "react";
-
+import { useContext, useState } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/shared/GenericButton";
 import { montserrat } from "@/app/ui/fonts";
@@ -10,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { authPost } from "@/app/utils/authApi";
 import GenericInput from "@/components/shared/GenericInput";
+import { AuthContext } from "../context/auth"
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -26,6 +26,7 @@ export default function Register() {
     password: "",
     confirmPassword: ""
   });
+  const { user, setUser } = useContext(AuthContext);
 
   const handleChange = (e:any) => {
     const { name, value } = e.target;
@@ -94,8 +95,9 @@ export default function Register() {
         email: formData.email,
         password: formData.password
       };
-      const result = await authPost('auth/register/',data);
+      const result = await authPost('auth/register/', data);
       console.log("Formulario válido, enviar datos", result);
+      
     }
   };
 

@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react'
-import { AuthProvider } from '@/context/auth'
-import './globals.css'
+import { AuthProvider } from '@/app/context/auth'
 
 export const AuthContext = React.createContext(null)
 
