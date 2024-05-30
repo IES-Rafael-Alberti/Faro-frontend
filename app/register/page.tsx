@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { authPost } from "@/utils/authApi";
 import GenericInput from "@/components/shared/GenericInput";
-import { postRegister } from "@/utils/postRegister";
+// import { postRegister } from "@/utils/postRegister";
 
 export default function Register() {
   const [formData, setFormData] = useState({
