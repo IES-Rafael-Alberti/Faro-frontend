@@ -1,8 +1,8 @@
 'use client'
 
 import { NextPage } from 'next'
-import { fetchBasicUserInfo } from '@/utils/fetchData'
-import { AuthContext } from '@/context/auth'
+import { fetchBasicUserInfo } from '../utils/fetchData'
+import { AuthContext } from '../app/context/auth'
 import { useContext } from 'react'
 
 interface Props {

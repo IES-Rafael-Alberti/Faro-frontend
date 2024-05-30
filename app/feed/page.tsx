@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import FeedPublications from '../../components/Feed/FeedPublications'
-import BasicUserInfoCard from '@/components/BasicUserInfoCard'
-import CreatePublication from '@/components/Feed/CreatePublication'
+import BasicUserInfoCard from '../../components/BasicUserInfoCard'
+import CreatePublication from '../../components/Feed/CreatePublication'
 
 interface Props {}
 

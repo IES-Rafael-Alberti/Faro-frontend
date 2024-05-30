@@ -1,91 +1,93 @@
+/*
+
+// TODO: JUANJO
 // pages/register.js
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 
-import styles from "./page.module.css";
-import Button from "@/components/shared/GenericButton";
-import { montserrat } from "@/app/ui/fonts";
-import Image from "next/image";
-import Link from "next/link";
-import { authPost } from "@/app/utils/authApi";
-import GenericInput from "@/components/shared/GenericInput";
+import styles from './page.module.css'
+import Button from '../../components/shared/GenericButton'
 
-export default function Register() {
+import Image from 'next/image'
+import Link from 'next/link'
+
+import GenericInput from '../../components/shared/GenericInput'
+
+export default function Register () {
   const [formData, setFormData] = useState({
-    name: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
+    name: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
   const [errors, setErrors] = useState({
-    name: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
+    name: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
 
   const handleChange = (e:any) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prevData) => ({ ...prevData, [name]: value }))
+  }
 
   const validateEmail = (email:string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
 
   const validateNameOrLastName = (name:string) => {
-    const nameRegex = /^[a-zA-ZáÁéÉíÍóÓúÚ\s]+$/;
-    return nameRegex.test(name);
-  };
+    const nameRegex = /^[a-zA-ZáÁéÉíÍóÓúÚ\s]+$/
+    return nameRegex.test(name)
+  }
 
   const handleSubmit = async (e:any) => {
-    e.preventDefault();
-    let valid = true;
-    let validationErrors: { 
-      name?: string, 
-      lastName?: string 
+    e.preventDefault()
+    let valid = true
+    const validationErrors: {
+      name?: string,
+      lastName?: string
       email?: string,
       password?: string,
       confirmPassword?: string
-    } = {};
-    
+    } = {}
 
     if (!validateNameOrLastName(formData.name)) {
-      validationErrors.name = "Por favor, introduzca un nombre válido.";
-      valid = false;
+      validationErrors.name = 'Por favor, introduzca un nombre válido.'
+      valid = false
     }
 
     if (!validateNameOrLastName(formData.lastName)) {
-      validationErrors.lastName = "Por favor, introduzca un apellido válido.";
-      valid = false;
+      validationErrors.lastName = 'Por favor, introduzca un apellido válido.'
+      valid = false
     }
 
     if (!validateEmail(formData.email)) {
-      validationErrors.email = "Por favor, introduzca un email válido.";
-      valid = false;
+      validationErrors.email = 'Por favor, introduzca un email válido.'
+      valid = false
     }
 
     if (formData.password.length < 8) {
-      validationErrors.password = "La contraseña debe tener al menos 8 caracteres.";
-      valid = false;
+      validationErrors.password = 'La contraseña debe tener al menos 8 caracteres.'
+      valid = false
     }
 
     if (formData.password !== formData.confirmPassword) {
-      validationErrors.confirmPassword = "Las contraseñas no coinciden.";
-      valid = false;
+      validationErrors.confirmPassword = 'Las contraseñas no coinciden.'
+      valid = false
     }
 
     setErrors({
-      name: validationErrors.name || "", // Provide a default value of an empty string
-      lastName: validationErrors.lastName|| "",
-      email: validationErrors.email || "",
-      password: validationErrors.password || "",
-      confirmPassword: validationErrors.confirmPassword || ""
-    });
+      name: validationErrors.name || '', // Provide a default value of an empty string
+      lastName: validationErrors.lastName || '',
+      email: validationErrors.email || '',
+      password: validationErrors.password || '',
+      confirmPassword: validationErrors.confirmPassword || ''
+    })
 
     if (valid) {
       const data = {
@@ -93,11 +95,11 @@ export default function Register() {
         first_surname: formData.lastName,
         email: formData.email,
         password: formData.password
-      };
-      const result = await authPost('auth/register/',data);
-      console.log("Formulario válido, enviar datos", result);
+      }
+      const result = await authPost('auth/register/', data)
+      console.log('Formulario válido, enviar datos', result)
     }
-  };
+  }
 
   const handleClick = () => {
     useNavitate('/login')
@@ -185,9 +187,10 @@ export default function Register() {
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
-  );
+  )
 }
 
-function useNavitate(arg0: string) {
-  throw new Error("Function not implemented.");
+function useNavitate (arg0: string) {
+  throw new Error('Function not implemented.')
 }
+*/

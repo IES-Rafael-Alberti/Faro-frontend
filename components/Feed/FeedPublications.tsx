@@ -2,10 +2,10 @@
 
 import { NextPage } from 'next'
 import { useEffect, useState, useContext } from 'react'
-import { fetchFeedData } from '@/utils/fetchData'
-import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
+import { fetchFeedData } from '../../utils/fetchData'
+import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { AuthContext } from '@/context/auth'
+import { AuthContext } from '../../app/context/auth'
 
 interface Props {}
 
