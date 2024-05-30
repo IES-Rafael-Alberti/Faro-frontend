@@ -1,6 +1,6 @@
-import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '@/types/consts'
-import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
+import { FeedPublicationInterface } from '../types/FeedPublication.interface'
+import { PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '../types/consts'
+import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -21,8 +21,6 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
 }
 
 export async function fetchFeedData (page: number, token: string = ''): Promise<FeedPublicationInterface> {
-  console.log('fetchFeedData', page)
-  console.log('fetchFeedData', token)
   try {
     return await fetchData<FeedPublicationInterface>(`${PUBLICATIONS_URL}${page}`, token)
   } catch (error) {

@@ -2,8 +2,8 @@
 
 import { NextPage } from 'next'
 import React, { useState, useEffect, useContext } from 'react'
-import { submitPublication } from '@/utils/submitData'
-import { AuthContext } from '@/context/auth'
+import { submitPublication } from '../../utils/submitData'
+import { AuthContext } from '../../app/context/auth'
 
 interface Props {}
 
