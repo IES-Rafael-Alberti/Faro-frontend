@@ -1,12 +1,17 @@
+'use client'
+
 import { NextPage } from 'next'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
+import { AuthContext } from '@/context/auth'
+import { useContext } from 'react'
 
 interface Props {
     id: string;
 }
 
 const BasicUserInfoCard: NextPage<Props> = async ({ id }) => {
-  const user = await fetchBasicUserInfo(`http://localhost:3000/users/userBasicInfo/${id}`, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2NzQ0NDA1LCJleHAiOjE3MTY3NDgwMDV9.7a7RSq5K0oy3nNJ1OVKGxSYQ9q_BKYhFu6DTeBzq_cc')
+  const { token } = useContext(AuthContext)
+  const user = await fetchBasicUserInfo(id, token)
 
   return <div>
     <h1>{user.username}</h1>

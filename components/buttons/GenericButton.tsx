@@ -1,8 +1,10 @@
+'use client'
+
 import React from 'react'
 
 interface GenericButtonProps {
   label: string;
-  onClick: () => void;
+  onClick: (e:any) => void;
   disabled?: boolean;
   className?: string;
 }
