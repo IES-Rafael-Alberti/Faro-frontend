@@ -18,9 +18,9 @@ export async function authPost( src: string, body: object ): Promise<AuthRespons
           }
       });
   
-      const { token } = response.data;
+      const token = response.data;
   
-      return { token };
+      return token;
     } catch (error) {
       console.error('Error during auth:', error);
       throw error;

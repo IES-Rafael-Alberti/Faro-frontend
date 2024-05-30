@@ -38,8 +38,12 @@ export default function Login() {
         "email": email,
         "password": password
       }
-      authPost("auth/signIn", data)
-      console.log("Formulario válido, enviar datos");
+      authPost("auth/signIn", data).then((token) => {
+        console.log("Token recibido:", token);
+      })
+      .catch((error) => {
+          console.error("Error al enviar datos de autenticación:", error.message);
+      });
     }
   };
 
