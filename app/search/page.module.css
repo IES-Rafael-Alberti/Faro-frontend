@@ -1,0 +1,64 @@
+.wrapper{
+    width: calc(100vw - 160px);
+    height: 100vh;
+    float:right;
+    background: var(--lightgray);
+    padding:3vw 12vw 0 12vw;
+
+    && .searchItems{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-gap:2vw;
+        position: relative;
+    }
+
+    && .reloadButton {
+        grid-column: 2/3;
+        grid-row:1/2;
+        position: absolute;
+        right:0;
+        float:right;
+        width: 84px;
+        height:84px;
+        background-color: var(--white);
+        border-radius: 100%;
+        padding: 2vh;
+        cursor:pointer;
+        border:none;
+    }
+
+    && .overflowActive{
+        margin-top:2vw;
+        overflow-y: auto;
+        height: 80%;
+        padding-right:1vw;
+    }
+    
+    && .searchResults{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px,1fr));
+        grid-gap:1vw;
+    }
+
+    && .userCard{
+        background: white;
+        width: 100%;
+        padding: 1vw;
+        border-radius: 24px;
+        text-align: center;
+    }
+}
+
+.wrapper .overflowActive::-webkit-scrollbar {
+    width: 12px; 
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-thumb {
+    background-color: var(--primary); 
+    border-radius:4px;
+}
+

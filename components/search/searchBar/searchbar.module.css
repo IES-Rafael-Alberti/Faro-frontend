@@ -1,0 +1,19 @@
+.searchContainer{
+    grid-column: 1/2;
+    width:100%;
+    border-radius: 50px;
+    padding: 2.5vh;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 1vh;
+
+    && .searchInput{
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 29px;
+        font-style:italic;
+    }
+}
+

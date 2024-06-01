@@ -1,6 +1,7 @@
 import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '@/types/consts'
+import { ALL_USERS_URL, PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '@/types/consts'
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
+import { User } from '@/types/User.interface'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -36,6 +37,16 @@ export async function fetchBasicUserInfo (id: string, token: string = ''): Promi
     return await fetchData(`${USER_BASIC_INFO_URL}${id}`, token)
   } catch (error) {
     console.error(`Error fetching basic user info from ${USER_BASIC_INFO_URL}${id}:`, error)
+    return Promise.reject(error)
+  }
+}
+
+export async function fetchAllUsers (token: string = ''): Promise<User[]> {
+  console.log('fetchSearchData', token)
+  try {
+    return await fetchData<User[]>(ALL_USERS_URL, token)
+  } catch (error) {
+    console.error(`Error fetching feed data from ${ALL_USERS_URL}:`, error)
     return Promise.reject(error)
   }
 }

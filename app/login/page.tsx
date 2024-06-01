@@ -6,11 +6,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { authPost } from "@/utils/authApi";
+import { useContext } from "react";
+import { AuthContext } from "@/context/auth";
+
 export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const { token, setToken, isLogged, setIsLogged, id, setId } = useContext(AuthContext);
 
   const validateEmail = (email : string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,8 +42,10 @@ export default function Login() {
         "email": email,
         "password": password
       }
-      authPost("auth/signIn", data).then((token) => {
-        console.log("Token recibido:", token);
+      authPost("auth/signIn", data).then((response) => {
+        setToken(response.access_token);
+        setIsLogged(true);
+        // setId(response.id);
       })
       .catch((error) => {
           console.error("Error al enviar datos de autenticación:", error.message);

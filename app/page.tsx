@@ -21,7 +21,7 @@ export default function Home() {
         <Image className={styles.centerImage} src="/imgs/faroLanding.png" alt="FaroImg" width={300} height={300}/>
         <ul className={[styles.infoList, styles.flex].join(' ')}>
           <li className={styles.info}>
-            <Icon src="/icons/chart.svg" width={50} height={50} />
+            <Icon src="/icons/chart.svg"/>
             <p>Encuentre las mejores empresas según su perfil y preferencias</p>
           </li>
           <li className={styles.info}>
@@ -29,7 +29,7 @@ export default function Home() {
             <p>Mejore su networking, amplie su red de contacto fácilmente</p> 
           </li>
           <li className={styles.info}>
-            <Icon src="/icons/newspaper.svg" width={50} height={50} />
+            <Icon src="/icons/newspaper.svg"/>
             <p>Infórmese de todas las novedades, no pierda ninguna oportunidad</p>
           </li>
         </ul>

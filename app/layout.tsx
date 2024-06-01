@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth";
 import { montserrat } from "./ui/fonts";
+import Navbar from "@/components/navbar/navbar";
 
 AuthProvider
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
+        <Navbar />
         <AuthProvider>
           {children}
         </AuthProvider>

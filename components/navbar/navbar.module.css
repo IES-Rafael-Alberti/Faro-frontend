@@ -8,6 +8,7 @@
     justify-content: space-between;
     padding: 4vh 0 5vh 0;
     font-size: 21px;
+    float:left;
 
 
     && .navList {
@@ -22,7 +23,7 @@
             cursor:pointer;
 
             && .icon{
-                font-size:35px;
+                width: 50px;
                 margin-bottom:1vh;
             }
 

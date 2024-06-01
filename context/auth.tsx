@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useEffect } from 'react'
 
 interface AuthContextType {
   isLogged: boolean;
@@ -21,8 +21,8 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzNTk2MjhhLTE0NTItNDU2My04NjZkLWNjM2Y3NmYwYTFlNyIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE2OTE1NzExLCJleHAiOjE3MTY5MTkzMTF9.LyUyxkANemMp2NlDcoAsEkfidEXIqilmypQVeYOvAeY')
-  const [id, setId] = useState<string>('8359628a-1452-4563-866d-cc3f76f0a1e7')
+  const [token, setToken] = useState<string>('')
+  const [id, setId] = useState<string>('')
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, token, setToken, id, setId }}>

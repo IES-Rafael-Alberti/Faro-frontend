@@ -1,0 +1,30 @@
+.selectFilter{
+    grid-column: 2/3;
+    grid-row:1/2;
+    border-radius: 50px;
+    width: 70%;
+    padding: 2.5vh;
+    border: none;
+    outline: none;
+    font-size: 29px;
+    font-weight: 500;
+    color: var(--primary);
+    /* change the arrow */
+    background-image: url(../../../public/icons/caret-down-solid.svg); 
+    background-size: 10%;
+    background-repeat: no-repeat;
+    background-position: right center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    /* add spacing in right (arrow) */	
+    border-right: 2.5vh solid transparent;
+    cursor:pointer;
+}
+
+
+   
+/* .option{
+    TO DO
+} */
