@@ -1,4 +1,4 @@
-/*
+
 
 // TODO: JUANJO
 // pages/register.js
@@ -6,17 +6,12 @@
 
 import { useContext, useState } from "react";
 import styles from "./page.module.css";
-import Button from "@/components/shared/GenericButton";
-import { montserrat } from "@/app/ui/fonts";
+import Button from "../../components/shared/GenericButton";
+import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { authPost } from "@/app/utils/authApi";
-import GenericInput from "@/components/shared/GenericInput";
+import { authPost } from "../context/auth";
 import { AuthContext } from "../context/auth"
-
-import Image from 'next/image'
-import Link from 'next/link'
-
 import GenericInput from '../../components/shared/GenericInput'
 
 export default function Register () {
@@ -199,4 +194,3 @@ export default function Register () {
 function useNavitate (arg0: string) {
   throw new Error('Function not implemented.')
 }
-*/
