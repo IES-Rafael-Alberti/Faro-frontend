@@ -1,6 +1,6 @@
 "use client"
 import styles from "./page.module.css";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import SearchBar from "@/components/search/searchBar/searchbar";
 import Dropdown from "@/components/search/dropdown/dropdwon";
 import Icon from "@/components/icons";
@@ -13,8 +13,8 @@ import ContactCard from "@/components/search/contactCard/ContactCard";
 export default function Search() {
   const [filter, setFilter] = useState<string>("");
   const [query, setQuery] = useState<string>("");
-  const { token } = useContext(AuthContext);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [reset, setReset] = useState<boolean>(false);
+  const { id, token } = useContext(AuthContext);
   const [searchResults, setSearchResults] = useState<BasicUserInfoInterface[]>([]);
   const [userDetails, setUserDetails] = useState<BasicUserInfoInterface[]>([]);
   const options = ["admin", "student", "teacher", "company"];
@@ -22,8 +22,8 @@ export default function Search() {
   const fetchUsers = async () => {
     try {
       const result: User[] = await fetchAllUsers(token);
-      setAllUsers(result);
-      fetchDetailsForAllUsers(result);
+      const users = result.filter(user => user.user_id != id);
+      fetchDetailsForAllUsers(users);
     } catch (error) {
       console.error("Failed to fetch users:", error);
     }
@@ -46,47 +46,52 @@ export default function Search() {
     fetchUsers();
   }, []);
 
-  const handleSearch = (query: string) => {
-    setQuery(query);
-    if(query === "" || query === null) {
-      setSearchResults([]);
-      return;
-    }
-    
+  const filterAndSearchUsers = (query: string, filter: string) => {
     const lowerCaseQuery = query.toLowerCase();
-
-    if (searchResults.length > 0) {
-      const filteredResults = searchResults.filter(user =>
-        user.username.toLowerCase().includes(lowerCaseQuery)
+    const lowerCaseFilter = filter.toLowerCase();
+    
+    let filteredResults = userDetails;
+    
+    if (filter) {
+      filteredResults = filteredResults.filter(user =>
+        user.rol.toLowerCase().includes(lowerCaseFilter)
       );
-      setSearchResults(filteredResults);
-    } else {
-      const filteredResults = userDetails.filter(user =>
-        user.username.toLowerCase().includes(lowerCaseQuery)
-      );
-      setSearchResults(filteredResults);
     }
+
+    if (query) {
+      filteredResults = filteredResults.filter(user =>
+        user.username.toLowerCase().includes(lowerCaseQuery)
+      );
+    }
+
+    setSearchResults(filteredResults);
   };
 
+  const handleSearch = (query: string) => {
+    setReset(false);
+    setQuery(query);
+    filterAndSearchUsers(query, filter);
+  };
 
   const handleFilterSelect = (filter: string) => {
     setFilter(filter);
-    console.log(filter)
-    if(filter === "" || filter === null) {
-      setSearchResults([]);
-      return;
-    }
-    const filteredResults = userDetails.filter(user =>
-      user.rol.toLowerCase().includes(filter));
-    setSearchResults(filteredResults);
+    filterAndSearchUsers(query, filter);
   };
+
+  const resetSearch = () => {
+    setQuery("");
+    setFilter("");
+    setSearchResults([]);
+    setReset(true);
+  };
+
 
   return (
     <main className={styles.wrapper}>
       <section className={styles.searchItems}>
-        <SearchBar onSearch={handleSearch}/>
-        <Dropdown options={options} onSelect={handleFilterSelect} />
-        <button className={styles.reloadButton} onClick={fetchUsers}>
+        <SearchBar onSearch={handleSearch} reset={reset}/>
+        <Dropdown options={options} reset={reset} onSelect={handleFilterSelect} />
+        <button className={styles.reloadButton} onClick={resetSearch}>
           <Icon src="/icons/rotate-right.svg" width={35} height={35} />
         </button>
       </section>
@@ -97,18 +102,17 @@ export default function Search() {
           ) : (
             searchResults.map((user, index) => (
               <div key={index} className={styles.userCard}>
-                <ContactCard user={user}/>
+                <ContactCard user={user} />
               </div>
             ))
           )}
           {searchResults.length === 0 && query === "" && filter === "" && userDetails.map((user, index) => (
             <div key={index} className={styles.userCard}>
-              <ContactCard user={user}/>
+              <ContactCard user={user} />
             </div>
           ))}
         </section>
       </div>
-
     </main>
   );
 }
