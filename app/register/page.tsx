@@ -1,6 +1,3 @@
-
-
-// TODO: JUANJO
 // pages/register.js
 'use client'
 
@@ -10,9 +7,9 @@ import Button from "../../components/shared/GenericButton";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { authPost } from "../context/auth";
 import { AuthContext } from "../context/auth"
 import GenericInput from '../../components/shared/GenericInput'
+import { submitData } from "../../utils/submitData";
 
 export default function Register () {
   const [formData, setFormData] = useState({
@@ -29,7 +26,7 @@ export default function Register () {
     password: "",
     confirmPassword: ""
   });
-  const { user, setUser } = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
 
   const handleChange = (e:any) => {
     const { name, value } = e.target
@@ -97,8 +94,8 @@ export default function Register () {
         email: formData.email,
         password: formData.password
       }
-      const result = await authPost('auth/register/', data)
-      console.log('Formulario válido, enviar datos', result)
+      const result: RegisterResponse  = await submitData('auth/register/', data)
+      setToken(result.access_token)
     }
   }
 

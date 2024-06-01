@@ -1,7 +1,7 @@
 import Publication from '../types/Publication.interface'
 import { PUBLICATIONS_URL } from '../types/consts'
 
-export const submitData = async <T>(url: string, data: T, token: string = ''): Promise<T> => {
+export const submitData = async <Req,Res>(url: string, data: Req, token: string = ''): Promise<Res> => {
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -20,5 +20,5 @@ export const submitData = async <T>(url: string, data: T, token: string = ''): P
 }
 
 export const submitPublication = async (publication: string, id: string, token: string = ''): Promise<Publication> => {
-  return submitData<Publication>(PUBLICATIONS_URL, { msg: publication, user_id: id }, token)
+  return submitData<Publication,any>(PUBLICATIONS_URL, { msg: publication, user_id: id }, token)
 }
