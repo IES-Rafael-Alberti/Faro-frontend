@@ -57,9 +57,13 @@
         width: 75%;
     }
 
-    && button.connectButton:hover{
+    && button.connectButton:hover, && button.connectButtonIsConnected{
         background-color: var(--secondary);
         color: var(--white);
+    }
+
+    && button.connectButtonIsConnected{
+        cursor: initial;
     }
 
 }

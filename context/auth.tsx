@@ -1,4 +1,5 @@
 "use client";
+import Navbar from '@/components/navbar/navbar';
 import React, { createContext, useState, useEffect } from 'react'
 
 interface AuthContextType {
@@ -20,12 +21,13 @@ export const AuthContext = createContext<AuthContextType>({
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(false)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDU3MGI4LTk0MjctNDExYS1hMDJhLTdhY2IwYTkyMjU2ZSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3MjY1ODYzLCJleHAiOjE3MTcyNjk0NjN9.YK9LbbXoRZJw0HkRhV-ZvXCKpfTBMnYxp1Y2kJQ_yy8')
-  const [id, setId] = useState<string>('670570b8-9427-411a-a02a-7acb0a92256e')
+  const [isLogged, setIsLogged] = useState(true)
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZkMGU4YTVjLTk1MjItNDY4Ni1iMmZjLWI3Y2IxNWQzM2QyOCIsImVtYWlsIjoicHJ1ZWJhQGFkbWluLmNvbSIsImlhdCI6MTcxNzQyOTgxMywiZXhwIjoxNzE3NDMzNDEzfQ.b0Ld0lzWhVSCiOd9DaEz17Mp1lcd6XyK7lZKJ5YZf3Y')
+  const [id, setId] = useState<string>('6d0e8a5c-9522-4686-b2fc-b7cb15d33d28')
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, token, setToken, id, setId }}>
+      {isLogged && <Navbar />}
       {children}
     </AuthContext.Provider>
   )

@@ -9,6 +9,7 @@ import { AuthContext } from '../../app/context/auth'
 
 interface Props {}
 
+//  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
 const FeedPublications: NextPage<Props> = () => {
   const { token } = useContext(AuthContext)
 
@@ -17,6 +18,7 @@ const FeedPublications: NextPage<Props> = () => {
 
   const fetchPublications = async (page: number) => {
     const result = await fetchFeedData(page, token)
+    console.log(result)
     setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
   }
 

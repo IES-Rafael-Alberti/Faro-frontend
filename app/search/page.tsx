@@ -6,17 +6,18 @@ import Dropdown from "@/components/search/dropdown/dropdwon";
 import Icon from "@/components/icons";
 import { User } from "@/types/User.interface";
 import { AuthContext } from "@/context/auth";
-import { fetchAllUsers, fetchBasicUserInfo } from "@/utils/fetchData";
-import { BasicUserInfoInterface } from "@/types/BasicUserInfo.interface";
+import { fetchAllUsers, fetchBasicUserInfo, fetchAllConnectionsOfAnUser } from "@/utils/fetchData";
 import ContactCard from "@/components/search/contactCard/ContactCard";
+import { BasicUserInfoWithIdInterface } from "@/types/BasicUserInfoWithId.interface";
 
 export default function Search() {
   const [filter, setFilter] = useState<string>("");
   const [query, setQuery] = useState<string>("");
   const [reset, setReset] = useState<boolean>(false);
   const { id, token } = useContext(AuthContext);
-  const [searchResults, setSearchResults] = useState<BasicUserInfoInterface[]>([]);
-  const [userDetails, setUserDetails] = useState<BasicUserInfoInterface[]>([]);
+  const [connections, setConnections] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<BasicUserInfoWithIdInterface[]>([]);
+  const [userDetails, setUserDetails] = useState<BasicUserInfoWithIdInterface[]>([]);
   const options = ["admin", "student", "teacher", "company"];
 
   const fetchUsers = async () => {
@@ -31,10 +32,11 @@ export default function Search() {
 
   const fetchDetailsForAllUsers = async (users: User[]) => {
     try {
-      const details: BasicUserInfoInterface[] = [];
+      const details: BasicUserInfoWithIdInterface[] = [];
       for (const user of users) {
         const detail = await fetchBasicUserInfo(user.user_id, token);
-        details.push(detail);
+        const detailWithUserId = { ...detail, user_id: user.user_id };
+        details.push(detailWithUserId);
       }
       setUserDetails(details);
     } catch (error) {
@@ -42,8 +44,18 @@ export default function Search() {
     }
   };
 
+  const fetchConnections = async (token:string, id: string) => {
+    try {
+      const response = await fetchAllConnectionsOfAnUser(token, id);
+      setConnections(response);
+    } catch (error) {
+      console.error("Failed to fetch connections:", error);
+    } 
+  }
+
   useEffect(() => {
     fetchUsers();
+    fetchConnections(token, id);
   }, []);
 
   const filterAndSearchUsers = (query: string, filter: string) => {
@@ -102,13 +114,13 @@ export default function Search() {
           ) : (
             searchResults.map((user, index) => (
               <div key={index} className={styles.userCard}>
-                <ContactCard user={user} />
+                <ContactCard user={user} isConnected={connections.includes(user.user_id)} />
               </div>
             ))
           )}
           {searchResults.length === 0 && query === "" && filter === "" && userDetails.map((user, index) => (
             <div key={index} className={styles.userCard}>
-              <ContactCard user={user} />
+              <ContactCard user={user} isConnected={connections.includes(user.user_id)}/>
             </div>
           ))}
         </section>
