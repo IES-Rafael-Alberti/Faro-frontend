@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from "axios";
 
 interface AuthResponse {
+  id: string;
   access_token: string;
 }
 
-const URL = 'http://localhost:3000/'
+const URL = 'http://localhost:3000/';
 
+export async function authPost(src: string, body: object): Promise<AuthResponse> {
 
-export async function authPost( src: string, body: object ): Promise<AuthResponse> {
-
-    console.log(body)
+    console.log(body);
 
     try {
       const response: AxiosResponse<AuthResponse> = await axios.post<AuthResponse>(`${URL}${src}`, body, {
@@ -18,11 +18,11 @@ export async function authPost( src: string, body: object ): Promise<AuthRespons
           }
       });
   
-      const { access_token } = response.data;
-  
-      return { access_token };
+      const { id, access_token } = response.data;
+      
+      return { id, access_token };
     } catch (error) {
       console.error('Error during auth:', error);
       throw error;
     }
-  }
+}
