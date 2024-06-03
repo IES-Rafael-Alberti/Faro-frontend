@@ -22,8 +22,8 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true)
-  const [token, setToken] = useState<string>('')
-  const [id, setId] = useState<string>('')
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJlNGQ0M2U3LTViMjUtNDcxZi1hYWVjLThlZjNmNjg3ODRmMiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3NDM4NDY2LCJleHAiOjE3MTc0NDIwNjZ9.GgXP8DaOi_QyxLdydZ1DXB6wPsBFOF198juiyM-xCcM')
+  const [id, setId] = useState<string>('2e4d43e7-5b25-471f-aaec-8ef3f68784f2')
 
   console.log('isLogged:', isLogged, 'token:', token, 'id:', id)
 
