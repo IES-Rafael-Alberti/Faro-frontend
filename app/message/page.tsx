@@ -76,9 +76,7 @@ export default function Message() {
                         velit esse cillum dolore eu fugiat nulla pariatur.
                     </p>
                 </article>
-                <div className={styles.chatbox}>
-                    <textarea rows={4} cols={34} placeholder="Escribe un mensaje..."></textarea>
-                </div>
+                <textarea rows={4} placeholder="Escribe un mensaje..."></textarea>
         </section>
     </main>
   );

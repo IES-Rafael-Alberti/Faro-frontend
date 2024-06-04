@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from './navbar.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faHouse, faPowerOff, faSearch, faUser, faBars } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
+import { AuthContext } from '@/context/auth';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const { setId, setToken, setIsLogged } = useContext(AuthContext);
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    const logout = () => {
+        setId('');
+        setToken('');
+        setIsLogged(false);
+    }
 
     return (
         <div className={isOpen ? `${styles.container} ${styles.containerOpen}` : styles.container}>
@@ -48,7 +55,7 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li className={styles.navLink}>
-                        <Link href="/login">
+                        <Link href="/login" onClick={logout}>
                             <FontAwesomeIcon icon={faPowerOff} className={styles.icon} />
                             <p>Logout</p>
                         </Link>

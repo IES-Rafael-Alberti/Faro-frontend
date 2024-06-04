@@ -7,12 +7,14 @@ import Link from "next/link";
 import { useState, useContext } from "react";
 import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/context/auth";
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
   const { setToken, setIsLogged, setId } = useContext(AuthContext);
+  const router = useRouter();
 
   const validateEmail = (email : string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,7 +48,7 @@ export default function Login() {
           setToken(response.access_token);
           setIsLogged(true);
           setId(response.id);
-          // window.location.href = '/feed';
+          router.push('/feed');
         } else {
           console.error("Respuesta de autenticación inválida:", response);
         }

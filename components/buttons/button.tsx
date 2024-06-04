@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './button.module.css';
 import { montserrat } from '../../app/ui/fonts';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface ButtonProps{
     className: string,
@@ -9,15 +9,18 @@ interface ButtonProps{
     href: string
 }
 
+const Button = ({ className, text, href }: ButtonProps) => {
+    const router = useRouter();
 
-
-const Button = ({ className, text, href }: ButtonProps) => (
-    <Link href={href}>
-        <button className={[className, styles.commonButton, `${montserrat.className} antialiased`].join(' ')}>
+    const redirect = () => {
+        router.push(href);
+    }
+    
+    return (
+        <button className={[className, styles.commonButton, `${montserrat.className} antialiased`].join(' ')} onClick={redirect}>
             {text}
         </button>    
-    </Link>
-
-);
+    );
+}
 
 export default Button;

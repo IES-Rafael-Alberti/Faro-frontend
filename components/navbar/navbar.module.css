@@ -60,6 +60,7 @@
         width: 100vw;
         height: 0;
         padding: 0;
+        background-color: var(--lightgray);
         justify-content: center;
         align-items: flex-start;
         border-bottom-left-radius: 24px;
@@ -102,6 +103,7 @@
         height: auto;
         padding: 0 0 5vh 0;
         display: block;
+        background-color: var(--primary);
     }
 
     .navOpen {
@@ -118,7 +120,7 @@
         color: var(--primary);
         font-size: 1.5em;
         cursor: pointer;
-        margin: 5vw;
+        margin: 2vh;
         display: block;
         transition: ease-in-out 0.3s;
     }

@@ -38,9 +38,7 @@ export default function Home() {
         <section className={styles.authContent}></section>
         <p className={styles.authInfo}>Disfrute de las ventajas de FARO autenticándose con su propia cuenta</p>
         <div className={styles.buttonsContainer}>
-          <div className={styles.marginButton}>
-            <Button className={styles.authButton} text="Inicie Sesión" href="/login"/>
-          </div>
+          <Button className={styles.authButton} text="Inicie Sesión" href="/login"/>
           <Button className={styles.authButton} text="Regístrese" href="/register"/>
         </div>
 
