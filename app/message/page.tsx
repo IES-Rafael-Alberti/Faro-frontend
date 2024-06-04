@@ -54,10 +54,14 @@ export default function Message() {
                 </header>
                 <article className={styles.messages}>
                     <p className={`${styles.msg} ${styles.receiver}`}>
+                        {/* AQUÍ VA MENSAJE DE ENDPOINT */}
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
                         velit esse cillum dolore eu fugiat nulla pariatur.
+                        {/* AQUÍ VA LA FECHA Y HORA DEL MENSAJE DEL MENSAJE CON EL FORMATO DEL EJEMPLO */}
+                        <span className={styles.date}>11. abril, 12:25 pm</span> 
                     </p>
+                    {/* ESTO ES REPETIDO POR BUCLE CON LOS MENSAJES QUE HAYA, SI EL ID ES EL DEL USUARIO CONECTADO TIENE LA CLASS SENDER Y SI ES EL OTRO, TIENE LA CLASS RECEIVER */}
                     <p className={`${styles.msg} ${styles.sender}`}>
                         No sé qué decirte
                     </p>
