@@ -7,16 +7,17 @@ import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { AuthContext } from '../../app/context/auth'
 
-interface Props {}
+interface Props {
+  token : string
+}
 
 //  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
-const FeedPublications: NextPage<Props> = () => {
-  const { token } = useContext(AuthContext)
-
+const FeedPublications: NextPage<Props> = ({ token }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
 
   const fetchPublications = async (page: number) => {
+    console.log(token)
     const result = await fetchFeedData(page, token)
     console.log(result)
     setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
@@ -24,7 +25,7 @@ const FeedPublications: NextPage<Props> = () => {
 
   useEffect(() => {
     fetchPublications(page)
-  }, [page])
+  }, [page, token])
 
   const loadMore = () => {
     if (publications.currentPage < publications.totalPages) {

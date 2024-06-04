@@ -105,11 +105,12 @@
         height: 100vh;
 
         && .searchItems{
-            margin-top:7vh;
+            margin-top:8vh;
         }
 
         && .overflowActive{
             margin-top:2vh;
+            height: 64vh;
         }
     }
 
@@ -126,7 +127,7 @@
             width: 85%;
         }
         && .overflowActive{
-            height:71%;
+            height:69%;
         }
     }
 }

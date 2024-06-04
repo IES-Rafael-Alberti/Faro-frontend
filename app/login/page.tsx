@@ -46,7 +46,7 @@ export default function Login() {
           setToken(response.access_token);
           setIsLogged(true);
           setId(response.id);
-          window.location.href = '/feed';
+          // window.location.href = '/feed';
         } else {
           console.error("Respuesta de autenticación inválida:", response);
         }
