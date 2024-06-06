@@ -22,7 +22,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxODg0YmViLTFhZGUtNDVjNC04N2ViLThhNmFmZTU0Yjg5MyIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3Njk0NTkzLCJleHAiOjE3MTc2OTgxOTN9.L0K7ih0VHU1MHmQnv1-3_IkT6FBkub4a3jxaFkEEC6k')
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxODg0YmViLTFhZGUtNDVjNC04N2ViLThhNmFmZTU0Yjg5MyIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3Njk1MzU4LCJleHAiOjE3MTc2OTg5NTh9.xD3ujJQlz_FAdi9D425NGNDunoiDO7EBSgIO6YDSs04')
   const [id, setId] = useState<string>('91884beb-1ade-45c4-87eb-8a6afe54b893')
   
   return (

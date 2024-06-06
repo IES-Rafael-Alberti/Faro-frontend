@@ -1,6 +1,6 @@
 
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, USER_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL } from '../types/consts'
+import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, USER_URL, ALL_USERS_URL, CONNECTIONS_OF_AN_USER_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { ProfileInterface } from '../types/profile/Profile.interface'
 import { ExperienceInterface } from '../types/profile/experience.interface'
