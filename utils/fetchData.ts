@@ -9,9 +9,6 @@ import { RecommendationInterface } from '../types/profile/recomendation.interfac
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
 import { ContactInterface } from '../types/profile/contact.interface'
 import { PublicationInterface } from '../types/profile/publications.interface'
-import { FeedPublicationInterface } from '@/types/FeedPublication.interface'
-import { ALL_USERS_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '@/types/consts'
-import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
 import { User } from '@/types/User.interface'
 import axios, { AxiosResponse } from 'axios'
 
