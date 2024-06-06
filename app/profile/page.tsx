@@ -105,7 +105,7 @@ export default function Profile() {
   }, [id, token]);
 
   return (
-    // TODO: change this to the proper html with the css 
+    // TODO: change this to the proper html with the css, also split this into components
     <div>
       {editMode ? (
         <div>
