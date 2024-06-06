@@ -1,25 +1,29 @@
 'use client'
 
 import { NextPage } from 'next'
-import { fetchBasicUserInfo } from '@/utils/fetchData'
-import { AuthContext } from '@/context/auth'
-import { useContext } from 'react'
+import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
+import Image from 'next/image'
+import styles from './basicUserInfoCard.module.css'
+import translateRol from '@/context/translate'
 
 interface Props {
-    id: string;
+    user: BasicUserInfoInterface;
 }
 
-const BasicUserInfoCard: NextPage<Props> = async ({ id }) => {
-  const { token } = useContext(AuthContext)
-  const user = await fetchBasicUserInfo(id, token)
+const BasicUserInfoCard: NextPage<Props> = ({ user }) => {
 
-  return <div>
-    <h1>{user.username}</h1>
-    <p>{user.profile_picture}</p>
-    <p>{user.rol}</p>
-    <p>{user.count_of_publications}</p>
-    <p>{user.count_of_connections}</p>
-  </div>
+  return (
+  <article className={styles.contentUserInfo}>
+      {user.profile_picture && <Image className={styles.userImage} src={user.profile_picture} alt={`${user.username}_image`} width={100} height={100}/>}
+      <h1 className={styles.infoHighlight}>{user.username}</h1>
+      <p className={styles.info}>{translateRol(user.rol)}</p>
+      <div className={styles.stadistics}>
+          <p className={[styles.info, styles.flexInfo].join(' ')}>Publicaciones <span>{user.count_of_publications}</span></p>
+          <p className={[styles.info, styles.flexInfo].join(' ')}>Contactos <span>{user.count_of_connections}</span></p>
+      </div>
+      <p className={`${styles.info} ${styles.littleText}`}>Proyecto Faro, I.E.S Rafael Alberti</p>
+  </article>
+  )
 }
 
 export default BasicUserInfoCard

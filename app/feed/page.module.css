@@ -1,0 +1,27 @@
+.wrapper{
+    background-color: var(--lightgray);
+    width: 100vw;
+    padding:3vw 12vw 0 12vw;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.centerAll{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1085px) {
+    .wrapper {
+        padding:3vw 4vw 0 4vw;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .wrapper {
+        margin-top: 5vh;
+        height: 95vh;
+    }
+}
+
