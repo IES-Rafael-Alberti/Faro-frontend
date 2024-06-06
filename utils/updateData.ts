@@ -19,7 +19,6 @@ export const updateData = async <Req,Res>(url: string, data: Req, token: string 
       }
   
       const responseData = await response.json()
-      console.log('Response data from update:', responseData);
       return responseData
     } catch (error) {
       return Promise.reject(error)

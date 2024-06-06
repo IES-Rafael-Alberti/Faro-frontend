@@ -57,8 +57,8 @@ export default function Profile() {
           date: rec.date.toString() || '',
           senderId: rec.senderId || '',
         })),
-        contacts: profileData.contacts || [], // Add the missing contacts property
-        publications: profileData.publications || [] // Add the missing publications property
+        contacts: profileData.contacts || [], 
+        publications: profileData.publications || [] 
       });
     }
   };
@@ -80,20 +80,12 @@ export default function Profile() {
 
   const editProfile = async () => {
     try {
-      // Send the updated profile data to the backend
       const response = await updateProfileData(formData, token);
-
-      // Update the profile data state with the new response
       setProfileData(response);
-
-      // Fetch the updated profile data from the backend
       const updatedProfile = await getProfileData();
-
       if (updatedProfile !== undefined) {
-        // Update the profile data state with the fetched data
         setProfileData(updatedProfile);
       }
-      // Toggle the edit profile view
       toggleEditProfile();
     } catch (error) {
       // TODO: Change this to actually manage the error 
