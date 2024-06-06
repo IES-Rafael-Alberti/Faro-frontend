@@ -14,6 +14,7 @@ export default function Profile() {
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
+
   // TODO: Check if this type of implementation is correct
   const [formData, setFormData] = useState<CompleteProfile>({
     id: '',
@@ -21,7 +22,14 @@ export default function Profile() {
     description: '',
     education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
     experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
-    recommendations: [{ message: '', date: '', senderId: '' }]
+    recommendations: [{ message: '', date: '', senderId: '' }],
+    contacts: [{
+      connected_user_id: ""
+    }],
+    publications: [{
+      user_publication_msg: "",
+      users_publications_created_at: ""
+    }] 
   });
 
   const toggleEditProfile = () => {
@@ -48,7 +56,9 @@ export default function Profile() {
           message: rec.message || '',
           date: rec.date.toString() || '',
           senderId: rec.senderId || '',
-        }))
+        })),
+        contacts: profileData.contacts || [], // Add the missing contacts property
+        publications: profileData.publications || [] // Add the missing publications property
       });
     }
   };
@@ -72,14 +82,12 @@ export default function Profile() {
     try {
       // Send the updated profile data to the backend
       const response = await updateProfileData(formData, token);
-      console.log('Updated profile data from response:', response);
 
       // Update the profile data state with the new response
       setProfileData(response);
 
       // Fetch the updated profile data from the backend
       const updatedProfile = await getProfileData();
-      console.log('Fetched updated profile data:', updatedProfile);
 
       if (updatedProfile !== undefined) {
         // Update the profile data state with the fetched data
@@ -88,20 +96,16 @@ export default function Profile() {
       // Toggle the edit profile view
       toggleEditProfile();
     } catch (error) {
+      // TODO: Change this to actually manage the error 
       console.error('Error updating profile:', error);
     }
   };
   
 
   const getProfileData = async () => {
-    try {
-      const response = await fetchProfileData(`${id}`, token);
-      setProfileData(response);
-      console.log('Profile data:', response);
-      return response;
-    } catch (error) {
-      console.error('Error fetching profile data:', error);
-    }
+    const response = await fetchProfileData(`${id}`, token);
+    setProfileData(response);
+    return response;
   };
 
   useEffect(() => {
@@ -109,6 +113,7 @@ export default function Profile() {
   }, [id, token]);
 
   return (
+    // TODO: change this to the proper html with the css 
     <div>
       {editMode ? (
         <div>
