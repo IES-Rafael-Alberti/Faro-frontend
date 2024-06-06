@@ -118,3 +118,15 @@
         width:100%;
     }
 }
+
+
+@media screen and (max-width: 650px) {
+    .scrollContainer {
+        && .postContainer {
+            && footer {
+                padding: 2vh 0 1vh 0;
+            }
+        }
+    }
+}
+
