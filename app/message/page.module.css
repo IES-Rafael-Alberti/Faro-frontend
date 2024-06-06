@@ -1,0 +1,257 @@
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--lightgray);
+
+    && .chatsContainer{
+        background-color: var(--white);
+        height: 93vh;
+        width:20vw;
+        min-width: 300px;
+        border-radius: 24px;
+        
+    
+        && .overflowActive{
+            overflow-y: auto;
+            height: 97%;
+            padding: 0 2vh;
+
+            && .chat{
+                border-bottom: 1px solid var(--darkgray);
+                height: 100px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                    
+                && img.userImg {
+                    border-radius:100%;
+                    object-fit: cover;
+                    display:inline-block;
+                }
+    
+                && .flex {
+                    width: 73%;
+                    display: flex;
+                    flex-direction: column;
+                    float: right;
+    
+            
+                    && h2.username{
+                        display:inline-block;
+                        font-weight: 600;
+                    }
+                }
+        
+                && p.messageInfo{
+                    font-size: 14px;
+                    color: var(--semiblack);
+                }
+    
+            }
+       
+        }      
+      
+    }
+
+
+    && .messageContainer {
+        background-color: var(--white);
+        border-radius: 24px;
+        margin-left: 3vh;
+        padding: 2vw;
+        width: 40vw;
+        height:93vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        && .userInfo{
+            border-bottom: 1px solid var(--terciary);
+            display: flex;
+            gap: 2vh;
+            align-items: center;
+            padding-bottom: 2vh;
+
+            && .userImgMessage{
+                border-radius:100%;
+            }
+
+            && .flex{
+                width: 70%;
+                display: flex;
+                flex-direction: column;
+                float: right;
+
+                && h1.usernameMessage{
+                    font-style:italic;
+                    color: var(--primary);
+                    font-size:32px;
+                }
+
+                && .messageInfo {
+                    margin-top:.5vh;
+                    color: var(--semiblack);
+                }
+
+            }
+        }
+
+        && .messages{
+            height: 72%;
+            overflow-y: auto;
+            margin:2vh 0;
+
+            && .msg{
+                width: 80%;
+                padding: 3vh;
+                border-radius: 24px;
+                color: var(--white);
+                font-weight: 300;
+                font-size: 18px;
+                margin-bottom:3vh;
+            }
+
+            && .receiver{
+                background: var(--primary);
+                float:left;
+            }
+
+            && .sender{
+                background: var(--secondary);
+                float:right;
+            }
+        }
+
+        && textarea{
+            border: none;
+            outline: none;
+            width: 100%;
+            background: var(--darkgray);
+            padding: 2vh;
+            border-radius: 24px;
+            resize: none;
+        }
+        
+    }
+
+}
+
+
+.wrapper .overflowActive::-webkit-scrollbar {
+    width: 6px; 
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-thumb {
+    background-color: var(--primary); 
+    border-radius:4px;
+}
+
+.wrapper .messageContainer .messages::-webkit-scrollbar {
+    display: none;
+}
+
+@media screen and (min-width: 1500px){
+    .wrapper {
+
+        && .messageContainer {
+            padding: 2vw 4vw;
+            
+            && .messages{
+
+                && .msg{
+                    width: 60%;
+                }
+            }            
+        }    
+    }
+}
+
+@media screen and (max-width: 900px){
+    .wrapper {
+
+        && .chatsContainer{
+            min-width: 200px;
+
+            && .overflowActive{
+                padding: 0 .5vh;
+            }
+
+            && .chat{
+                min-height:130px;
+
+                && .userImg {
+                    transform: scale(0.8);
+                }
+
+                && .flex {
+
+                    && h2.username{
+                        font-size: 16px;
+                    
+                    }
+                }
+            }
+        }
+
+        && .messageContainer {
+            margin-left:1vh;
+        }
+
+    }
+}
+
+@media screen and (max-width: 650px){
+    .wrapper{
+
+        && .chatsContainer, && .messageContainer{
+            height: 90vh;
+            margin-top: 5vh;
+        }
+
+        && .messageContainer{
+            width: 48vw;
+            
+            && .userInfo{
+
+                && .userImgMessage{
+                    transform: scale(0.8);
+                }
+
+                && .flex{
+
+                    && h1.usernameMessage{
+                        font-size: 24px;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+
+@media screen and (max-width: 400px){
+    .wrapper{
+
+        && .chatsContainer, && .messageContainer{
+            height: 90vh;
+            margin-top: 7vh;
+        }
+
+        && .chatsContainer{
+            min-width: 160px;
+        }
+
+        && .messageContainer{
+            width: 50vw;
+        }
+
+    }
+}

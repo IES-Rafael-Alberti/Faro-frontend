@@ -1,0 +1,151 @@
+.wrapper{
+    width: calc(100vw - 160px);
+    height: 100vh;
+    float:right;
+    background: var(--lightgray);
+    padding:3vw 12vw 0 12vw;
+
+    && .searchItems{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-gap:1vw;
+        position: relative;
+    }
+
+    && .reloadButton {
+        grid-column: 2/3;
+        grid-row:1/2;
+        position: absolute;
+        right:0;
+        float:right;
+        width: 84px;
+        height:84px;
+        background-color: var(--white);
+        border-radius: 100%;
+        padding: 2vh;
+        cursor:pointer;
+        border:none;
+    }
+
+    && .overflowActive{
+        margin-top:2vw;
+        overflow-y: auto;
+        height: 83%;
+        padding-right:1vw;
+    }
+    
+    && .searchResults{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px,1fr));
+        grid-gap:1vw;
+    }
+
+    && .userCard{
+        background: white;
+        width: 100%;
+        padding: 1vw;
+        border-radius: 24px;
+        text-align: center;
+    }
+}
+
+.wrapper .overflowActive::-webkit-scrollbar {
+    width: 12px; 
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.wrapper .overflowActive::-webkit-scrollbar-thumb {
+    background-color: var(--primary); 
+    border-radius:4px;
+}
+
+@media screen and (max-width: 1340px) {
+    .wrapper{
+        && .searchItems{
+            grid-gap:0vw;
+        }
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .wrapper{
+        && .reloadButton {
+            grid-row:2/3;
+        }
+
+        && .overflowActive{
+            height: 73%;
+        }
+    }
+}
+
+@media screen and (max-width: 920px) {
+    .wrapper{
+
+        && .overflowActive{
+            height: 75%;
+        }
+    }
+}
+
+@media screen and (min-width: 651px) and (max-width: 686px) {
+    .wrapper{
+        && .userCard{
+            width: 90%;
+        }
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .wrapper{
+        width: 100vw;
+        height: 100vh;
+
+        && .searchItems{
+            margin-top:8vh;
+        }
+
+        && .overflowActive{
+            margin-top:2vh;
+            height: 64vh;
+        }
+    }
+
+    .wrapper .overflowActive::-webkit-scrollbar {
+        width: 6px; 
+    }
+    
+}
+
+
+@media screen and (max-width: 480px) {
+    .wrapper{
+        && .userCard{
+            width: 85%;
+        }
+        && .overflowActive{
+            height:69%;
+        }
+    }
+}
+
+
+@media screen and (max-width: 400px) {
+    .wrapper{
+        && .userCard{
+            width: 75%;
+        }
+
+        && .reloadButton {
+            width: 74px;
+            height:74px;
+        }
+
+        && .overflowActive {
+            height:66%;
+        }
+    }
+}
