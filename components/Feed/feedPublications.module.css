@@ -57,8 +57,6 @@
         }
 
         && .postStadistics{
-            padding-bottom:2vh;
-            border-bottom: 1px solid var(--darkgray);
 
             && .stadistic{
                 font-size: 12px;
@@ -80,22 +78,30 @@
             }
         }
 
-        && footer button.btn{
-            color: var(--secondary);
-            border: none;
-            outline: none;
-            cursor: pointer;
-            margin-right:3vh;
-            background: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius:24px;
+        && footer {
+            padding-top: 2vh;
+            border-top: 1px solid var(--darkgray);
 
-            && .footerIcon{
-                margin-right: 0.5vh;
+            && button.btn{
+                color: var(--secondary);
+                border: none;
+                outline: none;
+                cursor: pointer;
+                margin-right:3vh;
+                background: none;
+                font-size: 16px;
+                font-weight: 500;
+                border-radius:24px;
+    
+                && .footerIcon{
+                    margin-right: 0.5vh;
+                }
+
+                && .isLiked {
+                    color: red;
+                }
             }
         }
-
     }
 }
 

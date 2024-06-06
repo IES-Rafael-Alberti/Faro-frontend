@@ -22,11 +22,12 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
   const router = useRouter()
+  const [isLiked, setIsLiked] = useState(false)
   // const [likesCount, setLikesCount] = useState(5)
   // const [commentsCount, setCommentsCount] = useState(3)
 
   const likesCount = 5
-  const commentsCount = 0
+  const commentsCount = 5
   
   const fetchPublications = async (page: number) => {
     console.log(token)
@@ -118,7 +119,7 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
 
             <footer>
               <button className={`${styles.btn} ${montserrat.className} antialised`}>
-                <FontAwesomeIcon className={styles.footerIcon} icon={faHeart} />
+                <FontAwesomeIcon className={isLiked ? `${styles.footerIcon} ${styles.isLiked}` : styles.footerIcon} icon={faHeart} />
                 Me gusta
               </button>
               <button className={`${styles.btn} ${montserrat.className} antialised`}>
