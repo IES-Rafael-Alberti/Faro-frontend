@@ -1,6 +1,13 @@
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL } from '../types/consts'
+import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, USER_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
+import { ProfileInterface } from '../types/profile/Profile.interface'
+import { UserProfileInterface } from '../types/UserProfile.interface'
+import { ExperienceInterface } from '../types/profile/experience.interface'
+import { EducationInterface } from '../types/profile/education.interface'
+import { RecommendationInterface } from '../types/profile/recomendation.interface'
+import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
+import { log } from 'console'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -9,7 +16,7 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
     response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
       }
     })
 
@@ -19,6 +26,53 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
     return Promise.reject(error)
   }
 }
+export async function fetchProfileData(id: string, token: string = ''): Promise<CompleteProfile> {
+  try {
+    let profile: ProfileInterface;
+    let experience: ExperienceInterface[];
+    let education: EducationInterface[];
+    let recommendations: RecommendationInterface[];
+
+    try {
+      profile = await fetchData<ProfileInterface>(`${PROFILE_URL}${id}`, token);
+    } catch (error) {
+      console.error(`Error fetching profile:`, error);
+      throw error;
+    }
+
+    try {
+      experience = await fetchData<ExperienceInterface[]>(`${EXPERIENCE_URL}${id}`, token);
+    } catch (error) {
+      console.error(`Error fetching experience:`, error);
+      throw error;
+    }
+
+    try {
+      education = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${id}`, token);
+    } catch (error) {
+      console.error(`Error fetching education:`, error);
+      throw error;
+    }
+
+    try {
+      recommendations = await fetchData<RecommendationInterface[]>(`${RECOMMENDATION_URL}${id}`, token);
+    } catch (error) {
+      console.error(`Error fetching recommendations:`, error);
+      throw error;
+    }
+
+    return {
+      ...profile,
+      experience,
+      education,
+      recommendations,
+    };
+  } catch (error) {
+    console.error(`Error fetching complete profile data:`, error);
+    return Promise.reject(error);
+  }
+}
+
 
 export async function fetchFeedData (page: number, token: string = ''): Promise<FeedPublicationInterface> {
   try {

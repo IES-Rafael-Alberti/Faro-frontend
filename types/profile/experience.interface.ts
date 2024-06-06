@@ -1,8 +1,8 @@
-export interface Experience {
-    profileId: string ;
+export interface ExperienceInterface {
+    profileId?: string ;
     company: string;
     position: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string;
+    endDate: Date | string;
     description: string;
 }

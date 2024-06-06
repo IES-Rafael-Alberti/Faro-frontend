@@ -1,6 +1,6 @@
-export interface Recommendation {
-    profileId: string;
-    sender: string;
+export interface RecommendationInterface {
+    profileId?: string;
+    senderId: string;
     message: string;
-    date: string;
+    date: string | Date;
 }
