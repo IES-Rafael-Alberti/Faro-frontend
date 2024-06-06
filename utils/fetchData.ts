@@ -29,61 +29,34 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
 // TODO: check the implementation of this function 
 export async function fetchProfileData(id: string, token: string = ''): Promise<CompleteProfile> {
   try {
-    let profile: ProfileInterface;
-    let experience: ExperienceInterface[];
-    let education: EducationInterface[];
-    let recommendations: RecommendationInterface[];
-    let contacts: ContactInterface[];
-    let publications: PublicationInterface[];
+    const urls = [
+      { url: `${PROFILE_URL}${id}`, key: 'profile' },
+      { url: `${EXPERIENCE_URL}${id}`, key: 'experience' },
+      { url: `${EDUCATION_URL}${id}`, key: 'education' },
+      { url: `${RECOMMENDATION_URL}${id}`, key: 'recommendations' },
+      { url: `${CONTACT_URL}${id}`, key: 'contacts' },
+      { url: `${PUBLICATIONS_URL}${id}`, key: 'publications' },
+    ];
 
-    try {
-      profile = await fetchData<ProfileInterface>(`${PROFILE_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
+    const fetchPromises = urls.map(({ url }) => fetchData(url, token));
+    const results = await Promise.all(fetchPromises);
 
-    try {
-      experience = await fetchData<ExperienceInterface[]>(`${EXPERIENCE_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
-
-    try {
-      education = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
-
-    try {
-      recommendations = await fetchData<RecommendationInterface[]>(`${RECOMMENDATION_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
-    try {
-      contacts = await fetchData<ContactInterface[]>(`${CONTACT_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
-
-    try{
-      publications = await fetchData<PublicationInterface[]>(`${PUBLICATIONS_URL}${id}`, token);
-    } catch (error) {
-      throw error;
-    }
+    const [profile, experience, education, recommendations, contacts, publications] = results;
 
     return {
       ...profile,
-      experience,
-      education,
-      recommendations,
-      contacts,
-      publications
+      experience: experience as ExperienceInterface[],
+      education: education as EducationInterface[],
+      recommendations: recommendations as RecommendationInterface[],
+      contacts: contacts as ContactInterface[],
+      publications: publications as PublicationInterface[],
     };
   } catch (error) {
     console.error(`Error fetching complete profile data:`, error);
     return Promise.reject(error);
   }
 }
+
 
 
 export async function fetchFeedData (page: number, token: string = ''): Promise<FeedPublicationInterface> {
