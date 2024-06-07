@@ -4,6 +4,8 @@ import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDU
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
 import { ALL_USERS_URL, CONNECTIONS_OF_AN_USER_URL  } from '@/types/consts'
+import { ContactInterface } from '../types/profile/contact.interface'
+import { PublicationInterface } from '../types/profile/publications.interface'
 import { User } from '@/types/User.interface'
 import axios, { AxiosResponse } from 'axios'
 
