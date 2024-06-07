@@ -5,7 +5,7 @@ import SearchBar from "@/components/search/searchBar/searchbar";
 import Dropdown from "@/components/search/dropdown/dropdwon";
 import Icon from "@/components/icons";
 import { User } from "@/types/User.interface";
-import { AuthContext } from "@/context/auth";
+import { AuthContext } from "@/app/context/auth";
 import { fetchAllUsers, fetchBasicUserInfo, fetchAllConnectionsOfAnUser } from "@/utils/fetchData";
 import ContactCard from "@/components/search/contactCard/ContactCard";
 import { BasicUserInfoWithIdInterface } from "@/types/BasicUserInfoWithId.interface";

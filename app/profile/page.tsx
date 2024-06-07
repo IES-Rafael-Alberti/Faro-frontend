@@ -2,35 +2,31 @@
 
 import { fetchProfileData } from '../../utils/fetchData'
 import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../context/auth'
+import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
+import { EditableProfileData } from '@/types/profile/editableProfileData.interface'
+import { RequestInterface } from '@/types/profile/requests.interface'
 
-export default function Profile () {
-  const { id, token } = useContext(AuthContext)
-  const [profileData, setProfileData] = useState<CompleteProfile | undefined>()
-  const [editMode, setEditMode] = useState(false)
-  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile')
-
-  // TODO: Check if this type of implementation is correct
-  const [formData, setFormData] = useState<CompleteProfile>({
+export default function Profile() {
+  const { id, token } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
+  const [editMode, setEditMode] = useState(false);
+  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
+  const [requests, setRequests] = useState<RequestInterface[]>([]);
+  // Initialize formData with an empty structure
+  const [formData, setFormData] = useState<EditableProfileData>({
     id: '',
     headline: '',
     description: '',
     education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
     experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
-    contacts: [{
-      connected_user_id: ''
-    }],
-    publications: [{
-      user_publication_msg: '',
-      users_publications_created_at: ''
-    }]
-  })
+    publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
+  });
 
   const toggleEditProfile = () => {
-    setEditMode(!editMode)
+    setEditMode(!editMode);
     if (profileData) {
       setFormData({
         id: profileData.id,
@@ -54,55 +50,57 @@ export default function Profile () {
           date: rec.date.toString() || '',
           senderId: rec.senderId || ''
         })),
-        contacts: profileData.contacts || [],
         publications: profileData.publications || []
-      })
+      });
     }
-  }
+  };
 
   const handleInputChange = (e: any, index?: number, type?: 'education' | 'experience' | 'recommendations') => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (type && index !== undefined) {
       setFormData((prevFormData) => {
-        const updatedArray = [...prevFormData[type]]
-        updatedArray[index] = { ...updatedArray[index], [name]: value }
-        return { ...prevFormData, [type]: updatedArray }
-      })
+        const updatedArray = [...prevFormData[type]];
+        updatedArray[index] = { ...updatedArray[index], [name]: value };
+        return { ...prevFormData, [type]: updatedArray };
+      });
     } else {
-      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }))
+      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-  }
+  };
 
   const editProfile = async () => {
     try {
-      const response = await updateProfileData(formData, token)
-      setProfileData(response)
-      const updatedProfile = await getProfileData()
+      const response = await updateProfileData(formData, token);
+      setProfileData(response);
+      const updatedProfile = await getProfileData();
       if (updatedProfile !== undefined) {
-        setProfileData(updatedProfile)
+        setProfileData(updatedProfile);
       }
-      toggleEditProfile()
+      toggleEditProfile();
     } catch (error) {
-      // TODO: Change this to actually manage the error
-      console.error('Error updating profile:', error)
+      console.error('Error updating profile:', error);
     }
-  }
+  };
 
   const getProfileData = async () => {
-    const response = await fetchProfileData(`${id}`, token)
-    setProfileData(response)
-    return response
-  }
+    const response = await fetchProfileData(`${id}`, token);
+    const { receivedRequests } = response;
+    setProfileData(response);
+    setRequests(receivedRequests);
+    return response;
+  };
 
   useEffect(() => {
-    getProfileData()
-  }, [id, token])
+    getProfileData();
+  }, [id, token]);
+
+  useEffect(() => {
+    console.log("Received Requests from other users", requests);  // This will log the updated value
+  }, [requests]);
 
   return (
-    // TODO: change this to the proper html with the css, also split this into components
     <div>
-      {editMode
-        ? (
+      {editMode ? (
         <div>
           {currentSection === 'profile' && (
             <>
@@ -211,8 +209,7 @@ export default function Profile () {
           <button onClick={editProfile}>Save</button>
           <button onClick={toggleEditProfile}>Cancel</button>
         </div>
-          )
-        : (
+      ) : (
         <div>
           {currentSection === 'profile' && (
             <>
@@ -235,16 +232,28 @@ export default function Profile () {
               <p>{exp.description}</p>
             </div>
           ))}
-          {currentSection === 'recommendations' && profileData?.recommendations?.map((rec, index) => (
+          {currentSection === 'recommendations' && profileData?.recommendations.map((rec, index) => (
             <div key={index}>
               <p>{rec.message}</p>
               <p>{rec.date?.toString()}</p>
             </div>
           ))}
-
+          {currentSection === 'recommendations' && profileData?.contacts.map((contact) => (
+            <div key={String(contact)}>
+              {String(contact)}
+            </div>
+          ))}
+          <h2>Request recibidas de otros usuarios</h2>
+          {currentSection === 'recommendations' && requests.map((req) => (
+            
+            <div key={String(req)}>
+              
+              {String(req)}
+            </div>
+          ))}
           <button onClick={toggleEditProfile}>Edit Profile</button>
         </div>
-          )}
+      )}
       <div>
         <button onClick={() => setCurrentSection('profile')}>Profile</button>
         <button onClick={() => setCurrentSection('education')}>Education</button>
@@ -252,5 +261,5 @@ export default function Profile () {
         <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
       </div>
     </div>
-  )
+  );
 }
