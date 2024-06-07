@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import FeedPublications from '../../components/Feed/FeedPublications'
 import BasicUserInfoCard from '@/components/Feed/BasicUserInfoCard'
 import CreatePublication from '@/components/Feed/CreatePublication'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '@/app/context/auth'
 import styles from './page.module.css'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
@@ -26,12 +26,14 @@ const Page: NextPage<Props> = () => {
       profile_picture: ''
   })
 
-  fetchBasicUserInfo(id, token).then((response) => {
+  useEffect(() => {
+    fetchBasicUserInfo(id, token).then((response) => {
       setUser(response)
       setTimeout(() => {
-      setIsLoading(false)}, 1000)
-    }
-  )
+        setIsLoading(false)
+      }, 1000)
+    })
+  }, [])
 
   return (
     <main className={isLoading ? `${styles.wrapper} ${styles.centerAll}` : styles.wrapper}>
