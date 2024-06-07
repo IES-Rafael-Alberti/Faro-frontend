@@ -1,0 +1,70 @@
+.contentUserInfo {
+    display: flex;
+    min-height:350px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1vw;
+    border-radius: 24px;
+    text-align: center;
+
+    && .userImage{
+        border-radius: 100%;
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+    }
+
+    && .infoHighlight{
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-style: italic;
+        color: var(--primary);
+        margin-top:2vh;
+        margin-bottom:1vh;
+    }
+
+    && .info{
+        color: var(--semiblack);
+    }
+
+    && .flexInfo{
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+    }
+
+    && .stadistics{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 60%;
+        margin-top: 1vw;
+        margin:4vh;
+        text-transform: uppercase;
+    }
+
+    && button.connectButton{
+        outline: none;
+        padding: 10px;
+        border-radius: 50px;
+        font-weight: 400;
+        font-size: 26px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        background: none;
+        border: 2px solid var(--secondary);
+        color: var(--secondary);
+        width: 75%;
+    }
+
+    && button.connectButton:hover, && button.connectButtonIsConnected{
+        background-color: var(--secondary);
+        color: var(--white);
+    }
+
+    && button.connectButtonIsConnected{
+        cursor: initial;
+    }
+
+}

@@ -4,10 +4,16 @@ import { NextPage } from 'next'
 import React, { useState, useEffect, useContext } from 'react'
 import { submitPublication } from '../../utils/submitData'
 import { AuthContext } from '../../app/context/auth'
+import Image from 'next/image'
+import styles from './createPublication.module.css'
+import { montserrat } from '@/app/ui/fonts'
 
-interface Props {}
 
-const CreatePublication: NextPage<Props> = () => {
+interface Props {
+  userImg: string
+}
+
+const CreatePublication: NextPage<Props> = ({ userImg }) => {
   const { token, id } = useContext(AuthContext)
 
   const [publication, setPublication] = useState('')
@@ -31,21 +37,27 @@ const CreatePublication: NextPage<Props> = () => {
   }
 
   return (
-    <div>
+    <article className={styles.createContainer}>
+      <Image src={userImg} className={styles.userImg} alt="user_image" width={75} height={75} />
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={publication}
-          onChange={e => {
-            setPublication(e.target.value)
-            validateInput(e.target.value)
-          }}
-          placeholder="Create a new publication"
-          required
-        />
-        <button type="submit" disabled={!isValid}>Submit</button>
+        <div className={styles.boxToWrite}>
+          <textarea 
+            rows={2}
+            className={styles.chatbox}
+            value={publication}
+            placeholder="Crea una publicación"
+            onChange={e => {
+              setPublication(e.target.value)
+              validateInput(e.target.value)
+            }}
+            required
+            />
+        </div>
+        <button className={`${styles.submitButton} ${montserrat.className}`} type="submit" disabled={!isValid}>
+          Publicar
+        </button>
       </form>
-    </div>
+    </article>
   )
 }
 

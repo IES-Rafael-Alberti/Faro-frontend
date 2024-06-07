@@ -1,23 +1,29 @@
-'use client'
+import type { Metadata } from "next";
+import "./globals.css";
+import { AuthProvider } from "@/context/auth";
+import { montserrat } from "./ui/fonts";
 
-import React from 'react'
-import { AuthProvider } from './context/auth'
-import './globals.css'
 
-export const AuthContext = React.createContext(null)
+AuthProvider
+export const metadata: Metadata = {
+  title: "Faro",
+  description: "La mejor web para encontrar prácticas de ciclo formativo.",
+};
 
-export default function RootLayout ({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  
+
   return (
     <html lang="en">
-      <body>
+      <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
         <AuthProvider>
           {children}
         </AuthProvider>
       </body>
     </html>
-  )
+  );
 }

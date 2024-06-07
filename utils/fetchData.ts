@@ -1,7 +1,11 @@
+
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
 import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL, PUBLICATIONS_PROFILE_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
+import { ALL_USERS_URL, CONNECTIONS_OF_AN_USER_URL  } from '@/types/consts'
+import { User } from '@/types/User.interface'
+import axios, { AxiosResponse } from 'axios'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -72,5 +76,38 @@ export async function fetchBasicUserInfo (id: string, token: string = ''): Promi
   } catch (error) {
     console.error(`Error fetching basic user info from ${USER_BASIC_INFO_URL}${id}:`, error)
     return Promise.reject(error)
+  }
+}
+
+export async function fetchAllUsers (token: string = ''): Promise<User[]> {
+  try {
+    return await fetchData<User[]>(ALL_USERS_URL, token)
+  } catch (error) {
+    console.error(`Error fetching feed data from ${ALL_USERS_URL}:`, error)
+    return Promise.reject(error)
+  }
+}
+
+export async function fetchAllConnectionsOfAnUser (token: string = '', id: string): Promise<string[]> {
+  try {
+    return await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token)
+  } catch (error) {
+    console.error(`Error fetching feed data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error)
+    return Promise.reject(error)
+  }
+}
+
+export async function sendRequestToConnect(body: object, token: string = ''){
+  try {
+    const response: AxiosResponse = await axios.post(`http://localhost:3000/connections/request`, body, {
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+    });
+    return 201;
+  } catch (error) {
+    console.error('Error during auth:', error);
+    throw error;
   }
 }

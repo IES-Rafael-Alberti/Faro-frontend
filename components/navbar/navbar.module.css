@@ -1,0 +1,132 @@
+.containerNav{
+    width: 160px;
+    height: 100vh;
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4vh 0 5vh 0;
+    font-size: 21px;
+    float:left;
+    transition: ease-in-out 0.3s;
+
+
+    && .navList {
+        list-style: none;
+
+        && .navLink{
+            color: var(--white);
+            font-weight: 400;
+            margin-top: 4vh;
+            text-align: center;
+            transition: all 0.3s;
+            cursor:pointer;
+
+            && .icon{
+                width: 50px;
+                height: 50px;
+                margin-bottom:1vh;
+                vertical-align: 0;
+            }
+
+            &&:hover{
+                color: var(--terciary);
+            }
+        }
+    }
+}
+
+.menuButton {
+    display: none;
+  }
+
+@media screen and (max-width: 650px) {
+    .container {
+        background-color: var(--lightgray);
+        position: absolute;
+        top:0;
+        z-index:1000;
+    }
+
+    .containerOpen{
+        background-color: var(--primary);
+        color: var(--white);
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+    }
+
+    .containerNav{
+        width: 100vw;
+        height: 0;
+        padding: 0;
+        background-color: var(--lightgray);
+        justify-content: center;
+        align-items: flex-start;
+        border-bottom-left-radius: 24px;
+        border-bottom-right-radius: 24px;
+        transition: ease-in-out 0.3s;
+    
+        && img{
+            display:none;
+        }
+
+        && .navList {
+            margin-left:4vh;
+    
+            && .navLink{
+                border-bottom: 1px solid var(--white);
+                width: 80vw;
+                padding: 1vh 0;
+                margin-top: 3vh;
+
+                && a {
+                    display: flex;
+                    align-items: center;
+                }
+    
+                && .icon{
+                    width: 25px;
+                    height: 25px;
+                    margin-right:1vh;
+                    vertical-align: 0;
+                }
+    
+                &&:hover{
+                    color: var(--terciary);
+                }
+            }
+        }
+    }
+
+    .open {
+        height: auto;
+        padding: 0 0 5vh 0;
+        display: block;
+        background-color: var(--primary);
+    }
+
+    .navOpen {
+        display:block;
+    }
+
+    .navClosed {
+        display:none;
+    }
+    
+    .menuButton {
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-size: 1.5em;
+        cursor: pointer;
+        margin: 2vh;
+        display: block;
+        transition: ease-in-out 0.3s;
+    }
+
+    .buttonOpen{
+        color: var(--white);
+    }
+}
+   
