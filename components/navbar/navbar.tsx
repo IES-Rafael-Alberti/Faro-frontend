@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faHouse, faPowerOff, faSearch, faUser, faBars } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AuthContext } from '@/context/auth';
+import { AuthContext } from '@/app/context/auth';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
