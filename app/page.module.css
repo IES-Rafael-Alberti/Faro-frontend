@@ -131,6 +131,7 @@
       background-color: var(--white);
       color: var(--primary);
       font-size: 21px;
+      min-width: 200px;
     }
 
     && button:nth-child(1){
