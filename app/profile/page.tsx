@@ -6,12 +6,14 @@ import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface'
-export default function Profile () {
+import { RequestInterface } from '@/types/profile/requests.interface'
+
+export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
-
+  const [requests, setRequests] = useState<RequestInterface[]>([]);
   // Initialize formData with an empty structure
   const [formData, setFormData] = useState<EditableProfileData>({
     id: '',
@@ -82,14 +84,19 @@ export default function Profile () {
 
   const getProfileData = async () => {
     const response = await fetchProfileData(`${id}`, token);
+    const { receivedRequests } = response;
     setProfileData(response);
-    console.log(response.contacts);
+    setRequests(receivedRequests);
     return response;
   };
 
   useEffect(() => {
     getProfileData();
   }, [id, token]);
+
+  useEffect(() => {
+    console.log("Received Requests from other users", requests);  // This will log the updated value
+  }, [requests]);
 
   return (
     <div>
@@ -225,18 +232,25 @@ export default function Profile () {
               <p>{exp.description}</p>
             </div>
           ))}
-          {currentSection === 'recommendations' && profileData?.recommendations?.map((rec, index) => (
+          {currentSection === 'recommendations' && profileData?.recommendations.map((rec, index) => (
             <div key={index}>
               <p>{rec.message}</p>
               <p>{rec.date?.toString()}</p>
             </div>
           ))}
-          {currentSection === 'recommendations' && profileData?.contacts?.map((con) => (
-            <div key={String(con)}>
-              <p>{String(con)}</p>
+          {currentSection === 'recommendations' && profileData?.contacts.map((contact) => (
+            <div key={String(contact)}>
+              {String(contact)}
             </div>
           ))}
-          {profileData?.contacts[0]?.connected_user_id}
+          <h2>Request recibidas de otros usuarios</h2>
+          {currentSection === 'recommendations' && requests.map((req) => (
+            
+            <div key={String(req)}>
+              
+              {String(req)}
+            </div>
+          ))}
           <button onClick={toggleEditProfile}>Edit Profile</button>
         </div>
       )}

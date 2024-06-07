@@ -32,11 +32,11 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       { url: `${EDUCATION_URL}${id}`, type: 'education' },
       { url: `${RECOMMENDATION_URL}${id}`, type: 'recommendations' },
       { url: `${CONNECTIONS_OF_AN_USER_URL}${id}`, type: 'contacts' },
-      { url: `${PUBLICATIONS_PROFILE_URL}${id}`, type: 'publications' }
+      { url: `${PUBLICATIONS_PROFILE_URL}${id}`, type: 'publications' },
+      { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ]
 
     const fetchPromises = urls.map(({ url }) => fetchData(url, token))
-    const requests = await fetchData(`${REQUEST_URL}${id}`, token)
     
     const [
       profile,
@@ -44,17 +44,17 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       education,
       recommendations,
       contacts,
-      publications
+      publications, 
+      receivedRequests
     ] = await Promise.all(fetchPromises)
-    contacts.requests = requests;
-    console.log(contacts);
     return {
       ...profile,
       experience,
       education,
       recommendations,
       contacts,
-      publications
+      publications, 
+      receivedRequests
     }
   } catch (error) {
     console.error('Error fetching complete profile data:', error)
