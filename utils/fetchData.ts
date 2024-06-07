@@ -1,6 +1,6 @@
 
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, ALL_USERS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_PROFILE_URL } from '../types/consts'
+import { PUBLICATIONS_URL, ALL_USERS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_PROFILE_URL, REQUEST_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
 import { User } from '@/types/User.interface'
@@ -36,7 +36,8 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
     ]
 
     const fetchPromises = urls.map(({ url }) => fetchData(url, token))
-
+    const requests = await fetchData(`${REQUEST_URL}${id}`, token)
+    
     const [
       profile,
       experience,
@@ -45,8 +46,8 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       contacts,
       publications
     ] = await Promise.all(fetchPromises)
+    contacts.requests = requests;
     console.log(contacts);
-    
     return {
       ...profile,
       experience,

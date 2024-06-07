@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
+import { EditableProfileData } from '@/types/profile/editableProfileData.interface'
 export default function Profile () {
   const { id, token } = useContext(AuthContext);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
@@ -12,14 +13,13 @@ export default function Profile () {
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
 
   // Initialize formData with an empty structure
-  const [formData, setFormData] = useState<CompleteProfile>({
+  const [formData, setFormData] = useState<EditableProfileData>({
     id: '',
     headline: '',
     description: '',
     education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
     experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
-    contacts: [{ connected_user_id: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
@@ -48,7 +48,6 @@ export default function Profile () {
           date: rec.date.toString() || '',
           senderId: rec.senderId || ''
         })),
-        contacts: profileData.contacts || [],
         publications: profileData.publications || []
       });
     }

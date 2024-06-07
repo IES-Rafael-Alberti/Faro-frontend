@@ -1,3 +1,4 @@
+import { EditableProfileData } from "@/types/profile/editableProfileData.interface";
 import { PROFILE_URL } from "../types/consts"
 import { CompleteProfile } from "../types/profile/CompleteProfile.interface"
 
@@ -25,6 +26,6 @@ export const updateData = async <Req,Res>(url: string, data: Req, token: string 
     }
   }
 
-export const updateProfileData = async (profile: CompleteProfile, token: string = ''): Promise<CompleteProfile> => {
-    return updateData<CompleteProfile,any>(`${PROFILE_URL}${profile.id}`, profile, token)
+export const updateProfileData = async (profile: EditableProfileData, token: string = ''): Promise<CompleteProfile> => {
+    return updateData<EditableProfileData,any>(`${PROFILE_URL}${profile.id}`, profile, token)
 }
