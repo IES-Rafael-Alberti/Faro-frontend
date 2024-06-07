@@ -1,6 +1,7 @@
 'use client'
 import { AuthContext } from "@/app/context/auth";
 import { submitFriendRequest } from "@/utils/submitData";
+import { log } from "console";
 import { useContext } from "react";
 
 export default function OtherUsersProfile({ params }: { params: { profileId: string; };}) {
@@ -8,10 +9,10 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
     const { id, token, setId  } = useContext(AuthContext)
 
     const sendFriendRequest = async () => {
-      
+        console.log(profileId);
+        
         const response = await submitFriendRequest(id, profileId, token )
-        const data = await response.json()
-        console.log(data)
+        console.log(response)
     }
     
 

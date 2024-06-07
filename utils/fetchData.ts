@@ -45,7 +45,8 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       contacts,
       publications
     ] = await Promise.all(fetchPromises)
-
+    console.log(contacts);
+    
     return {
       ...profile,
       experience,

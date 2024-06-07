@@ -5,15 +5,13 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
-import Link from 'next/link'
-
 export default function Profile () {
-  const { id, token } = useContext(AuthContext)
-  const [profileData, setProfileData] = useState<CompleteProfile | undefined>()
-  const [editMode, setEditMode] = useState(false)
-  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile')
+  const { id, token } = useContext(AuthContext);
+  const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
+  const [editMode, setEditMode] = useState(false);
+  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
 
-  // TODO: Check if this type of implementation is correct
+  // Initialize formData with an empty structure
   const [formData, setFormData] = useState<CompleteProfile>({
     id: '',
     headline: '',
@@ -21,17 +19,12 @@ export default function Profile () {
     education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
     experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
-    contacts: [{
-      connected_user_id: ''
-    }],
-    publications: [{
-      user_publication_msg: '',
-      users_publications_created_at: ''
-    }]
-  })
+    contacts: [{ connected_user_id: '' }],
+    publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
+  });
 
   const toggleEditProfile = () => {
-    setEditMode(!editMode)
+    setEditMode(!editMode);
     if (profileData) {
       setFormData({
         id: profileData.id,
@@ -57,53 +50,51 @@ export default function Profile () {
         })),
         contacts: profileData.contacts || [],
         publications: profileData.publications || []
-      })
+      });
     }
-  }
+  };
 
   const handleInputChange = (e: any, index?: number, type?: 'education' | 'experience' | 'recommendations') => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (type && index !== undefined) {
       setFormData((prevFormData) => {
-        const updatedArray = [...prevFormData[type]]
-        updatedArray[index] = { ...updatedArray[index], [name]: value }
-        return { ...prevFormData, [type]: updatedArray }
-      })
+        const updatedArray = [...prevFormData[type]];
+        updatedArray[index] = { ...updatedArray[index], [name]: value };
+        return { ...prevFormData, [type]: updatedArray };
+      });
     } else {
-      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }))
+      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-  }
+  };
 
   const editProfile = async () => {
     try {
-      const response = await updateProfileData(formData, token)
-      setProfileData(response)
-      const updatedProfile = await getProfileData()
+      const response = await updateProfileData(formData, token);
+      setProfileData(response);
+      const updatedProfile = await getProfileData();
       if (updatedProfile !== undefined) {
-        setProfileData(updatedProfile)
+        setProfileData(updatedProfile);
       }
-      toggleEditProfile()
+      toggleEditProfile();
     } catch (error) {
-      // TODO: Change this to actually manage the error
-      console.error('Error updating profile:', error)
+      console.error('Error updating profile:', error);
     }
-  }
+  };
 
   const getProfileData = async () => {
-    const response = await fetchProfileData(`${id}`, token)
-    setProfileData(response)
-    return response
-  }
+    const response = await fetchProfileData(`${id}`, token);
+    setProfileData(response);
+    console.log(response.contacts);
+    return response;
+  };
 
   useEffect(() => {
-    getProfileData()
-  }, [id, token])
+    getProfileData();
+  }, [id, token]);
 
   return (
-    // TODO: change this to the proper html with the css, also split this into components
     <div>
-      {editMode
-        ? (
+      {editMode ? (
         <div>
           {currentSection === 'profile' && (
             <>
@@ -212,8 +203,7 @@ export default function Profile () {
           <button onClick={editProfile}>Save</button>
           <button onClick={toggleEditProfile}>Cancel</button>
         </div>
-          )
-        : (
+      ) : (
         <div>
           {currentSection === 'profile' && (
             <>
@@ -242,28 +232,21 @@ export default function Profile () {
               <p>{rec.date?.toString()}</p>
             </div>
           ))}
-
+          {currentSection === 'recommendations' && profileData?.contacts?.map((con) => (
+            <div key={String(con)}>
+              <p>{String(con)}</p>
+            </div>
+          ))}
+          {profileData?.contacts[0]?.connected_user_id}
           <button onClick={toggleEditProfile}>Edit Profile</button>
         </div>
-          )}
+      )}
       <div>
         <button onClick={() => setCurrentSection('profile')}>Profile</button>
         <button onClick={() => setCurrentSection('education')}>Education</button>
         <button onClick={() => setCurrentSection('experience')}>Experience</button>
         <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
       </div>
-      <h2>Requests:</h2>
-        <ul>
-          {profileData?.contacts?.map((connection, index) => (
-            <li key={index}>{connection.connected_user_id}</li> // Adjust this based on your connections data structure
-          ))}
-        </ul>
-      <h2>Connections:</h2>
-        <ul>
-          {profileData?.contacts?.map((connection, index) => (
-            <li key={index}>{connection.connected_user_id}</li> // Adjust this based on your connections data structure
-          ))}
-        </ul>
     </div>
-  )
+  );
 }
