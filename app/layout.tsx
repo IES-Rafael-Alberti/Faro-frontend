@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthProvider } from "@/context/auth";
+import { AuthProvider } from "@/app/context/auth";
 import { montserrat } from "./ui/fonts";
 
 

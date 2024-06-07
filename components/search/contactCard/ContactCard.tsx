@@ -3,10 +3,10 @@ import styles from './contactCard.module.css';
 import React, { useContext, useState, useEffect } from 'react';
 import Image from 'next/image';
 import GenericButton from '@/components/buttons/GenericButton';
-import translateRol from '@/context/translate';
+import translateRol from '@/app/context/translate';
 import { sendRequestToConnect, fetchAllConnectionsOfAnUser } from '@/utils/fetchData';
 import { BasicUserInfoWithIdInterface } from '@/types/BasicUserInfoWithId.interface';
-import { AuthContext } from '@/context/auth';
+import { AuthContext } from '@/app/context/auth';
 interface Props {
     user: BasicUserInfoWithIdInterface;
     isConnected: boolean;

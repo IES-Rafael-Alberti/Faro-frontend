@@ -3,7 +3,7 @@
 import { NextPage } from 'next'
 import React, { useState, useEffect, useContext } from 'react'
 import { submitPublication } from '../../utils/submitData'
-import { AuthContext } from '../../app/context/auth'
+import { AuthContext } from '@/app/context/auth' 
 import Image from 'next/image'
 import styles from './createPublication.module.css'
 import { montserrat } from '@/app/ui/fonts'
