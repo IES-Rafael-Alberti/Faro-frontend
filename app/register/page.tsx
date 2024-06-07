@@ -8,7 +8,7 @@ import Button from "../../components/shared/GenericButton";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { AuthContext } from "../context/auth"
+import { AuthContext } from "@/app/context/auth"
 import GenericInput from '../../components/shared/GenericInput'
 import { submitData } from "../../utils/submitData";
 
@@ -180,7 +180,7 @@ export default function Register () {
         <aside className={styles.authInfo}>
           <h3 className={styles.authInfoTitle}>¿Ya está registrado?</h3>
           <p className={styles.authInfoText}>Si ya está registrado inicie sesión para acceder a su cuenta</p>
-          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/login" />
+          <Button className={styles.registerButton} label="INICIE SESIÓN" onClick={handleSubmit}/>
         </aside>
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />

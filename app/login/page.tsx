@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useContext } from "react";
 import { authPost } from "@/utils/authApi";
-import { AuthContext } from "@/context/auth";
+import { AuthContext } from "@/app/context/auth";
 import { useRouter } from 'next/navigation';
 
 export default function Login() {

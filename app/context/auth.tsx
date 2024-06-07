@@ -1,3 +1,4 @@
+'use client'
 import React, { createContext, useState } from 'react'
 
 interface AuthContextType {
@@ -20,8 +21,8 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(false)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlYmQ3MGY0LWZiNmUtNDM1Zi1hNWZhLTRjY2QyODJhMDk1NCIsImVtYWlsIjoianVhbnNoemc0NGwyNDNlejU1MTExQGdtYWlsLmNvbSIsImlhdCI6MTcxNzc0NTMwNCwiZXhwIjoxNzE3NzQ4OTA0fQ.6QoqsZHQLd1kIajV-K9IzaxXSN42PCPXDoDOmYefRUs')
-  const [id, setId] = useState<string>('6ebd70f4-fb6e-435f-a5fa-4ccd282a0954')
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhNGIwNzU0LTNmNDMtNDIyYS04ODQ2LTc5NTA4ZDc2M2JiZSIsImVtYWlsIjoianVhbnNoejVnNDRsMjQzZXo1NTExMUBnbWFpbC5jb20iLCJpYXQiOjE3MTc3NTQxOTksImV4cCI6MTcxNzc1Nzc5OX0.pSEYhHbZZ6HFnDjhWFMCp8wVGKPXWuTbRXc7tb1crp0')
+  const [id, setId] = useState<string>('5a4b0754-3f43-422a-8846-79508d763bbe')
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, token, setToken, id, setId }}>

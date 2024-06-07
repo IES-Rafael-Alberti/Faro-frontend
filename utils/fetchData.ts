@@ -1,9 +1,8 @@
 
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL, PUBLICATIONS_PROFILE_URL } from '../types/consts'
+import { PUBLICATIONS_URL, ALL_USERS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_PROFILE_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
-import { ALL_USERS_URL, CONNECTIONS_OF_AN_USER_URL  } from '@/types/consts'
 import { User } from '@/types/User.interface'
 import axios, { AxiosResponse } from 'axios'
 
@@ -32,7 +31,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       { url: `${EXPERIENCE_URL}${id}`, type: 'experience' },
       { url: `${EDUCATION_URL}${id}`, type: 'education' },
       { url: `${RECOMMENDATION_URL}${id}`, type: 'recommendations' },
-      { url: `${CONTACT_URL}${id}`, type: 'contacts' },
+      { url: `${CONNECTIONS_OF_AN_USER_URL}${id}`, type: 'contacts' },
       { url: `${PUBLICATIONS_PROFILE_URL}${id}`, type: 'publications' }
     ]
 

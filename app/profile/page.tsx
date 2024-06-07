@@ -2,9 +2,10 @@
 
 import { fetchProfileData } from '../../utils/fetchData'
 import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../context/auth'
+import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
+import Link from 'next/link'
 
 export default function Profile () {
   const { id, token } = useContext(AuthContext)
@@ -251,6 +252,18 @@ export default function Profile () {
         <button onClick={() => setCurrentSection('experience')}>Experience</button>
         <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
       </div>
+      <h2>Requests:</h2>
+        <ul>
+          {profileData?.contacts?.map((connection, index) => (
+            <li key={index}>{connection.connected_user_id}</li> // Adjust this based on your connections data structure
+          ))}
+        </ul>
+      <h2>Connections:</h2>
+        <ul>
+          {profileData?.contacts?.map((connection, index) => (
+            <li key={index}>{connection.connected_user_id}</li> // Adjust this based on your connections data structure
+          ))}
+        </ul>
     </div>
   )
 }
