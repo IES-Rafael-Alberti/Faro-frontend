@@ -8,7 +8,6 @@
     border-radius: 24px;
     text-align: center;
     background-color: var(--white);
-    float: right;
 
     && .userImage{
         border-radius: 100%;
@@ -82,7 +81,6 @@
 @media screen and (max-width: 830px) {
     .contentUserInfo {
         width: 100%;
-        float:none;
         margin-bottom:2vh;
         flex-direction: unset;
         flex-wrap: wrap;
@@ -116,6 +114,19 @@
 
         && p.littleText{
           display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .contentUserInfo {
+
+        && .info:first-of-type, && .info{
+            font-size: 10px;
+        }
+
+        && .info:first-of-type{
+            justify-content: flex-start;
         }
     }
 }

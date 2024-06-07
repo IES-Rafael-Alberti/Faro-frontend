@@ -1,6 +1,6 @@
 "use client"
 import styles from './contactCard.module.css';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Image from 'next/image';
 import GenericButton from '@/components/buttons/GenericButton';
 import translateRol from '@/context/translate';
@@ -14,9 +14,11 @@ interface Props {
 
 const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     const {id, token} = useContext(AuthContext);
-    const [connected, setConnected] = useState(false);
+    const [connected, setConnected] = useState(isConnected);
     const [connections, setConnections] = useState<string[]>([]);
-    const [label, setLabel] = useState(isConnected ? "Conectado" : "Conectar");
+    const [label, setLabel] = useState(connected ? "Conectado" : "Conectar");
+    const [buttonClass, setButtonClass] = useState(connected ? `${styles.connectButton} ${styles.connectButtonIsConnected}` : styles.connectButton);
+    const [buttonClicked, setButtonClicked] = useState(false);
 
     const connectUser = async () => {
       const body = {
@@ -26,26 +28,36 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
         try {
             await sendRequestToConnect(body, token);
             fetchConnections(token, id);
-            checkIfConnected();
+            setButtonClicked(true);
         } catch (error) {
             console.error("Failed to connect user:", error);
         }
     }
 
-    const fetchConnections = async (token:string, id: string) => {
-        try {
-          const response = await fetchAllConnectionsOfAnUser(token, id);
-          setConnections(response);
-        } catch (error) {
-          console.error("Failed to fetch connections:", error);
-        } 
+    const fetchConnections = async (token: string, id: string) => {
+      try {
+        const response = await fetchAllConnectionsOfAnUser(token, id);
+        setConnections(response);
+      } catch (error) {
+        console.error("Failed to fetch connections:", error);
       }
+    };
+    
+    useEffect(() => {
+      console.log(connections)
+      checkIfConnected();
+    }, [connections]);
 
     const checkIfConnected = () => {
-        connections.includes(user.user_id) ? setConnected(true) : setConnected(false);
-        if(!connected){
-            setLabel("¡Enviado!");
-        }
+      console.log(connections)
+      if (connections.includes(user.user_id)) {
+          setConnected(true);
+          setLabel("Conectado");
+          setButtonClass(`${styles.connectButton} ${styles.connectButtonIsConnected}`);
+      } else if(buttonClicked) {
+          setLabel("¡Enviado!");
+          setButtonClass(`${styles.connectButton} ${styles.connectionIsSending}`);
+      }
     }
 
     return (
@@ -58,7 +70,7 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Publicaciones <span>{user.count_of_publications}</span></p>
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Contactos <span>{user.count_of_connections}</span></p>
             </div>
-            <GenericButton label={label} onClick={connectUser} className={isConnected ? `${styles.connectButton} ${styles.connectButtonIsConnected}` : styles.connectButton} disabled={isConnected}></GenericButton>
+            <GenericButton label={label} onClick={connectUser} className={buttonClass} disabled={connected}></GenericButton>
         </article>
     );
 }

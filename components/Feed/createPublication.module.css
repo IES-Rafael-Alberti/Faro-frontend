@@ -89,3 +89,14 @@
         }
     }
 }
+
+@media screen and (max-width: 400px) {
+    .createContainer {
+        width: 100%;
+
+        && .boxToWrite{
+            padding: 3vw 5vw;
+        }
+    }
+}
+

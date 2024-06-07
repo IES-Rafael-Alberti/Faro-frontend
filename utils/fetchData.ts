@@ -100,6 +100,7 @@ export async function fetchAllConnectionsOfAnUser (token: string = '', id: strin
 }
 
 export async function sendRequestToConnect(body: object, token: string = ''){
+  console.log(body)
   try {
     const response: AxiosResponse = await axios.post(`http://localhost:3000/connections/request`, body, {
       headers: {

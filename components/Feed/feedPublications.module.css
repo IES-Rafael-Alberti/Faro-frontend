@@ -130,3 +130,42 @@
     }
 }
 
+@media screen and (max-width: 400px) {
+    .scrollContainer {
+    
+        && .postContainer{
+            padding: 4vw;
+
+            && .userImg{
+                width: 60px;
+                height: 60px;
+            }
+    
+            && .postInfo{
+                height: calc(75px - 5vw);
+
+                && .postName{
+                    font-size: 20px;
+
+                }
+    
+                && p.postRol {
+                    font-size: 14px;
+                }
+    
+                && .infoPost{
+                    font-size: 12px;
+                }
+                
+            }
+
+            && footer {
+
+                && button.btn{
+                    font-size: 15px;
+                }
+            }
+        }
+
+    }
+}
