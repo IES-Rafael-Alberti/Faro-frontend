@@ -1,7 +1,7 @@
 "use client"
 import styles from "./page.module.css";
 import Image from "next/image";
-import translateRol from "@/context/translate";
+import translateRol from "../context/translate";
 
 export default function Message() {
 
