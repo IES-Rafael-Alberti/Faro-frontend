@@ -1,5 +1,5 @@
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, USER_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL } from '../types/consts'
+import { PUBLICATIONS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONTACT_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { ExperienceInterface } from '../types/profile/experience.interface'
 import { EducationInterface } from '../types/profile/education.interface'
@@ -15,7 +15,7 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
     response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     })
 
@@ -25,8 +25,8 @@ export async function fetchData<T = any> (url: string, token: string = ''): Prom
   }
 }
 
-// TODO: check the implementation of this function 
-export async function fetchProfileData(id: string, token: string = ''): Promise<CompleteProfile> {
+// TODO: check the implementation of this function
+export async function fetchProfileData (id: string, token: string = ''): Promise<CompleteProfile> {
   try {
     const urls = [
       { url: `${PROFILE_URL}${id}`, key: 'profile' },
@@ -34,13 +34,13 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
       { url: `${EDUCATION_URL}${id}`, key: 'education' },
       { url: `${RECOMMENDATION_URL}${id}`, key: 'recommendations' },
       { url: `${CONTACT_URL}${id}`, key: 'contacts' },
-      { url: `${PUBLICATIONS_URL}${id}`, key: 'publications' },
-    ];
+      { url: `${PUBLICATIONS_URL}${id}`, key: 'publications' }
+    ]
 
-    const fetchPromises = urls.map(({ url }) => fetchData(url, token));
-    const results = await Promise.all(fetchPromises);
+    const fetchPromises = urls.map(({ url }) => fetchData(url, token))
+    const results = await Promise.all(fetchPromises)
 
-    const [profile, experience, education, recommendations, contacts, publications] = results;
+    const [profile, experience, education, recommendations, contacts, publications] = results
 
     return {
       ...profile,
@@ -48,15 +48,13 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
       education: education as EducationInterface[],
       recommendations: recommendations as RecommendationInterface[],
       contacts: contacts as ContactInterface[],
-      publications: publications as PublicationInterface[],
-    };
+      publications: publications as PublicationInterface[]
+    }
   } catch (error) {
-    console.error(`Error fetching complete profile data:`, error);
-    return Promise.reject(error);
+    console.error('Error fetching complete profile data:', error)
+    return Promise.reject(error)
   }
 }
-
-
 
 export async function fetchFeedData (page: number, token: string = ''): Promise<FeedPublicationInterface> {
   try {
