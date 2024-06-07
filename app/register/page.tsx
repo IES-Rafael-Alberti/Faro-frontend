@@ -10,6 +10,8 @@ import Link from "next/link";
 import { AuthContext } from "../context/auth"
 import GenericInput from '../../components/shared/GenericInput'
 import { submitData } from "../../utils/submitData";
+import { useNavigate } from 'react-router-dom'; 
+
 
 export default function Register () {
   const [formData, setFormData] = useState({
@@ -99,8 +101,10 @@ export default function Register () {
     }
   }
 
+  
   const handleClick = () => {
-    useNavitate('/login')
+    const navigate = useNavigate(); // Assign the function to a variable
+    navigate('/login'); // Use the function to navigate
   }
 
   return (
@@ -186,8 +190,4 @@ export default function Register () {
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
   )
-}
-
-function useNavitate (arg0: string) {
-  throw new Error('Function not implemented.')
 }

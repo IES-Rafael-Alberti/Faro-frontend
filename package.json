@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@types/node": "20",
-    "@types/react": "18",
-    "@types/react-dom": "18",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "6.19.0",
     "@typescript-eslint/parser": "6.19.0",
     "eslint": "8",
@@ -29,6 +29,6 @@
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-standard": "5.0.0",
-    "typescript": "5"
+    "typescript": "^5.4.5"
   }
 }
