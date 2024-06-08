@@ -1,7 +1,7 @@
 'use client'
 
 import { checkEducationExists, checkExperienceExists, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
 import { updateProfileData } from '../../utils/updateData';
@@ -10,8 +10,11 @@ import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
 import { montserrat } from '../ui/fonts';
+import Image from 'next/image';
+import Icon from '@/components/icons';
 
 export default function Profile() {
+  const firstButtonRef = useRef(null);
   const { id, token } = useContext(AuthContext);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
@@ -27,6 +30,10 @@ export default function Profile() {
     recommendations: [{ message: '', date: '', senderId: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
+
+  useEffect(() => {
+    firstButtonRef.current.focus();
+  }, []);
 
   const toggleEditProfile = () => {
     setEditMode(!editMode);
@@ -85,14 +92,14 @@ export default function Profile() {
   const addEducation = () => {
     setFormData((prevFormData) => ({
         ...prevFormData,
-        education: [...prevFormData.education, { degree: '', institution: '', start_date: '2024-08-09', end_date: null }]
+        education: [...prevFormData.education, { degree: '', institution: '', start_date: '0000-00-00', end_date: null }]
     }));
 };
 
 const addExperience = () => {
     setFormData((prevFormData) => ({
         ...prevFormData,
-        experience: [...prevFormData.experience, { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' }]
+        experience: [...prevFormData.experience, { company: '', position: '', startDate: '0000-00-00', endDate: null, description: '' }]
     }));
 };
 
@@ -154,9 +161,24 @@ const addExperience = () => {
   }, [requests]);
 
   return (
-    <div>
+    <main className={styles.wrapper}>
+      <header className={styles.basicInfo}>
+        <Image src="/imgs/no-user-image.jpg" alt="userImg" width={120} height={120} className={styles.userImg} />
+        <section className={styles.nameAndRol}>
+          <h1 className={styles.name}>Pablo Fornell</h1>
+          <h2 className={styles.rol}>Estudiante (rol)</h2>
+        </section>
+      </header>
+      <div className={styles.buttonsContainer}>
+          <button ref={firstButtonRef} className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
+      </div>
       {editMode ? (
         <div>
+          <button onClick={editProfile}>Save</button>
+          <button onClick={toggleEditProfile}>Cancel</button>
           {currentSection === 'profile' && (
             <>
               <input
@@ -294,33 +316,33 @@ const addExperience = () => {
                 <p>You don't have any recommendations.</p>
               )
             )}
-  
-            <button onClick={editProfile}>Save</button>
-            <button onClick={toggleEditProfile}>Cancel</button>
           </div>
         ) : (
           <div>
             {currentSection === 'profile' && (
-              <>
-                <h2>{profileData?.name}</h2>
-                <h1>{profileData?.headline}</h1>
-                <p>{profileData?.description}</p>
-              </>
+              <section className={styles.profile}>
+                <h3 className={styles.headline}>{profileData?.headline}</h3>
+                <p className={styles.biography}>{profileData?.description}</p>
+              </section>
             )}
             {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
-              <div key={index}>
-                <h3>{edu.degree}</h3>
-                <p>{edu.institution}</p>
-                <p>{edu.start_date?.toString()} - {edu.end_date?.toString()}</p>
-              </div>
+              <section className={styles.education} key={index}>
+                <div className={styles.iconContainer}><Icon src='/icons/studentIcon.svg' width={40} height={40}/></div>
+                <div className={styles.studiesInfo}>
+                  <h3 className={styles.degree}>{edu.degree}</h3>
+                  <p className={styles.info}>{edu.institution}, {edu.start_date?.toString().slice(0, 4)} - {edu.end_date ? edu.end_date?.toString().slice(0, 4) : 'Actualidad'}</p>
+                </div>
+              </section>
             ))}
             {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
-              <div key={index}>
-                <h3>{exp.company}</h3>
-                <p>{exp.position}</p>
-                <p>{exp.startDate?.toString()} - {exp.endDate?.toString()}</p>
-                <p>{exp.description}</p>
-              </div>
+              <section className={styles.experience} key={index}>
+                <div className={styles.iconContainer}><Icon src='/icons/studentIcon.svg' width={40} height={40}/></div>
+                <div className={styles.workInfo}>
+                  <h3 className={styles.company}>{exp.company}</h3>
+                  <p className={styles.info}>{exp.position}, {exp.startDate?.toString().slice(0, 4)} - {exp.endDate ? exp.endDate?.toString().slice(0, 4) : 'Actualidad'}</p>
+                </div>
+                <p className={styles.description}>{exp.description}</p>
+              </section>
             ))}
             {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
               <div key={index}>
@@ -333,22 +355,16 @@ const addExperience = () => {
                 {String(contact)}
               </div>
             ))}
-            <h2>Request recibidas de otros usuarios</h2>
+            {/* <h2>Request recibidas de otros usuarios</h2> */}
             {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
-              <div key={String(req)}>
-                {String(req)}
-              </div>
+                <div key={String(req)}>
+                  {String(req)}
+                </div>
             ))}
             <button onClick={toggleEditProfile}>Edit Profile</button>
           </div>
         )}
-        <div>
-          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Profile</button>
-          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Education</button>
-          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experience</button>
-          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
-        </div>
-      </div>
+      </main>
     );
   }
   
