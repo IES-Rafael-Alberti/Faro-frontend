@@ -7,6 +7,7 @@ import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
 import { updateProfileData } from '../../utils/updateData'
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface'
 import { RequestInterface } from '@/types/profile/requests.interface'
+import styles from './page.module.css'
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -19,8 +20,8 @@ export default function Profile() {
     id: '',
     headline: '',
     description: '',
-    education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
-    experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
+    education: [{ degree: '', institution: '', start_date: '0000-00-00', end_date: '' }],
+    experience: [{ company: '', position: '', startDate: '0000-00-00', endDate: '', description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
@@ -36,19 +37,19 @@ export default function Profile() {
         education: profileData.education.map(ed => ({
           degree: ed.degree || '',
           institution: ed.institution || '',
-          start_date: ed.start_date.toString() || '',
-          end_date: ed.end_date?.toString() || ''
+          start_date: ed.start_date.toString() || '0000-00-00',
+          end_date: ed.end_date || ''
         })),
         experience: profileData.experience.map(ex => ({
           company: ex.company || '',
           position: ex.position || '',
-          startDate: ex.startDate.toString() || '',
-          endDate: ex.endDate?.toString() || '',
+          startDate: ex.startDate.toString() || '0000-00-00',
+          endDate: ex.endDate || '',
           description: ex.description || ''
         })),
         recommendations: profileData.recommendations.map(rec => ({
           message: rec.message || '',
-          date: rec.date.toString() || '',
+          date: rec.date || '',
           senderId: rec.senderId || ''
         })),
         publications: profileData.publications || []
@@ -87,14 +88,14 @@ export default function Profile() {
   const addEducation = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      education: [...prevFormData.education, { degree: '', institution: '', start_date: '2024-08-09', end_date: null }]
+      education: [...prevFormData.education, { degree: '', institution: '', start_date: '0000-00-00', end_date: '' }]
     }));
   };
 
   const addExperience = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      experience: [...prevFormData.experience, { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' }]
+      experience: [...prevFormData.experience, { company: '', position: '', startDate: '0000-00-00', endDate: '', description: '' }]
     }));
   };
 
@@ -201,14 +202,14 @@ export default function Profile() {
                     />
                     <input
                       type="date"
-                      name="startDate"
+                      name="start_date"
                       value={edu.start_date.toString()}
                       onChange={(e) => handleInputChange(e, index, 'education')}
                       placeholder="Start Date"
                     />
                     <input
                       type="date"
-                      name="endDate"
+                      name="end_date"
                       value={edu.end_date?.toString()}
                       onChange={(e) => handleInputChange(e, index, 'education')}
                       placeholder="End Date"
