@@ -149,3 +149,27 @@ export async function checkEducationExists(userId: string, newEducation: Educati
     return false;
   }
 }
+
+export async function fetchSenderRecommendations(userIds: string[], token: string = ''): Promise<BasicUserInfoInterface[]> {
+  const userBasicInfoList: BasicUserInfoInterface[] = [];
+
+  console.log("USER ID LIST: ", userIds);
+  
+
+  for (const userId of userIds) {
+    try {
+      // Fetch basic info for each user ID
+      const basicInfo = await fetchBasicUserInfo(userId, token)
+      console.log("AAAAAAAAA", basicInfo);
+      
+      // Add the basic info to the list
+      userBasicInfoList.push(basicInfo);
+    } catch (error) {
+      console.error(`Error fetching basic info for user ID ${userId}:`, error);
+      // Handle error for individual user ID, skip to the next user
+    }
+  }
+
+  return userBasicInfoList;
+}
+

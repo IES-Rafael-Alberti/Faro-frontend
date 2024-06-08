@@ -1,6 +1,6 @@
 'use client'
 
-import { checkEducationExists, checkExperienceExists, fetchProfileData } from '../../utils/fetchData'
+import { checkEducationExists, checkExperienceExists, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '@/app/context/auth'
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface'
@@ -27,6 +27,7 @@ export default function Profile() {
 
   const toggleEditProfile = () => {
     setEditMode(!editMode);
+    getSenderRecommendations();
     if (profileData) {
       setFormData({
         id: profileData.id,
@@ -52,6 +53,22 @@ export default function Profile() {
         })),
         publications: profileData.publications || []
       });
+    }
+  };
+
+  const getSenderRecommendations = async () => {
+    try {
+      // Extract senderId from each recommendation
+      const senderIds = profileData?.recommendations.map(rec => rec.senderId) || [];
+  
+      // Fetch sender recommendations
+      const response = await fetchSenderRecommendations(senderIds, token);
+      console.log(response);
+      
+     
+    } catch (error) {
+      console.error('Error fetching sender recommendations:', error);
+      // Handle error, display error message, or fallback behavior
     }
   };
 
@@ -136,6 +153,7 @@ export default function Profile() {
 
   useEffect(() => {
     getProfileData();
+    
   }, [id, token]);
 
   useEffect(() => {
