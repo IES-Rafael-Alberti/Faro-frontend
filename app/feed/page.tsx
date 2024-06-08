@@ -46,7 +46,7 @@ const Page: NextPage<Props> = () => {
         </div>}
       </aside>
       {!isLoading && <CreatePublication userImg={user.profile_picture} setUpdate={setUpdate} />}
-      {!isLoading && <FeedPublications token={token} />}
+      {!isLoading && <FeedPublications token={token} id={id} />}
 
     </main>
   )

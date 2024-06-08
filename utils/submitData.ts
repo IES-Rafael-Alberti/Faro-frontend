@@ -1,6 +1,6 @@
 import { EducationInterface } from '@/types/profile/education.interface'
 import Publication from '../types/Publication.interface'
-import { CREATE_EDUCATION_URL, CREATE_EXPERIENCE_URL, EDUCATION_URL, EXPERIENCE_URL, PUBLICATIONS_URL, REQUEST_URL } from '../types/consts'
+import { PUBLICATIONS_COMMENTS_URL, CREATE_EDUCATION_URL, CREATE_EXPERIENCE_URL, EDUCATION_URL, EXPERIENCE_URL, PUBLICATIONS_URL, REQUEST_URL } from '../types/consts'
 import { ExperienceInterface } from '@/types/profile/experience.interface'
 
 export const submitData = async <Req,Res>(url: string, data: Req, token: string = ''): Promise<Res> => {
@@ -36,4 +36,8 @@ export const submitEducation = async (education: EducationInterface, id: string,
 
 export const submitExperience = async (experience: ExperienceInterface, id: string, token: string = ''): Promise<any> => {
   return submitData<any,any>(CREATE_EXPERIENCE_URL, { ...experience, profileId: id }, token)
+}
+
+export const submitPublicationComment = async (publication_id: string, user_id: string ,comment: string, token: string = ''): Promise<any> => {
+  return submitData<any,any>(PUBLICATIONS_COMMENTS_URL, { publication_id, user_id, comment }, token)
 }

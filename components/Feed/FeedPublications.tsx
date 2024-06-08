@@ -13,17 +13,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { montserrat } from '@/app/ui/fonts'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
+import CommentForm from './CommentForm'
 
 interface Props {
   token : string
+  id: string
 }
 
 //  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
-const FeedPublications: NextPage<Props> = ({ token }) => {
+const FeedPublications: NextPage<Props> = ({ token, id }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
   const router = useRouter()
   const [isLiked, setIsLiked] = useState(false)
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false)
   // const [likesCount, setLikesCount] = useState(5)
   // const [commentsCount, setCommentsCount] = useState(3)
 
@@ -54,6 +57,10 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
     setPublications({ ...publicationsApiCall, data: publicationsWithComments });
   };
   
+  const toggleComments = () => {
+    setIsCommentsVisible(!isCommentsVisible);
+  }
+
   const parseDate = (initialDate: string): string => {
     const months = [
         "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -147,14 +154,22 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
             </footer>
 
             <section>
-              {publication.comments.map((comment, commentIndex) => (
-                <div key={commentIndex}>
-                  <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />
-                  <h4>{comment.name}</h4>
-                  <p>{comment.comment}</p>
-                </div>
-              ))}
-            </section>
+              <button onClick={toggleComments}>
+                {isCommentsVisible ? 'Hide Comments' : 'Show Comments'}
+              </button>
+              {isCommentsVisible && (
+                <>
+                  {publication.comments.map((comment, commentIndex) => (
+                    <div key={commentIndex}>
+                      <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />
+                      <h4>{comment.name}</h4>
+                      <p>{comment.comment}</p>
+                    </div>
+                  ))}
+                  <CommentForm publicationId={publication.id} userId={id} token={token} />
+                </>
+              )}
+          </section>
 
           </article>
         ))}
