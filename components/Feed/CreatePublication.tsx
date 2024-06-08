@@ -11,9 +11,10 @@ import { montserrat } from '@/app/ui/fonts'
 
 interface Props {
   userImg: string
+  setUpdate?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CreatePublication: NextPage<Props> = ({ userImg }) => {
+const CreatePublication: NextPage<Props> = ({ userImg, setUpdate }) => {
   const { token, id } = useContext(AuthContext)
 
   const [publication, setPublication] = useState('')
@@ -34,6 +35,10 @@ const CreatePublication: NextPage<Props> = ({ userImg }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     submitPublication(publication, id, token)
+    // Update upper component
+    if (setUpdate) {
+      setUpdate(true)
+    }
   }
 
   return (

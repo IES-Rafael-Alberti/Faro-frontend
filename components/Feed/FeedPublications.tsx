@@ -2,7 +2,7 @@
 
 import { NextPage } from 'next'
 import { useEffect, useState, useContext } from 'react'
-import { fetchFeedData } from '../../utils/fetchData'
+import { fetchCommentsOfPublication, fetchFeedData } from '../../utils/fetchData'
 import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styles from './feedPublications.module.css'
@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
 import { montserrat } from '@/app/ui/fonts'
+import { fetchBasicUserInfo } from '@/utils/fetchData'
 
 interface Props {
   token : string
@@ -30,10 +31,29 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
   const commentsCount = 5
   
   const fetchPublications = async (page: number) => {
-      const result = await fetchFeedData(page, token)
-      setPublications(result)
-  }
-
+    const publicationsApiCall = await fetchFeedData(page, token);
+    
+    const publicationsWithComments = await Promise.all(publicationsApiCall.data.map(async (publication) => {
+      const comments = await fetchCommentsOfPublication(publication.id, token);
+      
+      const commentsWithUserInfo = await Promise.all(comments.map(async (comment) => {
+        const user = await fetchBasicUserInfo(comment.user_id, token);
+        return {
+          ...comment,
+          name: user.username,
+          role: user.rol,
+          image: user.profile_picture,
+        };
+      }));
+      
+      return {
+        ...publication,
+        comments: commentsWithUserInfo,
+      };
+    }));
+    setPublications({ ...publicationsApiCall, data: publicationsWithComments });
+  };
+  
   const parseDate = (initialDate: string): string => {
     const months = [
         "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -125,6 +145,16 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
                 Comentar
               </button>
             </footer>
+
+            <section>
+              {publication.comments.map((comment, commentIndex) => (
+                <div key={commentIndex}>
+                  <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />
+                  <h4>{comment.name}</h4>
+                  <p>{comment.comment}</p>
+                </div>
+              ))}
+            </section>
 
           </article>
         ))}
