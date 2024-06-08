@@ -17,6 +17,7 @@ export default function Profile() {
   const [requests, setRequests] = useState<RequestInterface[]>([]);
   const [formData, setFormData] = useState<EditableProfileData>({
     id: '',
+    name: '',
     headline: '',
     description: '',
     education: [{ degree: '', institution: '', start_date: '', end_date: null }],
@@ -30,6 +31,7 @@ export default function Profile() {
     if (!editMode && profileData) {
       setFormData({
         id: profileData.id,
+        name: profileData.name,
         headline: profileData.headline || '',
         description: profileData.description || '',
         education: profileData.education.map(ed => ({
@@ -80,17 +82,18 @@ export default function Profile() {
 
   const addEducation = () => {
     setFormData((prevFormData) => ({
-      ...prevFormData,
-      education: [...prevFormData.education, { degree: '', institution: '', start_date: '2024-08-09', end_date: null }]
+        ...prevFormData,
+        education: [...prevFormData.education, { degree: '', institution: '', start_date: '2024-08-09', end_date: null }]
     }));
-  };
+};
 
-  const addExperience = () => {
+const addExperience = () => {
     setFormData((prevFormData) => ({
-      ...prevFormData,
-      experience: [...prevFormData.experience, { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' }]
+        ...prevFormData,
+        experience: [...prevFormData.experience, { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' }]
     }));
-  };
+};
+
 
   const getFilteredEducation = async () => {
     const newEducation = await Promise.all(formData.education.map(async (ed) => {
@@ -110,37 +113,27 @@ export default function Profile() {
 
   const editProfile = async () => {
     try {
-      const filteredEducation = await getFilteredEducation();
-      const filteredExperience = await getFilteredExperience();
+        const updatedFormData = { ...formData };
 
-      for (const edu of filteredEducation) {
-        await submitEducation(edu, id, token);
-      }
+        // Submit the entire updated education and experience lists to the backend
+        const response = await updateProfileData(updatedFormData, token);
+        console.log("Response", response);
+        
+        setProfileData(response);
 
-      for (const exp of filteredExperience) {
-        await submitExperience(exp, id, token);
-      }
-
-      // Update profile data
-      const updatedFormData = { ...formData };
-      console.log("Updated Form Data", updatedFormData);
-      const response = await updateProfileData(updatedFormData, token);
-      console.log("Response", response);
-      
-      setProfileData(response);
-
-      // Refresh profile data
-      const updatedProfile = await getProfileData();
-      if (updatedProfile !== undefined) {
-        console.log("Updated Profile", updatedProfile);
-        setProfileData(updatedProfile);
-      }
-      // Toggle edit mode
-      toggleEditProfile();
+        // Refresh profile data
+        const updatedProfile = await getProfileData();
+        if (updatedProfile !== undefined) {
+            console.log("Updated Profile", updatedProfile);
+            setProfileData(updatedProfile);
+        }
+        // Toggle edit mode
+        toggleEditProfile();
     } catch (error) {
-      console.error('Error updating profile:', error);
+        console.error('Error updating profile:', error);
     }
-  };
+};
+
 
   const getProfileData = async () => {
     const response = await fetchProfileData(`${id}`, token);
@@ -164,6 +157,13 @@ export default function Profile() {
         <div>
           {currentSection === 'profile' && (
             <>
+              <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Name"
+                />
               <input
                 type="text"
                 name="headline"
@@ -300,6 +300,7 @@ export default function Profile() {
           <div>
             {currentSection === 'profile' && (
               <>
+                <h2>{profileData?.name}</h2>
                 <h1>{profileData?.headline}</h1>
                 <p>{profileData?.description}</p>
               </>
