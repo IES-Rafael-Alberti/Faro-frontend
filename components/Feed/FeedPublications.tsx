@@ -96,7 +96,7 @@ const FeedPublications: NextPage<Props> = ({ token, id }) => {
           <article key={index} className={styles.postContainer}>
             <PublicationHeader publication={publication} />
             <p className={styles.postMsg}>{publication.msg}</p>
-            <PublicationFooter isLiked={isLiked} />
+            <PublicationFooter isLiked={isLiked} token={token} id={publication.id} />
             <PublicationComments publication={publication} isCommentsVisible={isCommentsVisible} toggleComments={toggleComments} userId={id} token={token} />
           </article>
         ))}

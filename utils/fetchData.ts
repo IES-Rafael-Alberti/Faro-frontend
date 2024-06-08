@@ -173,3 +173,14 @@ export async function fetchCommentsOfPublication(publicationId: string, token: s
     return [];
   }
 }
+
+// OMG
+export async function fetchNumberOfComments(publicationId: string, token: string = ''): Promise<number> {
+  try {
+    const comments = await fetchCommentsOfPublication(publicationId, token);
+    return comments.length;
+  } catch (error) {
+    console.error('Error fetching number of comments:', error);
+    return 0;
+  }
+}
