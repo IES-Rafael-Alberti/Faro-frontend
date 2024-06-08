@@ -63,7 +63,6 @@ export default function Profile() {
   
       // Fetch sender recommendations
       const response = await fetchSenderRecommendations(senderIds, token);
-      console.log(response);
       
      
     } catch (error) {

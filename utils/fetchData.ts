@@ -134,39 +134,28 @@ export async function checkExperienceExists(userId: string, newExperience: Exper
 export async function checkEducationExists(userId: string, newEducation: EducationInterface, token: string = ''): Promise<boolean> {
   try {
     const existingEducations: EducationInterface[] = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${userId}`, token);
-    console.log("Existing Education: ", existingEducations);
+   
     
     const filteredEducation =  existingEducations.some(edu => 
       edu.institution === newEducation.institution &&
       edu.degree === newEducation.degree &&
       new Date(edu.start_date).toISOString() === new Date(newEducation.start_date).toISOString()
     );
-    console.log("Filetered Education: ", filteredEducation);
     
     return filteredEducation;
   } catch (error) {
-    console.error('Error checking education:', error);
     return false;
   }
 }
 
 export async function fetchSenderRecommendations(userIds: string[], token: string = ''): Promise<BasicUserInfoInterface[]> {
   const userBasicInfoList: BasicUserInfoInterface[] = [];
-
-  console.log("USER ID LIST: ", userIds);
-  
-
   for (const userId of userIds) {
     try {
-      // Fetch basic info for each user ID
       const basicInfo = await fetchBasicUserInfo(userId, token)
-      console.log("AAAAAAAAA", basicInfo);
-      
-      // Add the basic info to the list
       userBasicInfoList.push(basicInfo);
     } catch (error) {
-      console.error(`Error fetching basic info for user ID ${userId}:`, error);
-      // Handle error for individual user ID, skip to the next user
+      throw error;
     }
   }
 
