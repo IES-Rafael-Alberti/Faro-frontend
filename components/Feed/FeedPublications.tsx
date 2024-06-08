@@ -7,7 +7,7 @@ import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styles from './feedPublications.module.css'
 import { useRouter } from 'next/navigation'
-import translateRol from '@/context/translate'
+import translateRol from '@/app/context/translate'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faComments, faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
@@ -89,7 +89,7 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
         {publications.data.map((publication, index) => (
           <article key={index} className={styles.postContainer}>
             <header>
-              <Image src={publication.profile_picture ? publication.profile_picture : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />
+              {/*<Image src={publication.profile_picture ? publication.profile_picture : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />*/}
               {/* <h2 onClick={redirect(`/profile/${publication.user_id}`)}>{publication.name}</h2> */}
               <div className={styles.postInfo}>
                 <h2 className={`${styles.w50} ${styles.postName}`}>{publication.name}</h2>
