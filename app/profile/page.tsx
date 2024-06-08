@@ -151,6 +151,12 @@ export default function Profile() {
 
   return (
     <div>
+      <div>
+        <button onClick={() => setCurrentSection('profile')}>Profile</button>
+        <button onClick={() => setCurrentSection('education')}>Education</button>
+        <button onClick={() => setCurrentSection('experience')}>Experience</button>
+        <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
+      </div>
       {editMode ? (
         <div>
           {currentSection === 'profile' && (
@@ -338,12 +344,6 @@ export default function Profile() {
           <button onClick={toggleEditProfile}>Edit Profile</button>
         </div>
       )}
-      <div>
-        <button onClick={() => setCurrentSection('profile')}>Profile</button>
-        <button onClick={() => setCurrentSection('education')}>Education</button>
-        <button onClick={() => setCurrentSection('experience')}>Experience</button>
-        <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
-      </div>
     </div>
   );
 }
