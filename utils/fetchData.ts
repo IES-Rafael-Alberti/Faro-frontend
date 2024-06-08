@@ -8,7 +8,7 @@ import axios, { AxiosResponse } from 'axios'
 import { EducationInterface } from '@/types/profile/education.interface'
 import { ExperienceInterface } from '@/types/profile/experience.interface'
 import { PublicationCommentsInterface } from '@/types/PublicationComments.interface'
-import { PUBLICATIONS_COMMENTS_URL } from '@/types/consts'
+import { PUBLICATIONS_COMMENTS_URL, PUBLICATIONS_LIKES_URL } from '@/types/consts'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -181,6 +181,16 @@ export async function fetchNumberOfComments(publicationId: string, token: string
     return comments.length;
   } catch (error) {
     console.error('Error fetching number of comments:', error);
+    return 0;
+  }
+}
+
+export async function fetchLikesCount(publicationId: string, token: string = ''): Promise<number> {
+  try {
+    const likes = await fetchData(`${PUBLICATIONS_LIKES_URL}${publicationId}`, token)
+    return likes.length;
+  } catch (error) {
+    console.error('Error fetching likes count:', error);
     return 0;
   }
 }

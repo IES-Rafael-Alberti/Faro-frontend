@@ -17,6 +17,7 @@ import CommentForm from './CommentForm'
 import PublicationHeader from './PublicationHeader'
 import PublicationFooter from './PublicatonFooter'
 import PublicationComments from './PublicationComments'
+import { submitLike } from '@/utils/submitData'
 
 interface Props {
   token : string
@@ -97,6 +98,7 @@ const FeedPublications: NextPage<Props> = ({ token, id }) => {
             <PublicationHeader publication={publication} />
             <p className={styles.postMsg}>{publication.msg}</p>
             <PublicationFooter isLiked={isLiked} token={token} id={publication.id} />
+            <button onClick={() => submitLike(publication.id, id, token)}>Like</button>
             <PublicationComments publication={publication} isCommentsVisible={isCommentsVisible} toggleComments={toggleComments} userId={id} token={token} />
           </article>
         ))}
