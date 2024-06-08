@@ -8,6 +8,7 @@ import { updateProfileData } from '../../utils/updateData'
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface'
 import { RequestInterface } from '@/types/profile/requests.interface'
 import styles from './page.module.css'
+import { submitEducation, submitExperience } from '@/utils/submitData'
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -120,9 +121,16 @@ export default function Profile() {
       const filteredEducation = await getFilteredEducation();
       const filteredExperience = await getFilteredExperience();
   
+      for (const edu of filteredEducation) {
+        submitEducation(edu, id, token);
+      }
+
+      for (const exp of filteredExperience) {
+        submitExperience(exp, id, token);
+      }
+
       // Update formData with only new education and experience entries
-      const updatedFormData = { ...formData, education: filteredEducation, experience: filteredExperience };
-  
+      const updatedFormData = { ...formData};
       // Update profile data
       const response = await updateProfileData(updatedFormData, token);
       setProfileData(response);
