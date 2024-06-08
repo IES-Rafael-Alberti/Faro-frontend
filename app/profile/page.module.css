@@ -7,7 +7,7 @@
     outline: none;
     border: none;
     border-bottom: 2px solid var(--terciary);
-    margin: .5vh;
+    margin-right: 1.5vh;
     cursor: pointer;
     font-size: 14px;
 }
