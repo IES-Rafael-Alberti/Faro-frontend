@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { checkEducationExists, checkExperienceExists, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
 import { useContext, useEffect, useState } from 'react';
@@ -20,8 +20,8 @@ export default function Profile() {
     name: '',
     headline: '',
     description: '',
-    education: [{ degree: '', institution: '', start_date: '', end_date: null }],
-    experience: [{ company: '', position: '', startDate: '', endDate: null, description: '' }],
+    education: [{ degree: '', institution: '', start_date: '', end_date: '' }],
+    experience: [{ company: '', position: '', startDate: '', endDate: '', description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
@@ -37,19 +37,19 @@ export default function Profile() {
         education: profileData.education.map(ed => ({
           degree: ed.degree || '',
           institution: ed.institution || '',
-          start_date: ed.start_date.toString() || '',
-          end_date: ed.end_date?.toString() || null
+          start_date: ed.start_date ? new Date(ed.start_date).toISOString().split('T')[0] : '',
+          end_date: ed.end_date ? new Date(ed.end_date).toISOString().split('T')[0] : ''
         })),
         experience: profileData.experience.map(ex => ({
           company: ex.company || '',
           position: ex.position || '',
-          startDate: ex.startDate.toString() || '',
-          endDate: ex.endDate?.toString() || null,
+          startDate: ex.startDate ? new Date(ex.startDate).toISOString().split('T')[0] : '',
+          endDate: ex.endDate ? new Date(ex.endDate).toISOString().split('T')[0] : '',
           description: ex.description || ''
         })),
         recommendations: profileData.recommendations.map(rec => ({
           message: rec.message || '',
-          date: rec.date || '',
+          date: rec.date ? new Date(rec.date).toISOString().split('T')[0] : '',
           senderId: rec.senderId || ''
         })),
         publications: profileData.publications || []
@@ -82,18 +82,17 @@ export default function Profile() {
 
   const addEducation = () => {
     setFormData((prevFormData) => ({
-        ...prevFormData,
-        education: [...prevFormData.education, { degree: '', institution: '', start_date: '2024-08-09', end_date: null }]
+      ...prevFormData,
+      education: [...prevFormData.education, { degree: '', institution: '', start_date: '', end_date: '' }]
     }));
-};
+  };
 
-const addExperience = () => {
+  const addExperience = () => {
     setFormData((prevFormData) => ({
-        ...prevFormData,
-        experience: [...prevFormData.experience, { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' }]
+      ...prevFormData,
+      experience: [...prevFormData.experience, { company: '', position: '', startDate: '', endDate: '', description: '' }]
     }));
-};
-
+  };
 
   const getFilteredEducation = async () => {
     const newEducation = await Promise.all(formData.education.map(async (ed) => {
@@ -113,27 +112,26 @@ const addExperience = () => {
 
   const editProfile = async () => {
     try {
-        const updatedFormData = { ...formData };
+      const updatedFormData = { ...formData };
 
-        // Submit the entire updated education and experience lists to the backend
-        const response = await updateProfileData(updatedFormData, token);
-        console.log("Response", response);
-        
-        setProfileData(response);
+      // Submit the entire updated education and experience lists to the backend
+      const response = await updateProfileData(updatedFormData, token);
+      console.log("Response", response);
 
-        // Refresh profile data
-        const updatedProfile = await getProfileData();
-        if (updatedProfile !== undefined) {
-            console.log("Updated Profile", updatedProfile);
-            setProfileData(updatedProfile);
-        }
-        // Toggle edit mode
-        toggleEditProfile();
+      setProfileData(response);
+
+      // Refresh profile data
+      const updatedProfile = await getProfileData();
+      if (updatedProfile !== undefined) {
+        console.log("Updated Profile", updatedProfile);
+        setProfileData(updatedProfile);
+      }
+      // Toggle edit mode
+      toggleEditProfile();
     } catch (error) {
-        console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error);
     }
-};
-
+  };
 
   const getProfileData = async () => {
     const response = await fetchProfileData(`${id}`, token);
@@ -158,12 +156,12 @@ const addExperience = () => {
           {currentSection === 'profile' && (
             <>
               <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Name"
-                />
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Name"
+              />
               <input
                 type="text"
                 name="headline"
@@ -201,14 +199,14 @@ const addExperience = () => {
                     <input
                       type="date"
                       name="start_date"
-                      value={edu.start_date.toString()}
+                      value={edu.start_date}
                       onChange={(e) => handleInputChange(e, index, 'education')}
                       placeholder="Start Date"
                     />
                     <input
                       type="date"
-                      name="endDate"
-                      value={edu.end_date?.toString() || ''}
+                      name="end_date"
+                      value={edu.end_date || ''}
                       onChange={(e) => handleInputChange(e, index, 'education')}
                       placeholder="End Date"
                     />
@@ -243,110 +241,109 @@ const addExperience = () => {
                     <input
                       type="date"
                       name="startDate"
-                      value={exp.startDate.toString()}
+                      value={exp.startDate}
                       onChange={(e) => handleInputChange(e, index, 'experience')}
                       placeholder="Start Date"
-                      />
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={exp.endDate?.toString() || ''}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="End Date"
-                      />
-                      <textarea
-                        name="description"
-                        value={exp.description}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="Description"
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p>You don't have any experience records.</p>
-                )}
-                <button onClick={addExperience}>Add Experience</button>
-              </>
-            )}
-  
-            {currentSection === 'recommendations' && (
-              formData.recommendations.length > 0 ? (
-                formData.recommendations.map((rec, index) => (
-                  <div key={index}>
-                    <textarea
-                      name="message"
-                      value={rec.message}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Message"
                     />
                     <input
                       type="date"
-                      name="date"
-                      value={rec.date.toString()}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Date"
+                      name="endDate"
+                      value={exp.endDate || ''}
+                      onChange={(e) => handleInputChange(e, index, 'experience')}
+                      placeholder="End Date"
+                    />
+                    <textarea
+                      name="description"
+                      value={exp.description}
+                      onChange={(e) => handleInputChange(e, index, 'experience')}
+                      placeholder="Description"
                     />
                   </div>
                 ))
               ) : (
-                <p>You don't have any recommendations.</p>
-              )
-            )}
-  
-            <button onClick={editProfile}>Save</button>
-            <button onClick={toggleEditProfile}>Cancel</button>
-          </div>
-        ) : (
-          <div>
-            {currentSection === 'profile' && (
-              <>
-                <h2>{profileData?.name}</h2>
-                <h1>{profileData?.headline}</h1>
-                <p>{profileData?.description}</p>
-              </>
-            )}
-            {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
-              <div key={index}>
-                <h3>{edu.degree}</h3>
-                <p>{edu.institution}</p>
-                <p>{edu.start_date?.toString()} - {edu.end_date?.toString()}</p>
-              </div>
-            ))}
-            {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
-              <div key={index}>
-                <h3>{exp.company}</h3>
-                <p>{exp.position}</p>
-                <p>{exp.startDate?.toString()} - {exp.endDate?.toString()}</p>
-                <p>{exp.description}</p>
-              </div>
-            ))}
-            {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
-              <div key={index}>
-                <p>{rec.message}</p>
-                <p>{rec.date?.toString()}</p>
-              </div>
-            ))}
-            {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
-              <div key={String(contact)}>
-                {String(contact)}
-              </div>
-            ))}
-            <h2>Request recibidas de otros usuarios</h2>
-            {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
-              <div key={String(req)}>
-                {String(req)}
-              </div>
-            ))}
-            <button onClick={toggleEditProfile}>Edit Profile</button>
-          </div>
-        )}
-        <div>
-          <button onClick={() => setCurrentSection('profile')}>Profile</button>
-          <button onClick={() => setCurrentSection('education')}>Education</button>
-          <button onClick={() => setCurrentSection('experience')}>Experience</button>
-          <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
+                <p>You don't have any experience records.</p>
+              )}
+              <button onClick={addExperience}>Add Experience</button>
+            </>
+          )}
+
+          {currentSection === 'recommendations' && (
+            formData.recommendations.length > 0 ? (
+              formData.recommendations.map((rec, index) => (
+                <div key={index}>
+                  <textarea
+                    name="message"
+                    value={rec.message}
+                    onChange={(e) => handleInputChange(e, index, 'recommendations')}
+                    placeholder="Message"
+                  />
+                  <input
+                    type="date"
+                    name="date"
+                    value={rec.date}
+                    onChange={(e) => handleInputChange(e, index, 'recommendations')}
+                    placeholder="Date"
+                  />
+                </div>
+              ))
+            ) : (
+              <p>You don't have any recommendations.</p>
+            )
+          )}
+
+          <button onClick={editProfile}>Save</button>
+          <button onClick={toggleEditProfile}>Cancel</button>
         </div>
+      ) : (
+        <div>
+          {currentSection === 'profile' && (
+            <>
+              <h2>{profileData?.name}</h2>
+              <h1>{profileData?.headline}</h1>
+              <p>{profileData?.description}</p>
+            </>
+          )}
+          {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
+            <div key={index}>
+              <h3>{edu.degree}</h3>
+              <p>{edu.institution}</p>
+              <p>{edu.start_date?.toString()} - {edu.end_date?.toString()}</p>
+            </div>
+          ))}
+          {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
+            <div key={index}>
+              <h3>{exp.company}</h3>
+              <p>{exp.position}</p>
+              <p>{exp.startDate?.toString()} - {exp.endDate?.toString()}</p>
+              <p>{exp.description}</p>
+            </div>
+          ))}
+          {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
+            <div key={index}>
+              <p>{rec.message}</p>
+              <p>{rec.date?.toString()}</p>
+            </div>
+          ))}
+          {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
+            <div key={String(contact)}>
+              {String(contact)}
+            </div>
+          ))}
+          <h2>Request recibidas de otros usuarios</h2>
+          {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
+            <div key={String(req)}>
+              {String(req)}
+            </div>
+          ))}
+          <button onClick={toggleEditProfile}>Edit Profile</button>
+        </div>
+      )}
+      <div>
+        <button onClick={() => setCurrentSection('profile')}>Profile</button>
+        <button onClick={() => setCurrentSection('education')}>Education</button>
+        <button onClick={() => setCurrentSection('experience')}>Experience</button>
+        <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
