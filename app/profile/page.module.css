@@ -76,6 +76,22 @@
         padding-right: .5vh;
     }
 
+    && .addButton,  && .scrollButton{
+        padding: 1.5vh;
+        margin-bottom: 2vh;
+        background: var(--secondary);
+        border: none;
+        outline: none;
+        color: var(--white);
+        border-radius: 16px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    && .scrollButton{
+        width: 100%;
+    }
+
    
     && .profile{
 
@@ -223,6 +239,10 @@
             font-weight: 600;
             text-transform: uppercase;
         }
+    }
+
+    && .editContainer:last-of-type{
+        margin-bottom:2vh;
     }
 
 }

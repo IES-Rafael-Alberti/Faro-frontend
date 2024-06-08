@@ -1,7 +1,7 @@
 'use client'
 
 import { checkEducationExists, checkExperienceExists, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
 import { updateProfileData } from '../../utils/updateData';
@@ -17,6 +17,9 @@ import { faBriefcase, faCancel, faEdit, faSave } from '@fortawesome/free-solid-s
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
+  const educationEndRef = useRef(null);
+  const experienceEndRef = useRef(null);
+  const topRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
@@ -64,6 +67,12 @@ export default function Profile() {
     }
   };
 
+  const scrollTo = (ref : any) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const getSenderRecommendations = async () => {
     try {
       const senderIds = profileData?.recommendations.map(rec => rec.senderId) || [];
@@ -92,6 +101,7 @@ export default function Profile() {
         ...prevFormData,
         education: [...prevFormData.education, { degree: '', institution: '', start_date: '0000-00-00', end_date: null }]
     }));
+    setTimeout(() => scrollTo(educationEndRef), 100)
 };
 
 const addExperience = () => {
@@ -99,6 +109,7 @@ const addExperience = () => {
         ...prevFormData,
         experience: [...prevFormData.experience, { company: '', position: '', startDate: '0000-00-00', endDate: null, description: '' }]
     }));
+    setTimeout(() => scrollTo(experienceEndRef), 100)
 };
 
 
@@ -213,6 +224,8 @@ const addExperience = () => {
             )}
             {currentSection === 'education' && (
               <>
+                <button ref={topRef} onClick={addEducation} className={`${styles.addButton} ${montserrat.className} antialised`}>Añade nuevos estudios</button>
+
                 {formData.education.length > 0 ? (
                   formData.education.map((edu, index) => (
                     <div key={index} className={styles.editContainer}>
@@ -254,12 +267,14 @@ const addExperience = () => {
                 ) : (
                   <p>You don't have any education records.</p>
                 )}
-                <button onClick={addEducation}>Add Education</button>
+                <button ref={educationEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
               </>
             )}
 
             {currentSection === 'experience' && (
               <>
+                <button ref={topRef} onClick={addExperience} className={`${styles.addButton} ${montserrat.className} antialised`}>Añade nueva experiencia</button>
+
                 {formData.experience.length > 0 ? (
                   formData.experience.map((exp, index) => (
                     <div key={index} className={styles.editContainer}>
@@ -314,7 +329,7 @@ const addExperience = () => {
                   ) : (
                     <p>You don't have any experience records.</p>
                   )}
-                  <button onClick={addExperience}>Add Experience</button>
+                  <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
                 </>
               )}
     
