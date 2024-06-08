@@ -5,6 +5,8 @@ import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
 import { User } from '@/types/User.interface'
 import axios, { AxiosResponse } from 'axios'
+import { EducationInterface } from '@/types/profile/education.interface'
+import { ExperienceInterface } from '@/types/profile/experience.interface'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -110,5 +112,40 @@ export async function sendRequestToConnect(body: object, token: string = ''){
   } catch (error) {
     console.error('Error during auth:', error);
     throw error;
+  }
+}
+
+
+export async function checkExperienceExists(userId: string, newExperience: ExperienceInterface, token: string = ''): Promise<boolean> {
+  try {
+    const existingExperiences: ExperienceInterface[] = await fetchData<ExperienceInterface[]>(`${EXPERIENCE_URL}${userId}`, token);
+
+    return existingExperiences.some(exp => 
+      exp.company === newExperience.company &&
+      exp.position === newExperience.position &&
+      exp.startDate === newExperience.startDate 
+    );
+  } catch (error) {
+    console.error('Error checking experience:', error);
+    return false;
+  }
+}
+
+export async function checkEducationExists(userId: string, newEducation: EducationInterface, token: string = ''): Promise<boolean> {
+  try {
+    const existingEducations: EducationInterface[] = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${userId}`, token);
+    console.log("Existing Education: ", existingEducations);
+    
+    const filteredEducation =  existingEducations.some(edu => 
+      edu.institution === newEducation.institution &&
+      edu.degree === newEducation.degree &&
+      new Date(edu.start_date).toISOString() === new Date(newEducation.start_date).toISOString()
+    );
+    console.log("Filetered Education: ", filteredEducation);
+    
+    return filteredEducation;
+  } catch (error) {
+    console.error('Error checking education:', error);
+    return false;
   }
 }

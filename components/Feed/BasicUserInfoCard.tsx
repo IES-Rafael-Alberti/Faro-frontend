@@ -4,7 +4,7 @@ import { NextPage } from 'next'
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
 import Image from 'next/image'
 import styles from './basicUserInfoCard.module.css'
-import translateRol from '@/context/translate'
+import translateRol from '@/app/context/translate'
 
 interface Props {
     user: BasicUserInfoInterface;
