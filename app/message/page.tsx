@@ -2,11 +2,16 @@
 import styles from "./page.module.css";
 import Image from "next/image";
 import translateRol from "../context/translate";
+import Icon from "@/components/icons";
 
 export default function Message() {
 
     // TO DO : QUE EL MENSAJE DE PREVISUALIZACIÓN SE CORTE A PARTIR DE "X" CARACTERES Y QUE SE AÑADA "..." AL FINAL PARA MANTENER EL CUADRO DE MENSAJES BIEN
     // (REFERENCIA DE LARGO MENSAJE DE MARÍA)
+
+    const sendMessage = () => {
+        // TO DO
+    }
 
     const users = [
         { id: 1, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?'},
@@ -76,7 +81,10 @@ export default function Message() {
                         velit esse cillum dolore eu fugiat nulla pariatur.
                     </p>
                 </article>
-                <textarea rows={4} placeholder="Escribe un mensaje..."></textarea>
+                <footer className={styles.chatboxContainer}>
+                    <textarea rows={4} placeholder="Escribe un mensaje..."></textarea>
+                    <div className={styles.iconContainer}><Icon src="/icons/sendIcon.png" width={25} height={25}/></div>
+                </footer>
         </section>
     </main>
   );
