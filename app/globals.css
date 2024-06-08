@@ -8,6 +8,7 @@
  --white: #fff;
  --semiblack: rgba(0,0,0,.5);
  --black: #000;
+ --delete: #c90505;
 }
 
 @media (prefers-color-scheme: dark) {

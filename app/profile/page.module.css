@@ -70,6 +70,10 @@
         width: 20px;
     }
 
+    && .deleteIcon{
+        background-color: var(--delete);
+    }
+
     && .currentSection{
         overflow-y: auto;
         height: 70vh;
@@ -238,6 +242,8 @@
             color: var(--white);
             font-weight: 600;
             text-transform: uppercase;
+            width: calc(100% - 50px);
+            display: inline-block;
         }
     }
 

@@ -13,7 +13,7 @@ import { montserrat } from '../ui/fonts';
 import Image from 'next/image';
 import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faCancel, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -111,6 +111,14 @@ const addExperience = () => {
     }));
     setTimeout(() => scrollTo(experienceEndRef), 100)
 };
+
+  const deleteEducation = () => {
+    //TO DO
+  }
+
+  const deleteExperience = () => {
+    //TO DO
+  }
 
 
   const getFilteredEducation = async () => {
@@ -229,7 +237,8 @@ const addExperience = () => {
                 {formData.education.length > 0 ? (
                   formData.education.map((edu, index) => (
                     <div key={index} className={styles.editContainer}>
-                      <h3 className={styles.titleContainer}>Campo {index + 1}</h3>
+                      <h3 className={styles.titleContainer}>Estudio {index + 1}</h3> 
+                      <FontAwesomeIcon icon={faTrash} onClick={deleteEducation} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
                       <input
                         type="text"
                         name="degree"
@@ -278,7 +287,8 @@ const addExperience = () => {
                 {formData.experience.length > 0 ? (
                   formData.experience.map((exp, index) => (
                     <div key={index} className={styles.editContainer}>
-                      <h3 className={styles.titleContainer}>Campo {index + 1}</h3>
+                      <h3 className={styles.titleContainer}>Experiencia {index + 1}</h3>
+                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
                       <input
                         type="text"
                         name="company"
