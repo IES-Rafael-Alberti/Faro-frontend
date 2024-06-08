@@ -5,10 +5,12 @@ import { faEnvelope, faHouse, faPowerOff, faSearch, faUser, faBars } from '@fort
 import Link from 'next/link';
 import Image from 'next/image';
 import { AuthContext } from '@/app/context/auth';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { setId, setToken, setIsLogged } = useContext(AuthContext);
+    const router = useRouter();
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
@@ -17,6 +19,7 @@ const Navbar = () => {
         setId('');
         setToken('');
         setIsLogged(false);
+        router.push('/login');
     }
 
     return (
