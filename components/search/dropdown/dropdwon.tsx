@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { montserrat } from '@/app/ui/fonts';
 import styles from './dropdown.module.css';
-import translateRol from '@/context/translate';
+import translateRol from '@/app/context/translate';
 
 interface DropdownProps {
   options: string[];

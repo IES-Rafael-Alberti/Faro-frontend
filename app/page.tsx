@@ -47,7 +47,7 @@ export default function Home() {
             <li className={styles.link}><Link href="#">Política de privacidad</Link></li>
             <li className={styles.link}><Link href="#">Cookies</Link></li>
             <li className={styles.link}><Link href="#">Contáctanos</Link></li>
-            <li className={styles.link}><Link href="/autorship">Autoría</Link></li>
+            <li className={styles.link}><Link href="#">Autoría</Link></li>
           </ul>
         </footer>
 

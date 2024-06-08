@@ -70,25 +70,27 @@
                     font-style: italic;
                 }
 
+                && .dobleInput{
+                    margin: 1vh 0;
+                    width: 100%;
+                }
+
+                && .w48 {
+                    width: 48%;
+                    text-align: center;
+                }
+
                 && .dobleInputContainer {
                     display: flex;
                     justify-content: space-between;
                     width: 100%;
-
-                    && .nameContainer, .lastNameContainer{
-                        width: 48%;
-                        text-align: center;
-
-                        && .dobleInput{
-                            margin:1vh 0;
-                        }
-                    }
-
                 }
 
                 && .error {
                     color: red;
-                    font-size: 0.875em;
+                    margin-top: 1vh;
+                    font-size: 1em;
+                    font-weight: 500;
                   }
 
                 && .registerButton{

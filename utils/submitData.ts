@@ -4,6 +4,7 @@ import { CREATE_EDUCATION_URL, CREATE_EXPERIENCE_URL, EDUCATION_URL, EXPERIENCE_
 import { ExperienceInterface } from '@/types/profile/experience.interface'
 
 export const submitData = async <Req,Res>(url: string, data: Req, token: string = ''): Promise<Res> => {
+  console.log(data)
   try {
     const response = await fetch(url, {
       method: 'POST',

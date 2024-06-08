@@ -63,6 +63,13 @@
         color: var(--white);
     }
 
+    && button.connectionIsSending, && button.connectionIsSending:hover{
+        background-color: var(--terciary);
+        border-color: var(--terciary);
+        color: var(--white);
+        cursor:initial;
+    }
+
     && button.connectButtonIsConnected{
         cursor: initial;
     }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
 import { montserrat } from "../ui/fonts";
@@ -12,50 +12,24 @@ import { useRouter } from 'next/navigation';
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [error, setError] = useState('');
   const { setToken, setIsLogged, setId } = useContext(AuthContext);
   const router = useRouter();
 
-  const validateEmail = (email : string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = (e : any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let valid = true;
-    let errors = { email: "", password: "" };
+    const data = { email: email, password: password };
 
-    if (!validateEmail(email)) {
-      errors.email = "Por favor, introduzca un email válido.";
-      valid = false;
-    }
-    if (password.length < 8) {
-      errors.password = "La contraseña debe tener al menos 8 caracteres.";
-      valid = false;
-    }
-
-    setErrors(errors);
-
-    if (valid) {
-      const data = {
-        email: email,
-        password: password
-      };
-
-      authPost("auth/signIn", data).then((response) => {
-        if (response && response.access_token && response.id) {
-          setToken(response.access_token);
-          setIsLogged(true);
-          setId(response.id);
-          router.push('/feed');
-        } else {
-          console.error("Respuesta de autenticación inválida:", response);
-        }
-      })
-      .catch((error) => {
-          console.error("Error al enviar datos de autenticación:", error.message);
-      });
+    try {
+      const response = await authPost("auth/signIn", data);
+      if (response && response.access_token && response.id) {
+        setToken(response.access_token);
+        setIsLogged(true);
+        setId(response.id);
+        router.push('/feed');
+      }
+    } catch (e) {
+      setError("Credenciales inválidas");
     }
   };
 
@@ -67,7 +41,7 @@ export default function Login() {
           <h2 className={styles.authSubtitle}>a su cuenta</h2>
           <form className={styles.loginForm} onSubmit={handleSubmit}>
             <input
-              className={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+              className={[styles.authInput, montserrat.className, "antialiased"].join(' ')}
               type="text"
               id="email"
               name="email"
@@ -77,22 +51,20 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            {errors.email && <small className={styles.error}>{errors.email}</small>}
             <input
-              className={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+              className={[styles.authInput, montserrat.className, "antialiased"].join(' ')}
               type="password"
               id="password"
               name="password"
-              minLength={8}
               placeholder="contraseña"
               aria-label="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {errors.password && <small className={styles.error}>{errors.password}</small>}
+            {error && <small className={styles.error}>{error}</small>}
             <Link className={styles.linkToRegister} href="/register">¿Aún no tiene una cuenta? Regístrese</Link>
-            <button type="submit" className={[styles.loginButton, `${montserrat.className} antialiased`].join(' ')}>INICIE SESIÓN</button>
+            <button type="submit" className={[styles.loginButton, montserrat.className, "antialiased"].join(' ')}>INICIE SESIÓN</button>
           </form>
         </article>
         <aside className={styles.authInfo}>

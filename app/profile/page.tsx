@@ -8,6 +8,8 @@ import { updateProfileData } from '../../utils/updateData';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitEducation, submitExperience } from '@/utils/submitData';
+import styles from './page.module.css';
+import { montserrat } from '../ui/fonts';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -49,7 +51,7 @@ export default function Profile() {
         })),
         recommendations: profileData.recommendations.map(rec => ({
           message: rec.message || '',
-          date: rec.date.toString() || '',
+          date: rec.date || '',
           senderId: rec.senderId || ''
         })),
         publications: profileData.publications || []
@@ -200,7 +202,7 @@ const addExperience = () => {
                     />
                     <input
                       type="date"
-                      name="startDate"
+                      name="start_date"
                       value={edu.start_date.toString()}
                       onChange={(e) => handleInputChange(e, index, 'education')}
                       placeholder="Start Date"
@@ -341,10 +343,10 @@ const addExperience = () => {
           </div>
         )}
         <div>
-          <button onClick={() => setCurrentSection('profile')}>Profile</button>
-          <button onClick={() => setCurrentSection('education')}>Education</button>
-          <button onClick={() => setCurrentSection('experience')}>Experience</button>
-          <button onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Profile</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Education</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experience</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
         </div>
       </div>
     );
