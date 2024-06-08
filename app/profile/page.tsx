@@ -9,6 +9,7 @@ import { EditableProfileData } from '@/types/profile/editableProfileData.interfa
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
+import { montserrat } from '../ui/fonts';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -342,10 +343,10 @@ const addExperience = () => {
           </div>
         )}
         <div>
-          <button className={styles.sectionButton} onClick={() => setCurrentSection('profile')}>Profile</button>
-          <button className={styles.sectionButton} onClick={() => setCurrentSection('education')}>Education</button>
-          <button className={styles.sectionButton} onClick={() => setCurrentSection('experience')}>Experience</button>
-          <button className={styles.sectionButton} onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Profile</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Education</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experience</button>
+          <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recommendations</button>
         </div>
       </div>
     );

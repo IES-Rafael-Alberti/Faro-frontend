@@ -1,13 +1,18 @@
 .sectionButton{
-    padding: 1vh;
+    padding: .5vh;
     min-width: 100px;
     color: var(--terciary);
     font-weight: 600;
-    font-family: '__Montserrat_08a86a';
     background: none;
     outline: none;
     border: none;
     border-bottom: 2px solid var(--terciary);
     margin: .5vh;
     cursor: pointer;
+    font-size: 14px;
+}
+
+.sectionButton:focus{
+    color: var(--secondary);
+    border-bottom:2px solid var(--secondary);
 }
