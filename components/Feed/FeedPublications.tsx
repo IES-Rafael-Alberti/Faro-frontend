@@ -30,10 +30,8 @@ const FeedPublications: NextPage<Props> = ({ token }) => {
   const commentsCount = 5
   
   const fetchPublications = async (page: number) => {
-    console.log(token)
-    const result = await fetchFeedData(page, token)
-    console.log(result)
-    setPublications(prevPublications => ({ ...result, data: [...prevPublications.data, ...result.data] }))
+      const result = await fetchFeedData(page, token)
+      setPublications(result)
   }
 
   const parseDate = (initialDate: string): string => {

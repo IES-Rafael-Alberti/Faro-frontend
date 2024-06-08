@@ -16,14 +16,14 @@ import Link from 'next/link'
 interface Props {}
 
 const Page: NextPage<Props> = () => {
-    const { id, token } = useContext(AuthContext)
-    const [isLoading, setIsLoading] = useState(true)
-    const [user, setUser] = useState<BasicUserInfoInterface>({
-      username: '',
-      rol: '',
-      count_of_publications: 0,
-      count_of_connections: 0,
-      profile_picture: ''
+  const { id, token } = useContext(AuthContext)
+  const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<BasicUserInfoInterface>({
+    username: '',
+    rol: '',
+    count_of_publications: 0,
+    count_of_connections: 0,
+    profile_picture: ''
   })
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Page: NextPage<Props> = () => {
         setIsLoading(false)
       }, 1000)
     })
-  }, [])
+  }, [id, token])
 
   return (
     <main className={isLoading ? `${styles.wrapper} ${styles.centerAll}` : styles.wrapper}>
