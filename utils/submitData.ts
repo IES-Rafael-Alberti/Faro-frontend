@@ -1,5 +1,5 @@
 import Publication from '../types/Publication.interface'
-import { PUBLICATIONS_URL, REQUEST_URL } from '../types/consts'
+import {  PUBLICATIONS_URL, REQUEST_URL } from '../types/consts'
 
 export const submitData = async <Req,Res>(url: string, data: Req, token: string = ''): Promise<Res> => {
   console.log(data)
