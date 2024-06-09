@@ -7,7 +7,7 @@ import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
 import { updateProfileData, updateUserData } from '../../utils/updateData';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
-import { submitEducation, submitExperience } from '@/utils/submitData';
+import { submitAvatar, submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
 import { montserrat } from '../ui/fonts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
@@ -20,6 +20,7 @@ export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const educationEndRef = useRef(null);
   const experienceEndRef = useRef(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const topRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
@@ -40,7 +41,7 @@ export default function Profile() {
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
-  const scrollTo = (ref : any) => {
+  const scrollTo = (ref: any) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -234,6 +235,22 @@ export default function Profile() {
     }
   };
 
+  const handleImageUpload = (files: FileList | null) => {
+    if (files && files.length > 0) {
+      const file = files[0];
+      setImageFile(file);
+      // Now call submitAvatar to upload the image
+      submitAvatar(file, id, token)
+        .then(response => {
+          console.log('Image uploaded successfully:', response);
+          // Update the profile data or UI as needed
+        })
+        .catch(error => {
+          console.error('Error uploading image:', error);
+        });
+    }
+  };
+
   useEffect(() => {
     getProfileData();
     getUserBasicData();
@@ -246,34 +263,47 @@ export default function Profile() {
   return (
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
-        <Image src="/imgs/no-user-image.jpg" alt="userImg" width={120} height={120} className={styles.userImg} />
+        {editMode ? (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e.target.files)}
+          />
+        ) : (
+          <Image
+            src={imageFile ? URL.createObjectURL(imageFile) : "/imgs/no-user-image.jpg"}
+            alt="userImg"
+            width={120}
+            height={120}
+            className={styles.userImg}
+          />)}
         <section className={styles.nameAndRol}>
           <h1 className={styles.name}>Pablo Fornell</h1>
           <h2 className={styles.rol}>Estudiante (rol)</h2>
         </section>
       </header>
       <div className={styles.buttonsContainer}>
-          <button className={currentSection === 'profile' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
-          <button className={currentSection === 'education' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
-          <button className={currentSection === 'experience' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
-          <button className={currentSection === 'recommendations' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
+        <button className={currentSection === 'profile' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
+        <button className={currentSection === 'education' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
+        <button className={currentSection === 'experience' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
+        <button className={currentSection === 'recommendations' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
       </div>
       {editMode ? (
         <>
-          <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon}/>
-          <FontAwesomeIcon icon={faSave} onClick={editProfile} className={styles.editIcon}/>
+          <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon} />
+          <FontAwesomeIcon icon={faSave} onClick={editProfile} className={styles.editIcon} />
 
           <div className={styles.currentSection}>
             {currentSection === 'profile' && (
               <>
                 <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Name"
-                    className={styles.editInput}
-                  />
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Name"
+                  className={styles.editInput}
+                />
                 <input
                   type="text"
                   name="headline"
@@ -291,7 +321,7 @@ export default function Profile() {
                     rows={3}
                     className={`${styles.textarea} ${montserrat.className} antialiased`}
                     onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}            
+                    onBlur={() => setIsFocused(false)}
                   />
                 </div>
               </>
@@ -303,8 +333,8 @@ export default function Profile() {
                 {formData.education.length > 0 ? (
                   formData.education.map((edu, index) => (
                     <div key={index} className={styles.editContainer}>
-                      <h3 className={styles.titleContainer}>Estudio {index + 1}</h3> 
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteEducation} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
+                      <h3 className={styles.titleContainer}>Estudio {index + 1}</h3>
+                      <FontAwesomeIcon icon={faTrash} onClick={deleteEducation} className={`${styles.editIcon} ${styles.deleteIcon}`} />
                       <input
                         type="text"
                         name="degree"
@@ -354,7 +384,7 @@ export default function Profile() {
                   formData.experience.map((exp, index) => (
                     <div key={index} className={styles.editContainer}>
                       <h3 className={styles.titleContainer}>Experiencia {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
+                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience} className={`${styles.editIcon} ${styles.deleteIcon}`} />
                       <input
                         type="text"
                         name="company"
@@ -378,114 +408,114 @@ export default function Profile() {
                         onChange={(e) => handleInputChange(e, index, 'experience')}
                         placeholder="Start Date"
                         className={`${styles.editInput} ${styles.dateInput}`}
-                        />
-                        <input
-                          type="date"
-                          name="endDate"
-                          value={exp.endDate?.toString() || ''}
-                          onChange={(e) => handleInputChange(e, index, 'experience')}
-                          placeholder="End Date"
-                          className={`${styles.editInput} ${styles.dateInput}`}
-                        />
-
-                        <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
-                          <textarea
-                            name="description"
-                            value={exp.description}
-                            onChange={(e) => handleInputChange(e, index, 'experience')}
-                            placeholder="Description"
-                            rows={3}
-                            className={`${styles.textarea} ${montserrat.className} antialiased`}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}            
-                          />
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p>You don't have any experience records.</p>
-                  )}
-                  <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
-                </>
-              )}
-    
-              {currentSection === 'recommendations' && (
-                formData.recommendations.length > 0 ? (
-                  formData.recommendations.map((rec, index) => (
-                    <div key={index}>
-                      <textarea
-                        name="message"
-                        value={rec.message}
-                        onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                        placeholder="Message"
                       />
                       <input
                         type="date"
-                        name="date"
-                        value={rec.date.toString()}
-                        onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                        placeholder="Date"
+                        name="endDate"
+                        value={exp.endDate?.toString() || ''}
+                        onChange={(e) => handleInputChange(e, index, 'experience')}
+                        placeholder="End Date"
+                        className={`${styles.editInput} ${styles.dateInput}`}
                       />
+
+                      <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
+                        <textarea
+                          name="description"
+                          value={exp.description}
+                          onChange={(e) => handleInputChange(e, index, 'experience')}
+                          placeholder="Description"
+                          rows={3}
+                          className={`${styles.textarea} ${montserrat.className} antialiased`}
+                          onFocus={() => setIsFocused(true)}
+                          onBlur={() => setIsFocused(false)}
+                        />
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p>You don't have any recommendations.</p>
-                )
-              )}
-            </div>
-          </>
-        ) : (
-          <> 
-            <FontAwesomeIcon icon={faEdit} onClick={toggleEditProfile} className={styles.editIcon}/>
+                  <p>You don't have any experience records.</p>
+                )}
+                <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
+              </>
+            )}
 
-            <div className={styles.currentSection}>
-              {currentSection === 'profile' && (
-                <section className={styles.profile}>
-                  <h3 className={styles.headline}>{profileData?.headline}</h3>
-                  <p className={styles.biography}>{profileData?.description}</p>
-                </section>
-              )}
-              {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
-                <section className={styles.education} key={index}>
-                  <div className={styles.iconContainer}><Icon src='/icons/studentIcon.svg' width={40} height={40}/></div>
-                  <div className={styles.studiesInfo}>
-                    <h3 className={styles.degree}>{edu.degree}</h3>
-                    <p className={styles.info}>{edu.institution}, {edu.start_date?.toString().slice(0, 4)} - {edu.end_date ? edu.end_date?.toString().slice(0, 4) : 'Actualidad'}</p>
+            {currentSection === 'recommendations' && (
+              formData.recommendations.length > 0 ? (
+                formData.recommendations.map((rec, index) => (
+                  <div key={index}>
+                    <textarea
+                      name="message"
+                      value={rec.message}
+                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
+                      placeholder="Message"
+                    />
+                    <input
+                      type="date"
+                      name="date"
+                      value={rec.date.toString()}
+                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
+                      placeholder="Date"
+                    />
                   </div>
-                </section>
-              ))}
-              {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
-                <section className={styles.expContainer} key={index}>
-                  <div className={styles.experience}>
-                    <div className={styles.iconContainer}><FontAwesomeIcon icon={faBriefcase} className={styles.icon}/></div>
-                    <div className={styles.workInfo}>
-                      <h3 className={styles.company}>{exp.company}</h3>
-                      <p className={styles.info}>{exp.position}, {exp.startDate?.toString().slice(0, 4)} - {exp.endDate ? exp.endDate?.toString().slice(0, 4) : 'Actualidad'}</p>
-                    </div>
-                  </div>
-                  <p className={styles.description}>{exp.description}</p>
-                </section>
-              ))}
-              {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
-                <div key={index}>
-                  <p>{rec.message}</p>
-                  <p>{rec.date?.toString()}</p>
+                ))
+              ) : (
+                <p>You don't have any recommendations.</p>
+              )
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <FontAwesomeIcon icon={faEdit} onClick={toggleEditProfile} className={styles.editIcon} />
+
+          <div className={styles.currentSection}>
+            {currentSection === 'profile' && (
+              <section className={styles.profile}>
+                <h3 className={styles.headline}>{profileData?.headline}</h3>
+                <p className={styles.biography}>{profileData?.description}</p>
+              </section>
+            )}
+            {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
+              <section className={styles.education} key={index}>
+                <div className={styles.iconContainer}><Icon src='/icons/studentIcon.svg' width={40} height={40} /></div>
+                <div className={styles.studiesInfo}>
+                  <h3 className={styles.degree}>{edu.degree}</h3>
+                  <p className={styles.info}>{edu.institution}, {edu.start_date?.toString().slice(0, 4)} - {edu.end_date ? edu.end_date?.toString().slice(0, 4) : 'Actualidad'}</p>
                 </div>
-              ))}
-              {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
-                <div key={String(contact)}>
-                  {String(contact)}
-                </div>
-              ))}
-              {/* <h2>Request recibidas de otros usuarios</h2> */}
-              {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
-                  <div key={String(req)}>
-                    {String(req)}
+              </section>
+            ))}
+            {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
+              <section className={styles.expContainer} key={index}>
+                <div className={styles.experience}>
+                  <div className={styles.iconContainer}><FontAwesomeIcon icon={faBriefcase} className={styles.icon} /></div>
+                  <div className={styles.workInfo}>
+                    <h3 className={styles.company}>{exp.company}</h3>
+                    <p className={styles.info}>{exp.position}, {exp.startDate?.toString().slice(0, 4)} - {exp.endDate ? exp.endDate?.toString().slice(0, 4) : 'Actualidad'}</p>
                   </div>
-              ))}
-            </div>
-          </>
-        )}
-      </main>
-    );
-  }
+                </div>
+                <p className={styles.description}>{exp.description}</p>
+              </section>
+            ))}
+            {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
+              <div key={index}>
+                <p>{rec.message}</p>
+                <p>{rec.date?.toString()}</p>
+              </div>
+            ))}
+            {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
+              <div key={String(contact)}>
+                {String(contact)}
+              </div>
+            ))}
+            {/* <h2>Request recibidas de otros usuarios</h2> */}
+            {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
+              <div key={String(req)}>
+                {String(req)}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </main>
+  );
+}
