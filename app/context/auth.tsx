@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
@@ -30,7 +31,7 @@ export const AuthContext = createContext<AuthContextType>({
  * @returns {JSX.Element} - The JSX element representing the authentication provider.
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(true); // State to track login status.
+  const [isLogged, setIsLogged] = useState(false); // State to track login status.
   const [token, setToken] = useState<string>(''); // State to store authentication token.
   const [id, setId] = useState<string>(''); // State to store user ID.
   const router = useRouter();
