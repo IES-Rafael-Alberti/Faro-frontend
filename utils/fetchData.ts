@@ -1,6 +1,6 @@
 
 import { FeedPublicationInterface } from '../types/FeedPublication.interface'
-import { PUBLICATIONS_URL, ALL_USERS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_PROFILE_URL, REQUEST_URL } from '../types/consts'
+import { PUBLICATIONS_URL, ALL_USERS_URL, USER_BASIC_INFO_URL, PROFILE_URL, EXPERIENCE_URL, EDUCATION_URL, RECOMMENDATION_URL, CONNECTIONS_OF_AN_USER_URL, PUBLICATIONS_PROFILE_URL, REQUEST_URL, MESSAGE_URL } from '../types/consts'
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface'
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface'
 import { User } from '@/types/User.interface'
@@ -9,6 +9,7 @@ import { EducationInterface } from '@/types/profile/education.interface'
 import { ExperienceInterface } from '@/types/profile/experience.interface'
 import { PublicationCommentsInterface } from '@/types/PublicationComments.interface'
 import { PUBLICATIONS_COMMENTS_URL, PUBLICATIONS_LIKES_URL } from '@/types/consts'
+import { UserMessageInterface } from '@/types/user-message.interface'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -40,6 +41,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ]
 
+
     const fetchPromises = urls.map(({ url }) => fetchData(url, token))
     
     const [
@@ -59,6 +61,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       contacts,
       publications, 
       receivedRequests
+
     }
   } catch (error) {
     console.error('Error fetching complete profile data:', error)
@@ -93,12 +96,28 @@ export async function fetchAllUsers (token: string = ''): Promise<User[]> {
   }
 }
 
-export async function fetchAllConnectionsOfAnUser (token: string = '', id: string): Promise<string[]> {
+export async function fetchAllConnectionsOfAnUser(token: string = '', id: string): Promise<UserMessageInterface[]> {
   try {
-    return await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token)
+    const userConnections: UserMessageInterface[] = [];
+    const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token);
+    
+    for (const element of idList) {
+      const basicUserInfo = await fetchBasicUserInfo(element, token);
+      const user: UserMessageInterface = {
+        id: element,
+        name: basicUserInfo.username,
+        avatar: basicUserInfo.profile_picture,
+        rol: 'Student', 
+        last_msg_date: null,  
+        last_msg: ''          
+      };
+      userConnections.push(user);
+    }
+
+    return userConnections;
   } catch (error) {
-    console.error(`Error fetching feed data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error)
-    return Promise.reject(error)
+    console.error(`Error fetching feed data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error);
+    return Promise.reject(error);
   }
 }
 
@@ -193,4 +212,9 @@ export async function fetchLikesCount(publicationId: string, token: string = '')
     console.error('Error fetching likes count:', error);
     return 0;
   }
+}
+
+
+export const fetchMessagesFromUser = async (senderId: string, receiverId: string, token: string = ''): Promise<any> => {
+  return fetchData(`${MESSAGE_URL}sender/${senderId}/receiver/${receiverId}`, token)
 }
