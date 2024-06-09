@@ -18,6 +18,7 @@ interface Props {}
 const Page: NextPage<Props> = () => {
   const { id, token } = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(true)
+  const [updateFeed, setUpdateFeed] = useState(false);
   const [user, setUser] = useState<BasicUserInfoInterface>({
     username: '',
     rol: '',
@@ -25,7 +26,6 @@ const Page: NextPage<Props> = () => {
     count_of_connections: 0,
     profile_picture: ''
   })
-  const [update, setUpdate] = useState(false)
 
   useEffect(() => {
     fetchBasicUserInfo(id, token).then((response) => {
@@ -36,6 +36,16 @@ const Page: NextPage<Props> = () => {
     })
   }, [id, token])
 
+  const handleUpdateFeed = () => {
+    setUpdateFeed(true);
+  };
+
+  useEffect(() => {
+    if (updateFeed) {
+      setUpdateFeed(false);
+    }
+  }, [updateFeed]);
+
   return (
     <main className={isLoading ? `${styles.wrapper} ${styles.centerAll}` : styles.wrapper}>
       {isLoading && <HashLoader color="#163D64"/>}
@@ -45,8 +55,8 @@ const Page: NextPage<Props> = () => {
         <p className={styles.contactInfo}>Para ponerse en contacto con el equipo de soporte haga click <Link href="mailto:faro@iesrafaelalberti.com">aquí</Link></p>
         </div>}
       </aside>
-      {!isLoading && <CreatePublication userImg={user.profile_picture} setUpdate={setUpdate} />}
-      {!isLoading && <FeedPublications token={token} id={id} />}
+      {!isLoading && <CreatePublication userImg={user.profile_picture} onUpdateFeed={handleUpdateFeed}/>}
+      {!isLoading && <FeedPublications token={token} id={id} updateFeed={updateFeed} />}
 
     </main>
   )

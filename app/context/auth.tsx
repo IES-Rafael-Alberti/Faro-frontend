@@ -23,8 +23,8 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjA2ZTg4OGJlLTViZTEtNDUxNS1iMGJkLTZhZTIwMzc2OTIyNSIsImVtYWlsIjoicGFibG9AZ21haWwuY29tIiwiaWF0IjoxNzE3OTMzMzc1LCJleHAiOjE3MTc5MzY5NzV9.tK62irTKqhWv_u7b_H4r_Gr5PxCjTqizEb4eDkmkPdE')
-  const [id, setId] = useState<string>('06e888be-5be1-4515-b0bd-6ae203769225')
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIxMmIwYjBkLTEzM2QtNDRiYS05ZTZkLThhNWU4NzM2ODc1MSIsImVtYWlsIjoic2FyYUBhZG1pbi5jb20iLCJpYXQiOjE3MTc5NjAxMDYsImV4cCI6MTcxNzk2MzcwNn0.NCY6FI1lmDrXHvsrEI5uaSJ5i9NTGV6ELqUQwwRFbu4')
+  const [id, setId] = useState<string>('b12b0b0d-133d-44ba-9e6d-8a5e87368751')
   const router = useRouter();
 
   useEffect(() => {

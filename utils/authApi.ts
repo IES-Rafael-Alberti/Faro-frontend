@@ -5,7 +5,7 @@ interface AuthResponse {
   access_token: string;
 }
 
-const URL = 'http://localhost:3000/';
+import { URL } from "@/types/consts";
 
 export async function authPost(src: string, body: object): Promise<AuthResponse> {
 

@@ -1,0 +1,27 @@
+.commentInput{
+    width: calc(100% - 105px - 10px);
+    padding: 1vh;
+    margin-right: 10px;
+    border: 2px solid var(--terciary);
+    border-radius: 8px;
+    margin-bottom: 2vh;
+    font-size: 16px;
+}
+
+.commentInput:focus{
+    outline: none;
+    border: 2px solid var(--primary);
+}
+
+.commentButton{
+    padding: 1.5vh;
+    margin-bottom: 2vh;
+    background: var(--secondary);
+    border: none;
+    outline: none;
+    color: var(--white);
+    border-radius: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    width: 105px;
+}

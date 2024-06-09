@@ -1,32 +1,55 @@
 import Image from 'next/image'
-import styles from './feedPublications.module.css'
+// import styles from './feedPublications.module.css'
 import CommentForm from './CommentForm'
+import styles from './publicationComments.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { useEffect } from 'react'
+import { deleteComment } from '@/utils/deleteData'
 
 interface Props {
   publication: any
   isCommentsVisible: boolean
-  toggleComments: () => void
   userId: string
   token: string
+  onCommentUpdate: () => any
 }
 
-const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, toggleComments, userId, token }) => {
+const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate  }) => {
+
+  useEffect(() => {
+    console.log(publication)
+
+  }, [])
+
+  const deleteCommentbyId = async (comment : string) => {
+    console.log(comment)
+    try {
+      // const response = await deleteComment(`comments/${comment.id}/user/${userId}/publication/${publication.id}`, token)
+      onCommentUpdate()
+    } catch (error) {
+      console.error('Error deleting publication:', error)
+    }
+  }
+
   return (
     <section>
-      <button onClick={toggleComments}>
-        {isCommentsVisible ? 'Hide Comments' : 'Show Comments'}
-      </button>
       {isCommentsVisible && (
         <>
-          {publication.comments.map((comment, commentIndex) => (
-            <div key={commentIndex}>
-              <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={75} height={75} />
-              <h4>{comment.name}</h4>
-              <p>{comment.comment}</p>
+          {publication.comments.map((comment : any, commentIndex : any) => (
+            <div key={commentIndex} className={styles.comment}>
+            {comment.user_id === userId &&
+              <FontAwesomeIcon icon={faXmark} className={styles.deleteCommentIcon} onClick={() => deleteCommentbyId(comment)}/>
+            }
+              <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={50} height={50} />
+              <section className={styles.commentAndName}>
+                <h4 className={styles.name}>{comment.name}</h4>
+                <p className={styles.comment}>{comment.comment}</p>
+              </section>
             </div>
           ))}
-          <CommentForm publicationId={publication.id} userId={userId} token={token} />
-        </>
+          <CommentForm publicationId={publication.id} userId={userId} token={token} onCommentUpdate={onCommentUpdate} />
+          </>
       )}
     </section>
   )

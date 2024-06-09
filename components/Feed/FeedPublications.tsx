@@ -1,42 +1,31 @@
 'use client'
 
 import { NextPage } from 'next'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchCommentsOfPublication, fetchFeedData } from '../../utils/fetchData'
 import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styles from './feedPublications.module.css'
 import { useRouter } from 'next/navigation'
-import translateRol from '@/app/context/translate'
-import Image from 'next/image'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments, faComment, faHeart } from '@fortawesome/free-solid-svg-icons'
-import { montserrat } from '@/app/ui/fonts'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
-import CommentForm from './CommentForm'
-import PublicationHeader from './PublicationHeader'
-import PublicationFooter from './PublicatonFooter'
-import PublicationComments from './PublicationComments'
-import { submitLike } from '@/utils/submitData'
+import Publication from './Publication'
+import { on } from 'events'
+import { faSleigh } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   token : string
   id: string
+  updateFeed: boolean
 }
 
 //  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
-const FeedPublications: NextPage<Props> = ({ token, id }) => {
+const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
   const router = useRouter()
-  const [isLiked, setIsLiked] = useState(false)
-  const [isCommentsVisible, setIsCommentsVisible] = useState(false)
-  // const [likesCount, setLikesCount] = useState(5)
-  // const [commentsCount, setCommentsCount] = useState(3)
+  const [commentAdded, setCommentAdded] = useState(false)
+  const [updatePublications, setUpdatePublications] = useState(false)
 
-  const likesCount = 5
-  const commentsCount = 5
-  
   const fetchPublications = async (page: number) => {
     const publicationsApiCall = await fetchFeedData(page, token);
     
@@ -60,23 +49,29 @@ const FeedPublications: NextPage<Props> = ({ token, id }) => {
     }));
     setPublications({ ...publicationsApiCall, data: publicationsWithComments });
   };
-  
-  const toggleComments = () => {
-    setIsCommentsVisible(!isCommentsVisible);
-  }
 
   const redirect = (path: string) => () => {
     router.push(path)
   }
 
+  const setUpdate = () => {
+    setUpdatePublications(true)
+  }
+
   useEffect(() => {
     fetchPublications(page)
-  }, [page, token])
+    setCommentAdded(false)
+    setUpdatePublications(false)
+  }, [updateFeed, updatePublications, page, token, commentAdded])
 
   const loadMore = () => {
     if (publications.currentPage < publications.totalPages) {
       setPage(prevPage => prevPage + 1)
     }
+  }
+
+  const onCommentAdded = () => {
+    setCommentAdded(true)
   }
 
   return (
@@ -89,18 +84,12 @@ const FeedPublications: NextPage<Props> = ({ token, id }) => {
         loader={<h4>Loading...</h4>}
         endMessage={
           <p style={{ textAlign: 'center', color: 'var(--primary)', fontStyle: 'italic'  }}>
-            <b>Yay! You have seen it all</b>
+            <b>No hay más publicaciones.</b>
           </p>
         }
       >
       {publications.data.map((publication, index) => (
-          <article key={index} className={styles.postContainer}>
-            <PublicationHeader publication={publication} />
-            <p className={styles.postMsg}>{publication.msg}</p>
-            <PublicationFooter isLiked={isLiked} token={token} id={publication.id} />
-            <button onClick={() => submitLike(publication.id, id, token)}>Like</button>
-            <PublicationComments publication={publication} isCommentsVisible={isCommentsVisible} toggleComments={toggleComments} userId={id} token={token} />
-          </article>
+          <Publication key={index} id={id} token={token} publication={publication} updatePublications={setUpdate} onCommentAdded={onCommentAdded}/>
         ))}
       </InfiniteScroll>
     </div>

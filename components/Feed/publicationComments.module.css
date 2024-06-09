@@ -1,0 +1,33 @@
+.comment{
+    display: flex;
+    gap: 2vh;
+    margin-bottom: 2vh;
+
+    && .deleteCommentIcon{
+        color: var(--delete);
+        font-size: 20px;
+        cursor: pointer;
+        border-radius: 10px;
+        align-self: center;
+    }
+
+    && .userImg{
+        border-radius: 100%;
+        object-fit: cover;
+    }
+
+    && .commentAndName {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap:5px;
+
+        && .name{
+            font-weight: 600;
+        }
+
+        && .comment{
+            font-size:14px;
+        }
+    }
+}

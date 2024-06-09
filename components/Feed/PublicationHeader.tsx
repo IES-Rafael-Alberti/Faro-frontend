@@ -1,43 +1,35 @@
 import Image from 'next/image'
 import styles from './feedPublications.module.css'
 import translateRol from '@/app/context/translate'
+import { useEffect, useState } from 'react'
+import { fetchBasicUserInfo } from '@/utils/fetchData'
+import { width } from '@fortawesome/free-solid-svg-icons/fa0'
 
 interface Props {
-  publication: any
+  publication: any,
+  token: string
 }
 
-const PublicationHeader: React.FC<Props> = ({ publication }) => {
+const PublicationHeader: React.FC<Props> = ({ publication, token }) => {
+  const [userImg, setUserImg] = useState<string>('')
 
-    const parseDate = (initialDate: string): string => {
-        const months = [
-            "enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-        ];
-    
-        const date = new Date(initialDate);
-        const day = date.getUTCDate();
-        const month = months[date.getUTCMonth()];
-        const year = date.getUTCFullYear();
-    
-        return `${day.toString().padStart(2, '0')}, ${month} ${year}`;
-    }
-
-    const parseTime = (initialTime: string): string => {
-        const date = new Date(initialTime);
-        const hours = date.getUTCHours().toString().padStart(2, '0');
-        const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-    
-        return `${hours}:${minutes}`;
-    }
+  useEffect(() => {
+    fetchBasicUserInfo(publication.user_id, token)
+      .then(data => {
+        setUserImg(data.profile_picture)
+      })
+      .catch(error => console.error('Error fetching user image:', error))
+  }, [])
 
   return (
     <header>
-      <div className={styles.postInfo}>
-        <h2 className={`${styles.w50} ${styles.postName}`}>{publication.name}</h2>
-        <p className={styles.infoPost}>{parseDate(publication.created_at)}</p>
-        <p className={`${styles.w50}  ${styles.postRol} ${styles.infoPost}`}>{translateRol(publication.user_role)}</p>
-        <p className={styles.infoPost}>{parseTime(publication.created_at)}</p>
-      </div>
+      <section className={styles.postInfo}>
+        <Image src={userImg ? userImg : '/imgs/no-user-image.jpg'} className={styles.userImg} alt="user_image" width={75} height={75} />
+        <div className={styles.userInfo}>
+          <h2 className={`${styles.postName}`}>{publication.name}</h2>
+          <p className={`${styles.postRol} ${styles.infoPost}`}>{translateRol(publication.user_role)}</p>
+        </div>
+      </section>
     </header>
   )
 }

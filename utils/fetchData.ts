@@ -8,7 +8,7 @@ import axios, { AxiosResponse } from 'axios'
 import { EducationInterface } from '@/types/profile/education.interface'
 import { ExperienceInterface } from '@/types/profile/experience.interface'
 import { PublicationCommentsInterface } from '@/types/PublicationComments.interface'
-import { PUBLICATIONS_COMMENTS_URL, PUBLICATIONS_LIKES_URL } from '@/types/consts'
+import { URL, PUBLICATIONS_COMMENTS_URL, PUBLICATIONS_LIKES_URL } from '@/types/consts'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -107,7 +107,7 @@ export async function fetchAllConnectionsOfAnUser (token: string = '', id: strin
 export async function sendRequestToConnect(body: object, token: string = ''){
   console.log(body)
   try {
-    const response: AxiosResponse = await axios.post(`http://localhost:3000/connections/request`, body, {
+    const response: AxiosResponse = await axios.post(`${URL}connections/request`, body, {
       headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`

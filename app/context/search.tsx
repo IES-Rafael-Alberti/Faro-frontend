@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback, ReactNode } from 'react'
-
-const URL = 'http://localhost:3000/'
+import { URL } from '@/types/consts'
 
 // Create a React context for managing global state
 const AppContext = React.createContext({})

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { submitPublicationComment } from '@/utils/submitData';
+import styles from './commentForm.module.css';
 
-const CommentForm: React.FC<{ publicationId: string, userId: string, token: string }> = ({ publicationId, userId, token }) => {
+const CommentForm: React.FC<{ publicationId: string, userId: string, token: string, onCommentUpdate: () => any }> = ({ publicationId, userId, token, onCommentUpdate }) => {
   const [comment, setComment] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (comment.trim() !== '') {
       await submitPublicationComment(publicationId, userId, comment, token);
+      onCommentUpdate();
       setComment('');
     }
   };
@@ -18,9 +20,10 @@ const CommentForm: React.FC<{ publicationId: string, userId: string, token: stri
         type="text"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Write a comment..."
+        placeholder="Escribe un comentario..."
+        className={styles.commentInput}
       />
-      <button type="submit">Submit</button>
+      <button type="submit" className={styles.commentButton}>Comentar</button>
     </form>
   );
 };
