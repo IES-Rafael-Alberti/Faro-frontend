@@ -9,27 +9,38 @@ import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/app/context/auth";
 import { useRouter } from 'next/navigation';
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState('');
-  const { setToken, setIsLogged, setId } = useContext(AuthContext);
-  const router = useRouter();
+/**
+ * 
+ * This component provides a login form that allows users to authenticate into the application.
+ * 
+ * @returns {JSX.Element} - The JSX element representing the login page.
+ */
+  export default function Login(): JSX.Element {
+  const [email, setEmail] = useState(""); // State for the user's email.
+  const [password, setPassword] = useState(""); // State for the user's password.
+  const [error, setError] = useState(''); // State to handle login errors.
+  const { setToken, setIsLogged, setId } = useContext(AuthContext); // Authentication context.
+  const router = useRouter(); // Next.js router hook.
 
+  /**
+   * Function to handle form submission for login.
+   * 
+   * @param {Event} e - The form submission event.
+   */
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const data = { email: email, password: password };
+    const data = { email: email, password: password }; // Login data.
 
     try {
-      const response = await authPost("auth/signIn", data);
+      const response = await authPost("auth/signIn", data); // Sending login request.
       if (response && response.access_token && response.id) {
-        setToken(response.access_token);
-        setIsLogged(true);
-        setId(response.id);
-        router.push('/feed');
+        setToken(response.access_token); // Set authentication token in context.
+        setIsLogged(true); // Set login state to true.
+        setId(response.id); // Set user ID in context.
+        router.push('/feed'); // Redirect user to feed page.
       }
     } catch (e) {
-      setError("Credenciales inválidas");
+      setError("Invalid credentials"); // Handling login errors.
     }
   };
 

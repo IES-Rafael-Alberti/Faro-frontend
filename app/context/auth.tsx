@@ -1,7 +1,6 @@
-'use client'
-import Navbar from '@/components/navbar/navbar';
 import React, { createContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
+import Navbar from '@/components/navbar/navbar';
 
 interface AuthContextType {
   isLogged: boolean;
@@ -12,6 +11,9 @@ interface AuthContextType {
   setId: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * Context for managing authentication state.
+ */
 export const AuthContext = createContext<AuthContextType>({
   isLogged: false,
   setIsLogged: () => {},
@@ -21,17 +23,26 @@ export const AuthContext = createContext<AuthContextType>({
   setId: () => {}
 })
 
+/**
+ * Provides authentication context to its children components.
+ * 
+ * @param {React.ReactNode} children - The child components to be wrapped by the provider.
+ * @returns {JSX.Element} - The JSX element representing the authentication provider.
+ */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(true)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIyY2RhYzk2LWY3ODYtNGNjOC1hZWE5LTBiMzRmNzA5YWU3MCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3OTY2NzMyLCJleHAiOjE3MTc5NzAzMzJ9.sN6FVajKo40UImDQm04q5tYQLvmKH7AAG6iQkd1-g3Q')
-  const [id, setId] = useState<string>('b2cdac96-f786-4cc8-aea9-0b34f709ae70')
+  const [isLogged, setIsLogged] = useState(true); // State to track login status.
+  const [token, setToken] = useState<string>(''); // State to store authentication token.
+  const [id, setId] = useState<string>(''); // State to store user ID.
   const router = useRouter();
 
+  /**
+   * Redirects to the homepage if not logged in.
+   */
   useEffect(() => {
     if(!isLogged && !token && !id){
-      router.push('/')
+      router.push('/');
     }
-  }, [children])
+  }, [isLogged, token, id, router]);
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, token, setToken, id, setId }}>
