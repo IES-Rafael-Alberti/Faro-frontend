@@ -18,7 +18,6 @@ import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/fre
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
-  const firstButtonRef = useRef(null);
   const educationEndRef = useRef(null);
   const experienceEndRef = useRef(null);
   const topRef = useRef(null);
@@ -41,11 +40,7 @@ export default function Profile() {
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
-  useEffect(() => {
-    if (firstButtonRef.current) {
-      firstButtonRef.current.focus();
-    }
-  }, []);
+
 
   const scrollTo = (ref : any) => {
     if (ref.current) {
