@@ -4,6 +4,7 @@ import { EducationInterface } from "./education.interface";
 import { ExperienceInterface } from "./experience.interface";
 import { ProfileInterface } from "./Profile.interface";
 import { RecommendationInterface } from "./recomendation.interface";
+import { RequestInterface } from "./requests.interface";
 
 export interface CompleteProfile extends ProfileInterface {
     experience: ExperienceInterface[];
@@ -11,4 +12,5 @@ export interface CompleteProfile extends ProfileInterface {
     recommendations: RecommendationInterface[];
     contacts: ContactInterface[];
     publications: PublicationInterface[];
+    receivedRequests: RequestInterface[];
 }

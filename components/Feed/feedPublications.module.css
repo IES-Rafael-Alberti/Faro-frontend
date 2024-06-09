@@ -1,0 +1,171 @@
+.scrollContainer {
+    width: calc(100% - 18vw);
+    float: left;
+
+    && .postContainer{
+        background-color: var(--white);
+        margin-bottom: 2vh;
+        padding: 1.5vw;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 2vh;
+
+        && .userImg{
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            float: left;
+            border-radius: 100%;
+        }
+
+        && .postInfo{
+            float: right;
+            width: calc(100% - 75px - 1vw);
+            display: flex;
+            flex-wrap: wrap;
+            height: calc(75px - 2vw);
+            margin-top: 1vw;
+            justify-content: space-between;
+            align-items: center;
+
+            && .w50{
+                width: 60%;
+            }
+
+            && .postName{
+                font-size: 24px;
+                font-weight: 600;
+                color: var(--black);
+            }
+
+            && p.postRol {
+                font-size: 16px;
+            }
+
+            && .infoPost{
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--semiblack);
+            }
+            
+        }
+
+        && .postMsg{
+            font-size: 14px;
+            padding-top: 1vh 0 2vh 0;
+        }
+
+        && .postStadistics{
+
+            && .stadistic{
+                font-size: 12px;
+                color: var(--semiblack);
+                float: left;
+                margin-right: 2vh;
+
+                && .likeIcon {
+                    color: red;
+                }
+
+                && .commentsIcon {
+                    color: var(--primary);
+                }
+
+                && .likeIcon, && .commentsIcon {
+                    margin-right: 0.7vh;
+                }
+            }
+        }
+
+        && footer {
+            padding-top: 2vh;
+            border-top: 1px solid var(--darkgray);
+
+            && button.btn{
+                color: var(--secondary);
+                border: none;
+                outline: none;
+                cursor: pointer;
+                margin-right:3vh;
+                background: none;
+                font-size: 16px;
+                font-weight: 500;
+                border-radius:24px;
+    
+                && .footerIcon{
+                    margin-right: 0.5vh;
+                }
+
+                && .isLiked {
+                    color: red;
+                }
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 1085px) {
+    .scrollContainer {
+        width: calc(100% - 23vw);
+    }
+}
+
+
+@media screen and (max-width: 830px) {
+    .scrollContainer {
+        width:100%;
+    }
+}
+
+
+@media screen and (max-width: 650px) {
+    .scrollContainer {
+        && .postContainer {
+            && footer {
+                padding: 2vh 0 1vh 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .scrollContainer {
+    
+        && .postContainer{
+            padding: 4vw;
+
+            && .userImg{
+                width: 60px;
+                height: 60px;
+            }
+    
+            && .postInfo{
+                height: calc(75px - 5vw);
+
+                && .postName{
+                    font-size: 20px;
+
+                }
+    
+                && p.postRol {
+                    font-size: 14px;
+                }
+    
+                && .infoPost{
+                    font-size: 12px;
+                }
+                
+            }
+
+            && footer {
+
+                && button.btn{
+                    font-size: 15px;
+                }
+            }
+        }
+
+    }
+}

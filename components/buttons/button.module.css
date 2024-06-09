@@ -1,0 +1,11 @@
+
+.commonButton{
+    text-transform: uppercase;
+    font-size: 21px;
+    border: none;
+    outline: none;
+    padding:2vh;
+    border-radius:50px;
+    font-weight: 600;
+    cursor: pointer;
+  }
