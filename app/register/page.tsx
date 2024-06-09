@@ -1,7 +1,4 @@
-// pages/register.js
-
-'use client'
-
+'use client';
 import { useContext, useState } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
@@ -14,10 +11,15 @@ import { submitData } from "../../utils/submitData";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
 
-
-export default function Register () {
+/**
+ * Component for user registration.
+ * Allows users to register by providing necessary information.
+ */
+export default function Register() {
+  // Initialize useRouter hook from Next.js
   const router = useRouter();
 
+  // Define state variables for form data and errors
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -32,24 +34,44 @@ export default function Register () {
     password: "",
     confirmPassword: ""
   });
+
+  // Access the authentication context
   const { setToken } = useContext(AuthContext);
 
-  const handleChange = (e:any) => {
+  /**
+   * Function to handle form input changes.
+   * @param {Event} e - Event object representing the form input change event.
+   */
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const validateEmail = (email:string) => {
+  /**
+   * Function to validate email format.
+   * @param {string} email - Email address to validate.
+   * @returns {boolean} - Indicates whether the email is valid.
+   */
+  const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validateNameOrLastName = (name:string) => {
+  /**
+   * Function to validate name or last name format.
+   * @param {string} name - Name or last name to validate.
+   * @returns {boolean} - Indicates whether the name or last name is valid.
+   */
+  const validateNameOrLastName = (name: string) => {
     const nameRegex = /^[a-zA-ZáÁéÉíÍóÓúÚ\s]+$/;
     return nameRegex.test(name);
   };
 
-  const handleSubmit = async (e:any) => {
+  /**
+   * Function to handle form submission.
+   * @param {Event} e - Event object representing the form submission event.
+   */
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     let valid = true;
     let validationErrors: { 
@@ -59,8 +81,8 @@ export default function Register () {
       password?: string,
       confirmPassword?: string
     } = {};
-    
 
+    // Perform validation checks on form data
     if (!validateNameOrLastName(formData.name)) {
       validationErrors.name = "Por favor, introduzca un nombre válido.";
       valid = false;
@@ -86,14 +108,16 @@ export default function Register () {
       valid = false;
     }
 
+    // Update errors state with validation results
     setErrors({
       name: validationErrors.name || "", 
-      lastName: validationErrors.lastName|| "",
+      lastName: validationErrors.lastName || "",
       email: validationErrors.email || "",
       password: validationErrors.password || "",
       confirmPassword: validationErrors.confirmPassword || ""
     });
 
+    // If form data is valid, submit it
     if (valid) {
       const data = {
         name: formData.name,
@@ -104,8 +128,10 @@ export default function Register () {
       try {
         const result = await authPost('auth/register', data);
         setToken(result.access_token);
+        // Redirect to login page after successful registration
         router.push('/login');
-      } catch (e : any) {
+      } catch (e: any) {
+        // Handle registration errors
         if (e.response && e.response.data && e.response.data.message === "User already exists") {
           setErrors((prevErrors) => ({
             ...prevErrors,
