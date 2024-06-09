@@ -22,7 +22,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true)
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ1MDdlNTUzLWI2NjItNGExMS1hNTVlLTMxNzExMzA0MGM4YSIsImVtYWlsIjoianVhbnNoejVnNjQ0bDI0M2V6NTUxMTFAZ21haWwuY29tIiwiaWF0IjoxNzE3OTM4NDI2LCJleHAiOjE3MTc5NDIwMjZ9.UWX8VE_zUG8m-UYdk-sNtkMW4UqPyLq3-H3JkTpKkwo')
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ1MDdlNTUzLWI2NjItNGExMS1hNTVlLTMxNzExMzA0MGM4YSIsImVtYWlsIjoianVhbnNoejVnNjQ0bDI0M2V6NTUxMTFAZ21haWwuY29tIiwiaWF0IjoxNzE3OTQ2NDA0LCJleHAiOjE3MTc5NTAwMDR9.KcNZzcU3QXtsSYYyVeDk5Vjv5kxBW7qhzWNbpKIjYOQ')
   const [id, setId] = useState<string>('d507e553-b662-4a11-a55e-317113040c8a')
 
 
