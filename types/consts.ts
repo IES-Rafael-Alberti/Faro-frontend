@@ -14,3 +14,4 @@ export const CREATE_EDUCATION_URL = 'http://localhost:3000/education/'
 export const UPDATE_USER_URL = "http://localhost:3000/users/update/"
 export const PUBLICATIONS_COMMENTS_URL = 'http://localhost:3000/comments/'
 export const PUBLICATIONS_LIKES_URL = 'http://localhost:3000/likes/'
+export const MESSAGE_URL = 'http://localhost:3000/direct-messages/'
