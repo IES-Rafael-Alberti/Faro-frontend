@@ -1,4 +1,5 @@
 export interface ExperienceInterface {
+    id? : string;
     profileId?: string ;
     company: string;
     position: string;

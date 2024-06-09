@@ -1,8 +1,7 @@
 'use client'
 
 import { checkEducationExists, checkExperienceExists, fetchBasicUserInfo, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
-import { useContext, useEffect, useState } from 'react';
-
+import { useContext, useEffect, useState, useRef, use } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
 import { updateProfileData, updateUserData } from '../../utils/updateData';
@@ -12,18 +11,23 @@ import { submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
 import { montserrat } from '../ui/fonts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
-import { get } from 'http';
-import { log } from 'console';
+import { deleteData } from '@/utils/deleteData';
 import Image from 'next/image';
 import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import translateRol from '../context/translate';
+import { profile } from 'console';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const educationEndRef = useRef(null);
   const experienceEndRef = useRef(null);
   const topRef = useRef(null);
+  const [imgSelected, setImgSelected] = useState(null);
+
+  const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
+  const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
@@ -31,40 +35,40 @@ export default function Profile() {
   const [requests, setRequests] = useState<RequestInterface[]>([]);
   const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
   const [formData, setFormData] = useState<EditableProfileData>({
-
     id: '',
     name: '',
     headline: '',
     description: '',
-    education: [{ degree: '', institution: '', start_date: '', end_date: null }],
-    experience: [{ company: '', position: '', startDate: '', endDate: null, description: '' }],
+    education: [{ id: '', degree: '', institution: '', start_date: '', end_date: null }],
+    experience: [{ id: '', company: '', position: '', startDate: '', endDate: null, description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
-
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
-
-
-  useEffect(() => {
-    firstButtonRef.current.focus();
-  }, []);
+  const handleSelectImage = (event : any) => {
+    const img = event.target.files[0];
+    if (img) {
+      setImgSelected(img);
+    }
+  };
   
   const toggleEditProfile = () => {
     setEditMode(!editMode);
     if (!editMode && profileData) {
-
       setFormData({
         id: profileData.id,
         name: profileData.name,
         headline: profileData.headline || '',
         description: profileData.description || '',
         education: profileData.education.map(ed => ({
+          id: ed.id || '',
           degree: ed.degree || '',
           institution: ed.institution || '',
           start_date: ed.start_date.toString() || '',
           end_date: ed.end_date?.toString() || null
         })),
         experience: profileData.experience.map(ex => ({
+          id: ex.id || '',
           company: ex.company || '',
           position: ex.position || '',
           startDate: ex.startDate.toString() || '',
@@ -116,25 +120,11 @@ export default function Profile() {
       const newEducation = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
       return {
         ...prevFormData,
-        education: [...prevFormData.education, { degree: '', institution: '', start_date: '0000-00-00', end_date: null }]
-    }));
-    setTimeout(() => scrollTo(educationEndRef), 100)
-};
-
-
-
-  const deleteEducation = () => {
-    //TO DO
-  }
-
-  const deleteExperience = () => {
-    //TO DO
-  }
-
         education: [...prevFormData.education, newEducation]
       };
     });
-  };
+    setTimeout(() => scrollTo(educationEndRef), 100);
+}
   
   const addExperience = () => {
     setFormData((prevFormData) => {
@@ -146,6 +136,26 @@ export default function Profile() {
     });
   };
   
+  const deleteEducation = (id: string) => {
+    setDeletedEducationIds((prevDeletedIds) => [...prevDeletedIds, id]);
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        education: prevFormData.education.filter((edu) => edu.id !== id)
+      };
+    });
+  };
+
+
+  const deleteExperience = (id: string) => {
+    setDeletedExperienceIds((prevDeletedIds) => [...prevDeletedIds, id]);
+    setFormData((prevFormData) => {
+      return {
+        ...prevFormData,
+        experience: prevFormData.experience.filter((ex) => ex.id !== id)
+      };
+    });
+  };
 
   const getFilteredEducation = async () => {
     const newEducation = await Promise.all(formData.education.map(async (ed) => {
@@ -169,6 +179,14 @@ export default function Profile() {
       const updatedFormData = { ...formData };
       const response = await updateProfileData(id, updatedFormData, token);
       console.log("Response", response);
+
+      for (const id of deletedEducationIds) {
+        await deleteData(`education/${id}`, token);
+      }
+
+      for (const id of deletedExperienceIds) {
+        await deleteData(`experience/${id}`, token);
+      }
   
       // Filter and submit new education entries
       const filteredEducation = await getFilteredEducation();
@@ -208,7 +226,9 @@ export default function Profile() {
         }
         setProfileData(updatedProfile);
       }
-  
+
+      setDeletedEducationIds([]);
+      setDeletedExperienceIds([]);
       // Toggle edit mode
       toggleEditProfile();
     } catch (error) {
@@ -256,16 +276,16 @@ export default function Profile() {
   }, [id, token]);
 
   useEffect(() => {
-    console.log("Received Requests from other users", requests);
+    // console.log("Received Requests from other users", requests);
   }, [requests]);
 
   return (
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
-        <Image src="/imgs/no-user-image.jpg" alt="userImg" width={120} height={120} className={styles.userImg} />
+        <Image src={userInfo?.profile_picture ? userInfo.profile_picture : '/imgs/no-user-image.jpg'} alt="userImg" width={120} height={120} className={styles.userImg} />
         <section className={styles.nameAndRol}>
-          <h1 className={styles.name}>Pablo Fornell</h1>
-          <h2 className={styles.rol}>Estudiante (rol)</h2>
+          <h1 className={styles.name}>{userInfo?.username}</h1>
+          <h2 className={styles.rol}>{translateRol(userInfo?.rol ? userInfo.rol : '')}</h2>
         </section>
       </header>
       <div className={styles.buttonsContainer}>
@@ -282,6 +302,8 @@ export default function Profile() {
           <div className={styles.currentSection}>
             {currentSection === 'profile' && (
               <>
+                <input id="input-imagen" type="file" accept="image/*" onChange={handleSelectImage} className={styles.editInput} />
+
                 <input
                     type="text"
                     name="name"
@@ -320,7 +342,7 @@ export default function Profile() {
                   formData.education.map((edu, index) => (
                     <div key={index} className={styles.editContainer}>
                       <h3 className={styles.titleContainer}>Estudio {index + 1}</h3> 
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteEducation} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
+                      <FontAwesomeIcon icon={faTrash} onClick={() => deleteEducation(edu.id ? edu.id : '')} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
                       <input
                         type="text"
                         name="degree"
@@ -356,7 +378,7 @@ export default function Profile() {
                     </div>
                   ))
                 ) : (
-                  <p>You don't have any education records.</p>
+                  <p>You don&apos;t have any education records.</p>
                 )}
                 <button ref={educationEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
               </>
@@ -370,7 +392,7 @@ export default function Profile() {
                   formData.experience.map((exp, index) => (
                     <div key={index} className={styles.editContainer}>
                       <h3 className={styles.titleContainer}>Experiencia {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
+                      <FontAwesomeIcon icon={faTrash}  onClick={() => deleteExperience(exp.id ? exp.id : '')} className={`${styles.editIcon} ${styles.deleteIcon}`}/>
                       <input
                         type="text"
                         name="company"
@@ -419,7 +441,7 @@ export default function Profile() {
                       </div>
                     ))
                   ) : (
-                    <p>You don't have any experience records.</p>
+                    <p>You don&apos;t have any experience records.</p>
                   )}
                   <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
                 </>
@@ -445,7 +467,7 @@ export default function Profile() {
                     </div>
                   ))
                 ) : (
-                  <p>You don't have any recommendations.</p>
+                  <p>You don&apos;t have any recommendations.</p>
                 )
               )}
             </div>
@@ -504,5 +526,6 @@ export default function Profile() {
         )}
       </main>
     );
+
   }
   
