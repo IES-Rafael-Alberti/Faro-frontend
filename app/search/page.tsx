@@ -23,7 +23,7 @@ export default function Search() {
   const fetchUsers = async () => {
     try {
       const result: User[] = await fetchAllUsers(token);
-      const users = result.filter(user => user.user_id != id);
+      const users = result.filter(user => user.id != id);
       fetchDetailsForAllUsers(users);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -34,8 +34,9 @@ export default function Search() {
     try {
       const details: BasicUserInfoWithIdInterface[] = [];
       for (const user of users) {
-        const detail = await fetchBasicUserInfo(user.user_id, token);
-        const detailWithUserId = { ...detail, user_id: user.user_id };
+        console.log(user)
+        const detail = await fetchBasicUserInfo(user.id, token);
+        const detailWithUserId = { ...detail, user_id: user.id };
         details.push(detailWithUserId);
       }
       setUserDetails(details);

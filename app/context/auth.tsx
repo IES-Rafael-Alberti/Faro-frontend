@@ -22,9 +22,9 @@ export const AuthContext = createContext<AuthContextType>({
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(false)
-  const [token, setToken] = useState<string>('')
-  const [id, setId] = useState<string>('')
+  const [isLogged, setIsLogged] = useState(true)
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIyY2RhYzk2LWY3ODYtNGNjOC1hZWE5LTBiMzRmNzA5YWU3MCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE3OTY2NzMyLCJleHAiOjE3MTc5NzAzMzJ9.sN6FVajKo40UImDQm04q5tYQLvmKH7AAG6iQkd1-g3Q')
+  const [id, setId] = useState<string>('b2cdac96-f786-4cc8-aea9-0b34f709ae70')
   const router = useRouter();
 
   useEffect(() => {
