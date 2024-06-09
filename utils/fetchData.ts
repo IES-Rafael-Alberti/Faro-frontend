@@ -7,6 +7,8 @@ import { User } from '@/types/User.interface'
 import axios, { AxiosResponse } from 'axios'
 import { EducationInterface } from '@/types/profile/education.interface'
 import { ExperienceInterface } from '@/types/profile/experience.interface'
+import { PublicationCommentsInterface } from '@/types/PublicationComments.interface'
+import { PUBLICATIONS_COMMENTS_URL, PUBLICATIONS_LIKES_URL } from '@/types/consts'
 
 // FIXME: If the URL target is not reachable, the app will crash
 export async function fetchData<T = any> (url: string, token: string = ''): Promise<T> {
@@ -38,6 +40,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ]
 
+
     const fetchPromises = urls.map(({ url }) => fetchData(url, token))
     
     const [
@@ -57,6 +60,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       contacts,
       publications, 
       receivedRequests
+
     }
   } catch (error) {
     console.error('Error fetching complete profile data:', error)
@@ -163,3 +167,32 @@ export async function fetchSenderRecommendations(userIds: string[], token: strin
   return userBasicInfoList;
 }
 
+export async function fetchCommentsOfPublication(publicationId: string, token: string = ''): Promise<PublicationCommentsInterface[]> {
+  try {
+    return await fetchData<PublicationCommentsInterface[]>(`${PUBLICATIONS_COMMENTS_URL}${publicationId}`, token);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    return [];
+  }
+}
+
+// OMG
+export async function fetchNumberOfComments(publicationId: string, token: string = ''): Promise<number> {
+  try {
+    const comments = await fetchCommentsOfPublication(publicationId, token);
+    return comments.length;
+  } catch (error) {
+    console.error('Error fetching number of comments:', error);
+    return 0;
+  }
+}
+
+export async function fetchLikesCount(publicationId: string, token: string = ''): Promise<number> {
+  try {
+    const likes = await fetchData(`${PUBLICATIONS_LIKES_URL}${publicationId}`, token)
+    return likes.length;
+  } catch (error) {
+    console.error('Error fetching likes count:', error);
+    return 0;
+  }
+}
