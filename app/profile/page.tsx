@@ -17,9 +17,7 @@ import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import translateRol from '../context/translate';
-import { profile } from 'console';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -28,13 +26,8 @@ export default function Profile() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const topRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
-  const educationEndRef = useRef(null);
-  const experienceEndRef = useRef(null);
-  const topRef = useRef(null);
-
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
   const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
-  const [isFocused, setIsFocused] = useState(false);
   const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
   const [editMode, setEditMode] = useState(false);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
