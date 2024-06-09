@@ -26,6 +26,7 @@ export default function Profile() {
   const [requests, setRequests] = useState<RequestInterface[]>([]);
   const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
   const [formData, setFormData] = useState<EditableProfileData>({
+
     id: '',
     name: '',
     headline: '',
@@ -33,8 +34,10 @@ export default function Profile() {
     education: [{ degree: '', institution: '', start_date: '', end_date: null }],
     experience: [{ company: '', position: '', startDate: '', endDate: null, description: '' }],
     recommendations: [{ message: '', date: '', senderId: '' }],
+
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
+
 
   useEffect(() => {
     firstButtonRef.current.focus();
@@ -43,6 +46,7 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setEditMode(!editMode);
     if (!editMode && profileData) {
+
       setFormData({
         id: profileData.id,
         name: profileData.name,
@@ -91,8 +95,9 @@ export default function Profile() {
       });
     } else {
       setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
+
     }
-  };
+  }
 
   const addEducation = () => {
     setFormData((prevFormData) => {
@@ -181,9 +186,9 @@ export default function Profile() {
       toggleEditProfile();
     } catch (error) {
       console.error('Error updating profile:', error);
+
     }
-  };
-  
+  }
 
 
   const getProfileData = async () => {
@@ -193,6 +198,7 @@ export default function Profile() {
     setRequests(receivedRequests);
     return response;
   };
+
 
   const getUserBasicData = async () => {
     try {
@@ -242,6 +248,7 @@ export default function Profile() {
           <button className={`${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
       </div>
       {editMode ? (
+
         <div>
           <button onClick={editProfile}>Save</button>
           <button onClick={toggleEditProfile}>Cancel</button>
@@ -270,6 +277,7 @@ export default function Profile() {
             </>
           )}
           {currentSection === 'education' && (
+
             <>
               {formData.education.length > 0 ? (
                 formData.education.map((edu, index) => (
