@@ -40,8 +40,6 @@ export default function Profile() {
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
-
-
   const scrollTo = (ref : any) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' });
@@ -51,6 +49,7 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setEditMode(!editMode);
     if (!editMode && profileData) {
+
       setFormData({
         id: profileData.id,
         name: profileData.name,
@@ -99,8 +98,9 @@ export default function Profile() {
       });
     } else {
       setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
+
     }
-  };
+  }
 
   const addEducation = () => {
     setFormData((prevFormData) => {
@@ -198,10 +198,9 @@ export default function Profile() {
       toggleEditProfile();
     } catch (error) {
       console.error('Error updating profile:', error);
+
     }
   };
-
-
 
   const getProfileData = async () => {
     const response = await fetchProfileData(`${id}`, token);
@@ -210,6 +209,7 @@ export default function Profile() {
     setRequests(receivedRequests);
     return response;
   };
+
 
   const getUserBasicData = async () => {
     try {

@@ -14,6 +14,7 @@ import { submitData } from "../../utils/submitData";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
 
+
 export default function Register () {
   const router = useRouter();
 
@@ -114,6 +115,7 @@ export default function Register () {
       }
     }
   };
+
 
   return (
     <main className={styles.wrapper}>

@@ -41,6 +41,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ]
 
+
     const fetchPromises = urls.map(({ url }) => fetchData(url, token))
     
     const [
@@ -60,6 +61,7 @@ export async function fetchProfileData (id: string, token: string = ''): Promise
       contacts,
       publications, 
       receivedRequests
+
     }
   } catch (error) {
     console.error('Error fetching complete profile data:', error)
