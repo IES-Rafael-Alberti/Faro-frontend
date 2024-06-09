@@ -2,51 +2,118 @@
 import styles from "./page.module.css";
 import Image from "next/image";
 import translateRol from "../context/translate";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/auth";
+import { fetchAllConnectionsOfAnUser, fetchMessagesFromUser } from "@/utils/fetchData";
+import { ContactInterface } from "@/types/profile/contact.interface";
+import { MessageInterface } from "@/types/message.interface";
+import { UserMessageInterface } from "@/types/user-message.interface";
 
 export default function Message() {
+    const { id, token } = useContext(AuthContext);
+    const [selectedContact, setSelectedContact] = useState<string>('');
+    const [contacts, setContacts] = useState<UserMessageInterface[]>([]);
+    const [messages, setMessages] = useState<MessageInterface[]>([]);
+
+    const getUsersConnectedTo = async () => {
+        try {
+            const response = await fetchAllConnectionsOfAnUser(token, id);
+            console.log("Fetched contacts:", response);
+
+            setContacts(response);
+            if (response.length > 0) {
+                const lastContact = response[response.length - 1];
+                setSelectedContact(lastContact.id);
+            }
+
+        } catch (error) {
+            console.error("Error fetching contacts:", error);
+        }
+    };
+
+    const fetchMessages = async () => {
+        if (selectedContact) {
+            try {
+                const fetchedMessages = await fetchMessagesFromUser(id, selectedContact, token);
+                console.log("Fetched messages:", fetchedMessages);
+                setMessages(fetchedMessages);
+
+                const lastMessage = fetchedMessages.length > 0 ? fetchedMessages[fetchedMessages.length - 1] : { date: null, message: '' };
+
+                setContacts(prevContacts => 
+                    prevContacts.map(contact => 
+                        contact.id === selectedContact
+                        ? { ...contact, last_msg: lastMessage.message, last_msg_date: lastMessage.date }
+                        : contact
+                    )
+                );
+
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const initialize = async () => {
+            await getUsersConnectedTo();
+        };
+        initialize();
+    }, []);
+
+    useEffect(() => {
+        console.log("Selected contact changed:", selectedContact);
+        fetchMessages();
+    }, [selectedContact]);
+
+    useEffect(() => {
+        console.log("Messages updated:", messages);
+    }, [messages]);
 
     // TO DO : QUE EL MENSAJE DE PREVISUALIZACIÓN SE CORTE A PARTIR DE "X" CARACTERES Y QUE SE AÑADA "..." AL FINAL PARA MANTENER EL CUADRO DE MENSAJES BIEN
     // (REFERENCIA DE LARGO MENSAJE DE MARÍA)
 
     const users = [
-        { id: 1, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?'},
-        { id: 2, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...'},
-        { id: 3, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor'},
-        { id: 4, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?'},
-        { id: 5, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...'},
-        { id: 6, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor'},
-        { id: 7, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?'},
-        { id: 8, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...'},
-        { id: 9, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor'},
-        { id: 10, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?'},
-        { id: 11, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...'},
-        { id: 12, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor'},
+        { id: 1, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?' },
+        { id: 2, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...' },
+        { id: 3, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor' },
+        { id: 4, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?' },
+        { id: 5, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...' },
+        { id: 6, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor' },
+        { id: 7, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?' },
+        { id: 8, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...' },
+        { id: 9, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor' },
+        { id: 10, name: 'Juan Pérez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, ¿qué tal?' },
+        { id: 11, name: 'María López', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Hola, la verdad es que estaba muy cansada el otro día...' },
+        { id: 12, name: 'Pedro Gómez', avatar: '/imgs/no-user-image.jpg', rol: 'student', last_msg_date: '2024-06-03', last_msg: 'Apruébame el tfg por favor' },
     ]
 
-    const parseDate = (date: string) => {
-        const [year, month, day] = date.split('-');
+    const parseDate = (isoDate: string) => {
+        const date = new Date(isoDate);
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth is zero-based
         const formattedDate = `${day}.${month}`;
         return formattedDate;
-    }
+    };
 
-  return (
-    <main className={styles.wrapper}>
-        <section className={styles.chatsContainer}>
-            <div className={styles.overflowActive}>
-                {users.map(user => (
-                    <article className={styles.chat} key={user.id}>
-                        <Image className={styles.userImg} src={user.avatar} alt={user.name} width={50} height={50}/>
-                        <div className={styles.flex}>
-                            <h2 className={styles.username}>{user.name}</h2>
-                            <p className={styles.messageInfo}><span>{parseDate(user.last_msg_date)}</span> - {user.last_msg}</p>
-                        </div>
-                    </article>
-                ))}
-            </div>
-        </section>
-        <section className={styles.messageContainer}>
+    return (
+        <main className={styles.wrapper}>
+            <section className={styles.chatsContainer}>
+                <div className={styles.overflowActive}>
+                    {users.map(user => (
+                        <article className={styles.chat} key={user.id}>
+                            <Image className={styles.userImg} src={user.avatar} alt={user.name} width={50} height={50} />
+                            <div className={styles.flex}>
+                                <h2 className={styles.username}>{user.name}</h2>
+                                <p className={styles.messageInfo}><span>{parseDate(user.last_msg_date)}</span> - {user.last_msg}</p>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+            <section className={styles.messageContainer}>
                 <header className={styles.userInfo}>
-                <Image className={styles.userImgMessage} src={users[0].avatar} alt={users[0].name} width={75} height={75}/>
+                    <Image className={styles.userImgMessage} src={users[0].avatar} alt={users[0].name} width={75} height={75} />
                     <div className={styles.flex}>
                         <h1 className={styles.usernameMessage}>{users[0].name}</h1>
                         <p className={styles.messageInfo}>{translateRol(users[0].rol)}</p>
@@ -59,7 +126,7 @@ export default function Message() {
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
                         velit esse cillum dolore eu fugiat nulla pariatur.
                         {/* AQUÍ VA LA FECHA Y HORA DEL MENSAJE DEL MENSAJE CON EL FORMATO DEL EJEMPLO */}
-                        <span className={styles.date}>11. abril, 12:25 pm</span> 
+                        <span className={styles.date}>11. abril, 12:25 pm</span>
                     </p>
                     {/* ESTO ES REPETIDO POR BUCLE CON LOS MENSAJES QUE HAYA, SI EL ID ES EL DEL USUARIO CONECTADO TIENE LA CLASS SENDER Y SI ES EL OTRO, TIENE LA CLASS RECEIVER */}
                     <p className={`${styles.msg} ${styles.sender}`}>
@@ -77,7 +144,7 @@ export default function Message() {
                     </p>
                 </article>
                 <textarea rows={4} placeholder="Escribe un mensaje..."></textarea>
-        </section>
-    </main>
-  );
+            </section>
+        </main>
+    );
 }

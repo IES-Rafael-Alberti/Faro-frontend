@@ -16,7 +16,7 @@ export default function Login() {
   const { setToken, setIsLogged, setId } = useContext(AuthContext);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const data = { email: email, password: password };
 
