@@ -11,5 +11,6 @@ export const ALL_USERS_URL = 'http://localhost:3000/users/'
 export const REQUEST_URL = 'http://localhost:3000/connections/request/'
 export const CREATE_EXPERIENCE_URL = 'http://localhost:3000/experience/'
 export const CREATE_EDUCATION_URL = 'http://localhost:3000/education/'
+export const UPDATE_USER_URL = "http://localhost:3000/users/update/"
 export const PUBLICATIONS_COMMENTS_URL = 'http://localhost:3000/comments/'
 export const PUBLICATIONS_LIKES_URL = 'http://localhost:3000/likes/'

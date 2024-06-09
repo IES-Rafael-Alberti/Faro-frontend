@@ -5,7 +5,7 @@ import { RecommendationInterface } from './recomendation.interface';
 
 export interface ProfileInterface {
     id: string;
-    name: string
+    name: string;
     users_profile_profile_picture?: Buffer | null;
     headline?: string;
     description?: string;

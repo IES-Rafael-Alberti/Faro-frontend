@@ -1,15 +1,19 @@
 'use client'
 
-import { checkEducationExists, checkExperienceExists, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
-import { useContext, useEffect, useState, useRef } from 'react';
+import { checkEducationExists, checkExperienceExists, fetchBasicUserInfo, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
+import { useContext, useEffect, useState } from 'react';
+
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
-import { updateProfileData } from '../../utils/updateData';
+import { updateProfileData, updateUserData } from '../../utils/updateData';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
 import { montserrat } from '../ui/fonts';
+import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
+import { get } from 'http';
+import { log } from 'console';
 import Image from 'next/image';
 import Icon from '@/components/icons';
 
@@ -20,6 +24,7 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
   const [requests, setRequests] = useState<RequestInterface[]>([]);
+  const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
   const [formData, setFormData] = useState<EditableProfileData>({
     id: '',
     name: '',
@@ -80,29 +85,35 @@ export default function Profile() {
     const { name, value } = e.target;
     if (type && index !== undefined) {
       setFormData((prevFormData) => {
-        const updatedArray = [...prevFormData[type]];
-        updatedArray[index] = { ...updatedArray[index], [name]: value };
-        return { ...prevFormData, [type]: updatedArray };
+        const updatedArray = prevFormData[type].slice();
+        updatedArray[index] = Object.assign({}, updatedArray[index], { [name]: value });
+        return Object.assign({}, prevFormData, { [type]: updatedArray });
       });
     } else {
-      setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+      setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
     }
   };
 
   const addEducation = () => {
-    setFormData((prevFormData) => ({
+    setFormData((prevFormData) => {
+      const newEducation = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
+      return {
         ...prevFormData,
-        education: [...prevFormData.education, { degree: '', institution: '', start_date: '0000-00-00', end_date: null }]
-    }));
-};
-
-const addExperience = () => {
-    setFormData((prevFormData) => ({
+        education: [...prevFormData.education, newEducation]
+      };
+    });
+  };
+  
+  const addExperience = () => {
+    setFormData((prevFormData) => {
+      const newExperience = { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' };
+      return {
         ...prevFormData,
-        experience: [...prevFormData.experience, { company: '', position: '', startDate: '0000-00-00', endDate: null, description: '' }]
-    }));
-};
-
+        experience: [...prevFormData.experience, newExperience]
+      };
+    });
+  };
+  
 
   const getFilteredEducation = async () => {
     const newEducation = await Promise.all(formData.education.map(async (ed) => {
@@ -111,7 +122,7 @@ const addExperience = () => {
     }));
     return newEducation.filter(({ exists }) => !exists).map(({ entry }) => entry);
   };
-
+  
   const getFilteredExperience = async () => {
     const newExperience = await Promise.all(formData.experience.map(async (exp) => {
       const exists = await checkExperienceExists(id, exp, token);
@@ -119,29 +130,60 @@ const addExperience = () => {
     }));
     return newExperience.filter(({ exists }) => !exists).map(({ entry }) => entry);
   };
-
+  
   const editProfile = async () => {
     try {
-        const updatedFormData = { ...formData };
-
-        // Submit the entire updated education and experience lists to the backend
-        const response = await updateProfileData(updatedFormData, token);
-        console.log("Response", response);
-        
-        setProfileData(response);
-
-        // Refresh profile data
-        const updatedProfile = await getProfileData();
-        if (updatedProfile !== undefined) {
-            console.log("Updated Profile", updatedProfile);
-            setProfileData(updatedProfile);
+      // First, update the profile with all data
+      const updatedFormData = { ...formData };
+      const response = await updateProfileData(id, updatedFormData, token);
+      console.log("Response", response);
+  
+      // Filter and submit new education entries
+      const filteredEducation = await getFilteredEducation();
+      for (const edu of filteredEducation) {
+        await submitEducation(edu, id, token);
+      }
+  
+      // Filter and submit new experience entries
+      const filteredExperience = await getFilteredExperience();
+      for (const exp of filteredExperience) {
+        await submitExperience(exp, id, token);
+      }
+  
+      // If there is additional user info to update
+      let userResponse;
+      if (userInfo !== undefined) {
+        console.log("User Info", userInfo);
+        userResponse = await updateUserData(id, userInfo, token);
+        setUserInfo(userResponse);
+        console.log("User Response", userResponse);
+      }
+  
+      // Update the response name with the name from userResponse if userResponse is defined
+      if (userResponse && userResponse.name) {
+        response.name = userResponse.name;
+      }
+  
+      // Update the profile data in the state
+      setProfileData(response);
+  
+      // Refresh profile data
+      const updatedProfile = await getProfileData();
+      if (updatedProfile !== undefined) {
+        console.log("Updated Profile", updatedProfile);
+        if (userResponse && userResponse.name) {
+          updatedProfile.name = userResponse.name;
         }
-        // Toggle edit mode
-        toggleEditProfile();
+        setProfileData(updatedProfile);
+      }
+  
+      // Toggle edit mode
+      toggleEditProfile();
     } catch (error) {
-        console.error('Error updating profile:', error);
+      console.error('Error updating profile:', error);
     }
-};
+  };
+  
 
 
   const getProfileData = async () => {
@@ -152,8 +194,32 @@ const addExperience = () => {
     return response;
   };
 
+  const getUserBasicData = async () => {
+    try {
+      const response = await fetchBasicUserInfo(id, token);
+      setProfileData((prevProfileData) => {
+        const updatedProfileData = {
+          id: id,
+          name: response.username || 'Default Name',
+          experience: prevProfileData?.experience || [],
+          education: prevProfileData?.education || [],
+          recommendations: prevProfileData?.recommendations || [],
+          contacts: prevProfileData?.contacts || [],
+          publications: prevProfileData?.publications || [],
+          receivedRequests: prevProfileData?.receivedRequests || []
+        };
+        return Object.assign({}, prevProfileData, updatedProfileData);
+      });
+      setUserInfo(response);
+    } catch (error) {
+      console.error('Error fetching user basic data:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     getProfileData();
+    getUserBasicData();
   }, [id, token]);
 
   useEffect(() => {
@@ -182,12 +248,12 @@ const addExperience = () => {
           {currentSection === 'profile' && (
             <>
               <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Name"
-                />
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                placeholder="Name"
+              />
               <input
                 type="text"
                 name="headline"
@@ -270,45 +336,19 @@ const addExperience = () => {
                       value={exp.startDate.toString()}
                       onChange={(e) => handleInputChange(e, index, 'experience')}
                       placeholder="Start Date"
-                      />
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={exp.endDate?.toString() || ''}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="End Date"
-                      />
-                      <textarea
-                        name="description"
-                        value={exp.description}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="Description"
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p>You don't have any experience records.</p>
-                )}
-                <button onClick={addExperience}>Add Experience</button>
-              </>
-            )}
-  
-            {currentSection === 'recommendations' && (
-              formData.recommendations.length > 0 ? (
-                formData.recommendations.map((rec, index) => (
-                  <div key={index}>
-                    <textarea
-                      name="message"
-                      value={rec.message}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Message"
                     />
                     <input
                       type="date"
-                      name="date"
-                      value={rec.date.toString()}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Date"
+                      name="endDate"
+                      value={exp.endDate?.toString() || ''}
+                      onChange={(e) => handleInputChange(e, index, 'experience')}
+                      placeholder="End Date"
+                    />
+                    <textarea
+                      name="description"
+                      value={exp.description}
+                      onChange={(e) => handleInputChange(e, index, 'experience')}
+                      placeholder="Description"
                     />
                   </div>
                 ))
