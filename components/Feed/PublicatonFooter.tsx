@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment, faComments } from '@fortawesome/free-solid-svg-icons';
 import { montserrat } from '@/app/ui/fonts';
 import { fetchNumberOfComments, fetchLikesCount } from '@/utils/fetchData';
-import { submitLike } from '@/utils/submitData';
+import { submitLike, submitDislike } from '@/utils/submitData';
 import PublicationComments from './PublicationComments';
 import styles from './publicationFooter.module.css';
+import LikeButton from './Like';
 
 interface Props {
   authId: string,
@@ -82,6 +83,12 @@ const PublicationFooter: React.FC<Props> = ({ authId, publication, token, onComm
     setLikeCount(newLikeCount);
   };
 
+  const handleDislike = async () => {
+    await submitDislike(publication.id, authId, token);
+    const newLikeCount = await fetchLikesCount(publication.id, token);
+    setLikeCount(newLikeCount);
+  }
+
   /**
    * Toggles the visibility of comments.
    */
@@ -108,10 +115,7 @@ const PublicationFooter: React.FC<Props> = ({ authId, publication, token, onComm
         <p className={styles.date}>{parseTime(publication.created_at)}, {parseDate(publication.created_at)}</p>
       </section>
       <section className={styles.buttonsContainer}>
-        <button className={`${styles.btn} ${montserrat.className} antialised`} onClick={handleLike}>
-          <FontAwesomeIcon className={styles.footerIcon} icon={faHeart} />
-          Me gusta
-        </button>
+        <LikeButton onLike={handleLike} onDislike={handleDislike} />
         <button className={`${styles.btn} ${montserrat.className} antialised`} onClick={toggleComments}>
           <FontAwesomeIcon className={styles.footerIcon} icon={faComment} />
           Comentarios
