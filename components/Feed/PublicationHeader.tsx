@@ -9,7 +9,12 @@ interface Props {
   publication: any,
   token: string
 }
-
+/**
+ * Component for displaying the header of a publication.
+ * 
+ * @param {object} publication - The publication data.
+ * @param {string} token - Authentication token for fetching user information.
+ */
 const PublicationHeader: React.FC<Props> = ({ publication, token }) => {
   const [userImg, setUserImg] = useState<string>('')
 

@@ -7,20 +7,35 @@ import Image from 'next/image';
 import { AuthContext } from '@/app/context/auth';
 import { useRouter } from 'next/navigation';
 
+/**
+ * Component for the navigation bar.
+ * 
+ * @component
+ * @returns {JSX.Element} - The JSX element representing the navigation bar.
+ */
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { setId, setToken, setIsLogged } = useContext(AuthContext);
     const router = useRouter();
+
+
+    /**
+     * Toggles the visibility of the navigation menu.
+     */
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
+    /**
+     * Logs the user out and redirects to the login page.
+     */
     const logout = () => {
         setId('');
         setToken('');
         setIsLogged(false);
         router.push('/login');
     }
+
 
     return (
         <div className={isOpen ? `${styles.container} ${styles.containerOpen}` : styles.container}>

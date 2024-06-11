@@ -9,8 +9,7 @@ import styles from './feedPublications.module.css'
 import { useRouter } from 'next/navigation'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
 import Publication from './Publication'
-import { on } from 'events'
-import { faSleigh } from '@fortawesome/free-solid-svg-icons'
+
 
 interface Props {
   token : string
@@ -18,14 +17,24 @@ interface Props {
   updateFeed: boolean
 }
 
-//  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
-const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
+/**
+ * Component for displaying feed publications.
+ *
+ * @param {string} token - Authentication token for fetching data.
+ * @param {string} id - User ID.
+ * @param {boolean} updateFeed - Boolean indicating whether to update the feed.
+ */
+  const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
-  const router = useRouter()
   const [commentAdded, setCommentAdded] = useState(false)
   const [updatePublications, setUpdatePublications] = useState(false)
 
+    /**
+   * Function to fetch publications from the API.
+   * 
+   * @param {number} page - The page number of publications to fetch.
+   */
   const fetchPublications = async (page: number) => {
     const publicationsApiCall = await fetchFeedData(page, token);
     
@@ -50,9 +59,6 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
     setPublications({ ...publicationsApiCall, data: publicationsWithComments });
   };
 
-  const redirect = (path: string) => () => {
-    router.push(path)
-  }
 
   const setUpdate = () => {
     setUpdatePublications(true)
@@ -64,6 +70,10 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
     setUpdatePublications(false)
   }, [updateFeed, updatePublications, page, token, commentAdded])
 
+
+    /**
+   * Function to load more publications when scrolling.
+   */
   const loadMore = () => {
     if (publications.currentPage < publications.totalPages) {
       setPage(prevPage => prevPage + 1)

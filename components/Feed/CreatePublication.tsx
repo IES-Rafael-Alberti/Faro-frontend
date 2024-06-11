@@ -14,11 +14,22 @@ interface Props {
   onUpdateFeed: () => any
 }
 
+/**
+ * Component for creating a new publication.
+ *
+ * @param {string} userImg - URL of the user's profile image.
+ * @param {function} onUpdateFeed - Function to call after updating the feed with a new publication.
+ */
 const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
   const { token, id } = useContext(AuthContext)
   const [publication, setPublication] = useState('')
   const [isValid, setIsValid] = useState(false)
 
+  /**
+   * Function to validate the publication input.
+   * 
+   * @param {string} input - The publication input value.
+   */
   const validateInput = (input: string) => {
     if (input.trim() !== '') {
       setIsValid(true)
@@ -31,14 +42,16 @@ const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
     validateInput(publication)
   }, [publication])
 
+  /**
+   * Function to handle form submission.
+   * 
+   * @param {React.FormEvent} event - The form submission event.
+   */
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     submitPublication(publication, id, token)
     onUpdateFeed();
   }
-
-
-
 
   return (
     <article className={styles.createContainer}>
@@ -49,16 +62,16 @@ const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
             rows={2}
             className={styles.chatbox}
             value={publication}
-            placeholder="Crea una publicación"
+            placeholder="Create a publication"
             onChange={e => {
               setPublication(e.target.value)
               validateInput(e.target.value)
             }}
             required
-            />
+          />
         </div>
         <button className={`${styles.submitButton} ${montserrat.className}`} type="submit" disabled={!isValid}>
-          Publicar
+          Publish
         </button>
       </form>
     </article>
