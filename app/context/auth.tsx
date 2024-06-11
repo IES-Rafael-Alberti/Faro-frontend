@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if(!isLogged && !token && !id){
       router.push('/')
     }
-  }, [children])
+  }, [isLogged, token, id, router])
 
   return (
     <AuthContext.Provider value={{ isLogged, setIsLogged, token, setToken, id, setId }}>
