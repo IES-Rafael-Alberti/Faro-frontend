@@ -40,7 +40,7 @@ import { useRouter } from 'next/navigation';
         router.push('/feed'); // Redirect user to feed page.
       }
     } catch (e) {
-      setError("Invalid credentials"); // Handling login errors.
+      setError("Credenciales inválidas."); // Handling login errors.
     }
   };
 

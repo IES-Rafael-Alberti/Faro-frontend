@@ -1,6 +1,5 @@
 // components/GenericInput.js
 import React from 'react';
-import styles from './genericInput.module.css';
 
 /**
  * A reusable generic input component.
@@ -10,7 +9,6 @@ import styles from './genericInput.module.css';
  * @param {string} value - The value of the input.
  * @param {function} onChange - The function to call when the input value changes.
  * @param {string} placeholder - The placeholder text for the input.
- * @param {string} error - Error message to display, if any.
  * @param {string} containerClass - Additional CSS class for the input container.
  * @param {string} inputClass - Additional CSS class for the input element.
  * @param {boolean} container - Whether to render an additional container for the input (default: false).
@@ -23,7 +21,6 @@ const GenericInput = ({
   value = '',
   onChange = () => {},
   placeholder = '',
-  error = '',
   containerClass = '',
   inputClass = '',
   container = false,
@@ -41,6 +38,7 @@ const GenericInput = ({
             placeholder={placeholder}
             id={name}
             className={inputClass}
+            aria-label={name}
             {...props}
           />
         </div>
@@ -52,11 +50,11 @@ const GenericInput = ({
           onChange={onChange}
           placeholder={placeholder}
           id={name}
+          aria-label={name}
           className={inputClass}
           {...props}
         />
       )}
-      {error && <small className={styles.error}>{error}</small>}
     </>
   );
 };

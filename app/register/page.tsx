@@ -6,8 +6,7 @@ import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/app/context/auth"
-import GenericInput from '../../components/shared/GenericInput'
-import { submitData } from "../../utils/submitData";
+import GenericInput from "@/components/buttons/GenericInput";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
 
