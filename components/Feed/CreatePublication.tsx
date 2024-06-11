@@ -50,7 +50,8 @@ const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     submitPublication(publication, id, token)
-    onUpdateFeed();
+    onUpdateFeed()
+    setPublication('')
   }
 
   return (
