@@ -35,15 +35,16 @@ export const submitData = async <Req, Res>(url: string, data: Req, token: string
       body: JSON.stringify(data)
     });
 
+    const responseData = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
+
     if (!response.ok) {
       let errorMessage = `Error submitting data: ${response.status} ${response.statusText}`;
-      if (response.headers.get('content-type')?.includes('application/json')) {
-        const responseData = await response.json();
+      if (responseData) {
         errorMessage += ` - ${responseData.message}`;
       }
     }
 
-    return response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
+    return responseData;
   } catch (error) {
     return Promise.reject(error);
   }
