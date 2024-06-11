@@ -24,11 +24,7 @@ interface Props {
  * @param {string} token - Authentication token for deleting comments.
  * @param {function} onCommentUpdate - Function to call after updating comments.
  */
-  const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate }) => {
-
-  useEffect(() => {
-    console.log(publication)
-  }, [])
+const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate }) => {
 
   /**
    * Function to delete a comment by ID.
@@ -37,7 +33,7 @@ interface Props {
    */
   const deleteCommentbyId = async (comment: any) => {
     try {
-      // const response = await deleteComment(`comments/${comment.id}/user/${userId}/publication/${publication.id}`, token)
+      await deleteComment(comment.id, comment.user_id, publication.id, token)
       onCommentUpdate()
     } catch (error) {
       console.error('Error deleting comment:', error)
