@@ -19,7 +19,7 @@ const PublicationHeader: React.FC<Props> = ({ publication, token }) => {
         setUserImg(data.profile_picture)
       })
       .catch(error => console.error('Error fetching user image:', error))
-  }, [])
+  }, [userImg, publication.user_id, token])
 
   return (
     <header>

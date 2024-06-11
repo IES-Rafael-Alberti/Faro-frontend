@@ -6,11 +6,11 @@ import { fetchCommentsOfPublication, fetchFeedData } from '../../utils/fetchData
 import { FeedPublicationInterface } from '../../types/FeedPublication.interface'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styles from './feedPublications.module.css'
-import { useRouter } from 'next/navigation'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
 import Publication from './Publication'
 import { on } from 'events'
 import { faSleigh } from '@fortawesome/free-solid-svg-icons'
+import { useCallback } from 'react'
 
 interface Props {
   token : string
@@ -22,11 +22,10 @@ interface Props {
 const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
-  const router = useRouter()
   const [commentAdded, setCommentAdded] = useState(false)
   const [updatePublications, setUpdatePublications] = useState(false)
 
-  const fetchPublications = async (page: number) => {
+  const fetchPublications = useCallback(async (page: number) => {
     // This line prevents to fetch data when you logout after load this component
     if (!token) {
       return
@@ -52,26 +51,26 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
       };
     }));
     setPublications({ ...publicationsApiCall, data: publicationsWithComments });
-  };
+  }, [token]);
 
-  const setUpdate = () => {
+  const setUpdate = useCallback(() => {
     setUpdatePublications(true)
-  }
+  }, []);
+
+  const onCommentAdded = useCallback(() => {
+    setCommentAdded(true)
+  }, []);
 
   useEffect(() => {
     fetchPublications(page)
     setCommentAdded(false)
     setUpdatePublications(false)
-  }, [updateFeed, updatePublications, page, token, commentAdded])
+  }, [updateFeed, updatePublications, page, token, commentAdded, fetchPublications])
 
   const loadMore = () => {
     if (publications.currentPage < publications.totalPages) {
       setPage(prevPage => prevPage + 1)
     }
-  }
-
-  const onCommentAdded = () => {
-    setCommentAdded(true)
   }
 
   return (
