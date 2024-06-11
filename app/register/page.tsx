@@ -1,20 +1,21 @@
 'use client';
 import { useContext, useState } from "react";
 import styles from "./page.module.css";
-import Button from "@/components/buttons/button";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { AuthContext } from "@/app/context/auth"
-import GenericInput from "@/components/buttons/GenericInput";
+import { AuthContext } from "@/app/context/auth";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
+import FormHeader from "@/components/shared/FormHeader";
+import AuthFormSection from "@/components/shared/AuthFormSection";
+import AuthInfoAside from "@/components/shared/AuthInfoAside";
 
 /**
  * Component for user registration.
  * Allows users to register by providing necessary information.
  */
-export default function Register() {
+const Register = () => {
   // Initialize useRouter hook from Next.js
   const router = useRouter();
 
@@ -43,7 +44,7 @@ export default function Register() {
    */
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
   /**
@@ -141,46 +142,41 @@ export default function Register() {
     }
   };
 
-
   return (
     <main className={styles.wrapper}>
       <section className={styles.authContainer}>
         <article className={styles.authForm}>
-          <h1 className={styles.authTitle}>Registre</h1>
-          <h2 className={styles.authSubtitle}>una nueva cuenta</h2>
+          <FormHeader title="Registre" subtitle="una nueva cuenta" styles={styles} />
           <form className={styles.registerForm} onSubmit={handleSubmit}>
             <section className={styles.dobleInputContainer}>
-              <div className={styles.w48}>
-                <GenericInput
-                  inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
-                  type="text"
-                  name="name"
-                  placeholder="nombre"
-                  value={formData.name}
-                  onChange={handleChange}
-                  error={errors.name}
-                  minLength={3}
-                  required
-                />
-                {errors.name && <small className={styles.error}>{errors.name}</small>}
-              </div>
-              <div className={styles.w48}>
-                <GenericInput
-                  inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
-                  type="text"
-                  name="lastName"
-                  placeholder="apellido"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  error={errors.lastName}
-                  minLength={3}
-                  required
-                />
-                {errors.lastName && <small className={styles.error}>{errors.lastName}</small>}
-              </div>
+              <AuthFormSection
+                type="text"
+                name="name"
+                placeholder="nombre"
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
+                minLength={3}
+                required
+                styles={styles}
+                montserratClassName={montserrat.className}
+                hasOutsideDiv={true}
+              />
+              <AuthFormSection
+                type="text"
+                name="lastName"
+                placeholder="apellido"
+                value={formData.lastName}
+                onChange={handleChange}
+                error={errors.lastName}
+                minLength={3}
+                required
+                styles={styles}
+                montserratClassName={montserrat.className}
+                hasOutsideDiv={true}
+              />
             </section>
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="text"
               name="email"
               placeholder="email"
@@ -188,10 +184,11 @@ export default function Register() {
               onChange={handleChange}
               error={errors.email}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            {errors.email && <small className={styles.error}>{errors.email}</small>}
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="password"
               name="password"
               placeholder="contraseña"
@@ -200,10 +197,11 @@ export default function Register() {
               error={errors.password}
               minLength={8}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            {errors.password && <small className={styles.error}>{errors.password}</small>}
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="password"
               name="confirmPassword"
               placeholder="confirmar contraseña"
@@ -212,19 +210,25 @@ export default function Register() {
               error={errors.confirmPassword}
               minLength={8}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            {errors.confirmPassword && <small className={styles.error}>{errors.confirmPassword}</small>}
             <Link className={styles.linkToRegister} href="/login">¿Ya está registrado? Conéctese</Link>
             <button type="submit" className={[styles.registerButton, `${montserrat.className} antialiased`].join(' ')}>REGÍSTRESE</button>
           </form>
         </article>
-        <aside className={styles.authInfo}>
-          <h3 className={styles.authInfoTitle}>¿Ya está registrado?</h3>
-          <p className={styles.authInfoText}>Si ya está registrado inicie sesión para acceder a su cuenta</p>
-          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/login" />
-        </aside>
+        <AuthInfoAside 
+          headerMessage="¿Ya está registrado?"
+          text="Si ya está registrado inicie sesión para acceder a su cuenta"
+          buttonText="INICIE SESION"
+          buttonLink="/login"
+          styles={styles} 
+        />
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
   );
-}
+};
+
+export default Register;

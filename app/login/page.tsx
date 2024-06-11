@@ -1,13 +1,18 @@
-"use client";
+// pages/login.js
+
+'use client'
+
+import { useState, useContext } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
-import Button from "@/components/buttons/button";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useContext } from "react";
 import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/app/context/auth";
-import { useRouter } from 'next/navigation';
+import AuthFormSection from "@/components/shared/AuthFormSection";
+import FormHeader from "@/components/shared/FormHeader";
+import AuthInfoAside from "@/components/shared/AuthInfoAside";
 
 /**
  * 
@@ -15,7 +20,7 @@ import { useRouter } from 'next/navigation';
  * 
  * @returns {JSX.Element} - The JSX element representing the login page.
  */
-  export default function Login(): JSX.Element {
+  const Login = () : JSX.Element => {
   const [email, setEmail] = useState(""); // State for the user's email.
   const [password, setPassword] = useState(""); // State for the user's password.
   const [error, setError] = useState(''); // State to handle login errors.
@@ -48,43 +53,43 @@ import { useRouter } from 'next/navigation';
     <main className={styles.wrapper}>
       <section className={styles.authContainer}>
         <article className={styles.authForm}>
-          <h1 className={styles.authTitle}>Conéctese</h1>
-          <h2 className={styles.authSubtitle}>a su cuenta</h2>
+          <FormHeader title="Conéctese" subtitle="a su cuenta" styles={styles} />
           <form className={styles.loginForm} onSubmit={handleSubmit}>
-            <input
-              className={[styles.authInput, montserrat.className, "antialiased"].join(' ')}
+            <AuthFormSection
               type="text"
-              id="email"
               name="email"
               placeholder="email"
-              aria-label="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            <input
-              className={[styles.authInput, montserrat.className, "antialiased"].join(' ')}
+            <AuthFormSection
               type="password"
-              id="password"
               name="password"
               placeholder="contraseña"
-              aria-label="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
             {error && <small className={styles.error}>{error}</small>}
             <Link className={styles.linkToRegister} href="/register">¿Aún no tiene una cuenta? Regístrese</Link>
             <button type="submit" className={[styles.loginButton, montserrat.className, "antialiased"].join(' ')}>INICIE SESIÓN</button>
           </form>
         </article>
-        <aside className={styles.authInfo}>
-          <h3 className={styles.authInfoTitle}>¿Nuevo en faro?</h3>
-          <p className={styles.authInfoText}>Únase a nuestra comunidad y disfrute todas las ventajas que nuestra web le ofrece</p>
-          <Button className={styles.registerButton} text="REGÍSTRESE" href="/register" />
-        </aside>
+        <AuthInfoAside 
+          headerMessage="¿Nuevo en faro?"
+          text="Únase a nuestra comunidad y disfrute todas las ventajas que nuestra web le ofrece"
+          buttonText="REGÍSTRESE"
+          buttonLink="/register"
+          styles={styles} />
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
   );
-}
+};
+
+export default Login;
