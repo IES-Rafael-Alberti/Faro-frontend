@@ -7,6 +7,7 @@ import translateRol from '@/app/context/translate';
 import { sendRequestToConnect, fetchAllConnectionsOfAnUser } from '@/utils/fetchData';
 import { BasicUserInfoWithIdInterface } from '@/types/BasicUserInfoWithId.interface';
 import { AuthContext } from '@/app/context/auth';
+import { UserMessageInterface } from '@/types/user-message.interface';
 interface Props {
     user: BasicUserInfoWithIdInterface;
     isConnected: boolean;
@@ -15,7 +16,7 @@ interface Props {
 const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     const {id, token} = useContext(AuthContext);
     const [connected, setConnected] = useState(isConnected);
-    const [connections, setConnections] = useState<string[]>([]);
+    const [connections, setConnections] = useState<UserMessageInterface[]>([]);
     const [label, setLabel] = useState(connected ? "Conectado" : "Conectar");
     const [buttonClass, setButtonClass] = useState(connected ? `${styles.connectButton} ${styles.connectButtonIsConnected}` : styles.connectButton);
     const [buttonClicked, setButtonClicked] = useState(false);
@@ -44,12 +45,10 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     };
     
     useEffect(() => {
-      console.log(connections)
       checkIfConnected();
     }, [connections]);
 
     const checkIfConnected = () => {
-      console.log(connections)
       if (connections.includes(user.user_id)) {
           setConnected(true);
           setLabel("Conectado");

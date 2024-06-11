@@ -17,13 +17,7 @@ interface Props {
 
 const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate  }) => {
 
-  useEffect(() => {
-    console.log(publication)
-
-  }, [])
-
   const deleteCommentbyId = async (comment : string) => {
-    console.log(comment)
     try {
       // const response = await deleteComment(`comments/${comment.id}/user/${userId}/publication/${publication.id}`, token)
       onCommentUpdate()

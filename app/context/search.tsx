@@ -20,7 +20,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
       const { information } = json
       setData(information || [])
     } catch (error) {
-      console.log(error)
+      
     } finally {
       setResultTitle(data.length > 1 ? 'Your Search Result' : 'No Search Result Found!')
       setLoading(false)

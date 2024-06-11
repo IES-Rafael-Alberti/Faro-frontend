@@ -25,7 +25,6 @@ import { ExperienceInterface } from '@/types/profile/experience.interface';
  * @throws Will throw an error if the request fails.
  */
 export const submitData = async <Req, Res>(url: string, data: Req, token: string = '', verb: string = 'POST'): Promise<Res> => {
-  console.log(data);
   try {
     const response = await fetch(url, {
       method: verb,

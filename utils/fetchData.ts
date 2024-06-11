@@ -185,7 +185,6 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
  * @throws Will throw an error if the request fails.
  */
 export async function sendRequestToConnect(body: object, token: string = ''): Promise<number> {
-  console.log(body);
   try {
     const response: AxiosResponse = await axios.post(`${URL}connections/request`, body, {
       headers: {

@@ -25,7 +25,6 @@ const Publication: React.FC<Props> = ({ id, publication, token, updatePublicatio
     try {
       const response = await deleteData(`publications/user/${id}/msg/${publication.id}`, token)
       updatePublications()
-      console.log(response)
     } catch (error) {
       console.error('Error deleting publication:', error)
     }

@@ -31,7 +31,6 @@ export const updateData = async <Req, Res>(url: string, data: Req, token: string
     }
 
     const responseData = await response.json();
-    console.log("Response Data:", responseData);
     return responseData as Res;
   } catch (error) {
     return Promise.reject(error);
@@ -82,7 +81,6 @@ export const patchData = async <Req, Res>(url: string, data: Req, token: string 
  * @throws Will throw an error if the request fails.
  */
 export const updateProfileData = async (id: string, profile: EditableProfileData, token: string = ''): Promise<CompleteProfile> => {
-  console.log("Profile:", profile);
   return updateData<EditableProfileData, CompleteProfile>(`${PROFILE_URL}${id}`, profile, token);
 };
 

@@ -8,11 +8,8 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
     const { profileId } = params
     const { id, token, setId  } = useContext(AuthContext)
 
-    const sendFriendRequest = async () => {
-        console.log(profileId);
-        
+    const sendFriendRequest = async () => {        
         const response = await submitFriendRequest(id, profileId, token )
-        console.log(response)
     }
     
 
