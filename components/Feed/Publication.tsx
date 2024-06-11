@@ -18,7 +18,7 @@ const Publication: React.FC<Props> = ({ id, publication, token, updatePublicatio
 
   const parseMsg = (msg : string) => {
     const lines = msg.split('\n');
-    return lines.map((line, index) => <p key={index} className={styles.postMsg}>{line}</p>);
+    return lines.map((line, index) => <span key={index} className={styles.postMsg}>{line}</span>);
   }
 
   const deletePublication = async () => {
