@@ -5,13 +5,14 @@
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
-import Button from "@/components/buttons/button";
 import { montserrat } from "../ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/app/context/auth";
-import { useRouter } from 'next/navigation';
+import AuthFormSection from "@/components/shared/AuthFormSection";
+import FormHeader from "@/components/shared/FormHeader";
+import AuthInfoAside from "@/components/shared/AuthInfoAside";
 
 /**
  * 
@@ -19,7 +20,7 @@ import { useRouter } from 'next/navigation';
  * 
  * @returns {JSX.Element} - The JSX element representing the login page.
  */
-  export default function Login(): JSX.Element {
+  const Login = () : JSX.Element => {
   const [email, setEmail] = useState(""); // State for the user's email.
   const [password, setPassword] = useState(""); // State for the user's password.
   const [error, setError] = useState(''); // State to handle login errors.
