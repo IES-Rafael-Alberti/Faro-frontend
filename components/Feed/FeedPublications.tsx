@@ -18,8 +18,14 @@ interface Props {
   updateFeed: boolean
 }
 
-//  TO DO: FIX QUE NO EXPLOTE SI NO HAY DATA
-const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
+/**
+ * Component for displaying feed publications.
+ *
+ * @param {string} token - Authentication token for fetching data.
+ * @param {string} id - User ID.
+ * @param {boolean} updateFeed - Boolean indicating whether to update the feed.
+ */
+  const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
   const [commentAdded, setCommentAdded] = useState(false)
@@ -67,6 +73,10 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
     setUpdatePublications(false)
   }, [updateFeed, updatePublications, page, token, commentAdded, fetchPublications])
 
+
+    /**
+   * Function to load more publications when scrolling.
+   */
   const loadMore = () => {
     if (publications.currentPage < publications.totalPages) {
       setPage(prevPage => prevPage + 1)

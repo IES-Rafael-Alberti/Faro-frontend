@@ -15,14 +15,32 @@ interface Props {
   onCommentUpdate: () => any
 }
 
-const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate  }) => {
+/**
+ * Component for displaying comments of a publication.
+ * 
+ * @param {object} publication - The publication data.
+ * @param {boolean} isCommentsVisible - Boolean indicating whether comments are visible.
+ * @param {string} userId - User ID.
+ * @param {string} token - Authentication token for deleting comments.
+ * @param {function} onCommentUpdate - Function to call after updating comments.
+ */
+  const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate }) => {
 
-  const deleteCommentbyId = async (comment : string) => {
+  useEffect(() => {
+    console.log(publication)
+  }, [])
+
+  /**
+   * Function to delete a comment by ID.
+   * 
+   * @param {string} comment - The comment object.
+   */
+  const deleteCommentbyId = async (comment: any) => {
     try {
       // const response = await deleteComment(`comments/${comment.id}/user/${userId}/publication/${publication.id}`, token)
       onCommentUpdate()
     } catch (error) {
-      console.error('Error deleting publication:', error)
+      console.error('Error deleting comment:', error)
     }
   }
 

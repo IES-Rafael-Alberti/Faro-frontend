@@ -1,7 +1,4 @@
-// pages/register.js
-
-'use client'
-
+'use client';
 import { useContext, useState } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
@@ -13,11 +10,19 @@ import GenericInput from "@/components/buttons/GenericInput";
 import { submitData } from "@/utils/submitData";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
+import FormHeader from "@/components/shared/FormHeader";
+import AuthFormSection from "@/components/shared/AuthFormSection";
+import AuthInfoAside from "@/components/shared/AuthInfoAside";
 
-
-export default function Register () {
+/**
+ * Component for user registration.
+ * Allows users to register by providing necessary information.
+ */
+const Register = () => {
+  // Initialize useRouter hook from Next.js
   const router = useRouter();
 
+  // Define state variables for form data and errors
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -32,24 +37,44 @@ export default function Register () {
     password: "",
     confirmPassword: ""
   });
+
+  // Access the authentication context
   const { setToken } = useContext(AuthContext);
 
-  const handleChange = (e:any) => {
+  /**
+   * Function to handle form input changes.
+   * @param {Event} e - Event object representing the form input change event.
+   */
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const validateEmail = (email:string) => {
+  /**
+   * Function to validate email format.
+   * @param {string} email - Email address to validate.
+   * @returns {boolean} - Indicates whether the email is valid.
+   */
+  const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validateNameOrLastName = (name:string) => {
+  /**
+   * Function to validate name or last name format.
+   * @param {string} name - Name or last name to validate.
+   * @returns {boolean} - Indicates whether the name or last name is valid.
+   */
+  const validateNameOrLastName = (name: string) => {
     const nameRegex = /^[a-zA-ZáÁéÉíÍóÓúÚ\s]+$/;
     return nameRegex.test(name);
   };
 
-  const handleSubmit = async (e:any) => {
+  /**
+   * Function to handle form submission.
+   * @param {Event} e - Event object representing the form submission event.
+   */
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     let valid = true;
     let validationErrors: { 
@@ -59,8 +84,8 @@ export default function Register () {
       password?: string,
       confirmPassword?: string
     } = {};
-    
 
+    // Perform validation checks on form data
     if (!validateNameOrLastName(formData.name)) {
       validationErrors.name = "Por favor, introduzca un nombre válido.";
       valid = false;
@@ -86,14 +111,16 @@ export default function Register () {
       valid = false;
     }
 
+    // Update errors state with validation results
     setErrors({
       name: validationErrors.name || "", 
-      lastName: validationErrors.lastName|| "",
+      lastName: validationErrors.lastName || "",
       email: validationErrors.email || "",
       password: validationErrors.password || "",
       confirmPassword: validationErrors.confirmPassword || ""
     });
 
+    // If form data is valid, submit it
     if (valid) {
       const data = {
         name: formData.name,
@@ -116,46 +143,41 @@ export default function Register () {
     }
   };
 
-
   return (
     <main className={styles.wrapper}>
       <section className={styles.authContainer}>
         <article className={styles.authForm}>
-          <h1 className={styles.authTitle}>Registre</h1>
-          <h2 className={styles.authSubtitle}>una nueva cuenta</h2>
+          <FormHeader title="Registre" subtitle="una nueva cuenta" styles={styles} />
           <form className={styles.registerForm} onSubmit={handleSubmit}>
             <section className={styles.dobleInputContainer}>
-              <div className={styles.w48}>
-                <GenericInput
-                  inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
-                  type="text"
-                  name="name"
-                  placeholder="nombre"
-                  value={formData.name}
-                  onChange={handleChange}
-                  error={errors.name}
-                  minLength={3}
-                  required
-                />
-                {errors.name && <small className={styles.error}>{errors.name}</small>}
-              </div>
-              <div className={styles.w48}>
-                <GenericInput
-                  inputClass={[styles.authInput, styles.dobleInput, `${montserrat.className} antialiased`].join(' ')}
-                  type="text"
-                  name="lastName"
-                  placeholder="apellido"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  error={errors.lastName}
-                  minLength={3}
-                  required
-                />
-                {errors.lastName && <small className={styles.error}>{errors.lastName}</small>}
-              </div>
+              <AuthFormSection
+                type="text"
+                name="name"
+                placeholder="nombre"
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
+                minLength={3}
+                required
+                styles={styles}
+                montserratClassName={montserrat.className}
+                hasOutsideDiv={true}
+              />
+              <AuthFormSection
+                type="text"
+                name="lastName"
+                placeholder="apellido"
+                value={formData.lastName}
+                onChange={handleChange}
+                error={errors.lastName}
+                minLength={3}
+                required
+                styles={styles}
+                montserratClassName={montserrat.className}
+                hasOutsideDiv={true}
+              />
             </section>
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="text"
               name="email"
               placeholder="email"
@@ -163,10 +185,11 @@ export default function Register () {
               onChange={handleChange}
               error={errors.email}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            {errors.email && <small className={styles.error}>{errors.email}</small>}
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="password"
               name="password"
               placeholder="contraseña"
@@ -175,10 +198,11 @@ export default function Register () {
               error={errors.password}
               minLength={8}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
-            {errors.password && <small className={styles.error}>{errors.password}</small>}
-            <GenericInput
-              inputClass={[styles.authInput, `${montserrat.className} antialiased`].join(' ')}
+            <AuthFormSection
               type="password"
               name="confirmPassword"
               placeholder="confirmar contraseña"
@@ -187,6 +211,9 @@ export default function Register () {
               error={errors.confirmPassword}
               minLength={8}
               required
+              styles={styles}
+              montserratClassName={montserrat.className}
+              hasOutsideDiv={false}
             />
             {errors.confirmPassword && <small className={styles.error}>{errors.confirmPassword}</small>}
             <Link className={styles.linkToRegister} href="/public/login">¿Ya está registrado? Conéctese</Link>
@@ -202,4 +229,6 @@ export default function Register () {
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
     </main>
   );
-}
+};
+
+export default Register;

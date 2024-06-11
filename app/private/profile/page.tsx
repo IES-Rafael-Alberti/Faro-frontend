@@ -359,7 +359,7 @@ export default function Profile() {
                   formData.education.map((edu, index) => (
                     <div key={index} className={styles.editContainer}>
                       <h3 className={styles.titleContainer}>Estudio {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteEducation} className={`${styles.editIcon} ${styles.deleteIcon}`} />
+                      <FontAwesomeIcon icon={faTrash} onClick={() => deleteEducation(edu.id ?? '')} className={`${styles.editIcon} ${styles.deleteIcon}`} />
                       <input
                         type="text"
                         name="degree"
@@ -409,7 +409,7 @@ export default function Profile() {
                   formData.experience.map((exp, index) => (
                     <div key={index} className={styles.editContainer}>
                       <h3 className={styles.titleContainer}>Experiencia {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience} className={`${styles.editIcon} ${styles.deleteIcon}`} />
+                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience(id)} className={`${styles.editIcon} ${styles.deleteIcon}`} />
                       <input
                         type="text"
                         name="company"

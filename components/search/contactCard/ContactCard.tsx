@@ -13,6 +13,14 @@ interface Props {
     isConnected: boolean;
 }
 
+/**
+ * Component for displaying user contact information and interaction options.
+ * 
+ * @component
+ * @param {object} user - User information object.
+ * @param {boolean} isConnected - Indicates whether the user is already connected.
+ * @returns {JSX.Element} - The JSX element representing the contact card.
+ */
 const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     const {id, token} = useContext(AuthContext);
     const [connected, setConnected] = useState(isConnected);
@@ -21,6 +29,9 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     const [buttonClass, setButtonClass] = useState(connected ? `${styles.connectButton} ${styles.connectButtonIsConnected}` : styles.connectButton);
     const [buttonClicked, setButtonClicked] = useState(false);
 
+    /**
+     * Function to send a connection request to the user.
+     */
     const connectUser = async () => {
       const body = {
         user_id: id,
@@ -35,6 +46,12 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
         }
     }
 
+    /**
+     * Function to fetch the connections of the current user.
+     * 
+     * @param {string} token - User authentication token.
+     * @param {string} id - User ID.
+     */
     const fetchConnections = async (token: string, id: string) => {
       try {
         const response = await fetchAllConnectionsOfAnUser(token, id);
@@ -44,10 +61,16 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
       }
     };
     
+    /**
+     * Effect hook to check if the user is connected.
+     */
     useEffect(() => {
       checkIfConnected();
     }, [connections]);
 
+    /**
+     * Function to check if the user is connected and update button label and style accordingly.
+     */
     const checkIfConnected = () => {
       if (connections.includes(user.user_id)) {
           setConnected(true);
@@ -58,7 +81,6 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
           setButtonClass(`${styles.connectButton} ${styles.connectionIsSending}`);
       }
     }
-
     return (
         <article className={styles.contentUserInfo}>
             {/* TO DO TAKE ALWAYS THE IMG FROM RESPONSE */}

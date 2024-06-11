@@ -15,27 +15,40 @@ import Link from 'next/link'
 
 interface Props {}
 
+/**
+ * React component for the main page of the application.
+ * 
+ * This component displays the user's basic information, allows them to create publications, and shows their feed of publications.
+ * 
+ * @returns {JSX.Element} - The JSX element representing the main page.
+ */
 const Page: NextPage<Props> = () => {
-  const { id, token } = useContext(AuthContext)
-  const [isLoading, setIsLoading] = useState(true)
-  const [updateFeed, setUpdateFeed] = useState(false);
-  const [user, setUser] = useState<BasicUserInfoInterface>({
+  const { id, token } = useContext(AuthContext); // Authentication context.
+  const [isLoading, setIsLoading] = useState(true); // State to manage loading state.
+  const [updateFeed, setUpdateFeed] = useState(false); // State to trigger feed update.
+  const [user, setUser] = useState<BasicUserInfoInterface>({ // State to store user's basic information.
     username: '',
     rol: '',
     count_of_publications: 0,
     count_of_connections: 0,
     profile_picture: ''
-  })
+  });
 
+  /**
+   * Effect to fetch user's basic information on component mount.
+   */
   useEffect(() => {
     fetchBasicUserInfo(id, token).then((response) => {
-      setUser(response)
+      setUser(response);
       setTimeout(() => {
-        setIsLoading(false)
-      }, 1000)
-    })
-  }, [id, token])
+        setIsLoading(false);
+      }, 1000);
+    });
+  }, [id, token]);
 
+  /**
+   * Function to handle feed update.
+   */
   const handleUpdateFeed = () => {
     setUpdateFeed(true);
   };

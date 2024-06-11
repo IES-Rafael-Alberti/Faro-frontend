@@ -9,9 +9,23 @@ interface DropdownProps {
   reset: boolean; // Nueva prop para controlar el reset
 }
 
+/**
+ * Dropdown component for selecting options from a list.
+ * 
+ * @component
+ * @param {string[]} options - The list of options to display in the dropdown.
+ * @param {function} onSelect - The function to call when an option is selected.
+ * @param {boolean} reset - Flag indicating whether to reset the dropdown to its initial state.
+ * @returns {JSX.Element} - The JSX element representing the dropdown menu.
+ */
 const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, reset }) => {
   const [selectedOption, setSelectedOption] = useState("");
 
+  /**
+   * Handler function called when an option is selected from the dropdown.
+   * 
+   * @param {string} option - The selected option.
+   */
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     onSelect(option);

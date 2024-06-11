@@ -5,34 +5,46 @@ import translateRol from "@/app/context/translate";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/app/context/auth";
 import { fetchAllConnectionsOfAnUser, fetchMessagesFromUser } from "@/utils/fetchData";
-import { ContactInterface } from "@/types/profile/contact.interface";
 import { MessageInterface } from "@/types/message.interface";
 import { UserMessageInterface } from "@/types/user-message.interface";
 import { submitMessage } from "@/utils/submitData";
 
-export default function Message() {
-    const { id, token } = useContext(AuthContext);
-    const currentMessage = useRef<HTMLTextAreaElement>(null);
-    const [selectedContact, setSelectedContact] = useState<string>('');
-    const [contacts, setContacts] = useState<UserMessageInterface[]>([]);
-    const [messages, setMessages] = useState<MessageInterface[]>([]);
+/**
+ * This component provides a messaging interface where users can chat with their contacts.
+ *
+ * @returns {JSX.Element} - The JSX element representing the message page.
+ */
+export default function Message(): JSX.Element {
+    const { id, token } = useContext(AuthContext); // Authentication context to get user ID and token.
+    const currentMessage = useRef<HTMLTextAreaElement>(null); // Reference to the current message textarea.
+    const [selectedContact, setSelectedContact] = useState<string>(''); // State for the selected contact ID.
+    const [contacts, setContacts] = useState<UserMessageInterface[]>([]); // State for the user's contacts.
+    const [messages, setMessages] = useState<MessageInterface[]>([]); // State for the messages with the selected contact.
 
-    // Function to sort messages in ascending order based on timestamp
+    // Function to sort messages in ascending order based on timestamp.
     const sortedMessages = [...messages].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
+    /**
+     * Fetches the user's connected contacts and sets the last contact as the selected contact.
+     */
     const getUsersConnectedTo = async () => {
         try {
-            const response = await fetchAllConnectionsOfAnUser(token, id)
+            const response = await fetchAllConnectionsOfAnUser(token, id);
             setContacts(response);
             if (response.length > 0) {
                 const lastContact = response[response.length - 1];
                 setSelectedContact(lastContact.id);
             }
         } catch (error) {
-            throw (error);
+            throw error;
         }
     };
 
+    /**
+     * Fetches messages from the selected contact.
+     *
+     * @param {string} contactId - The ID of the selected contact.
+     */
     const fetchMessages = async (contactId: string) => {
         if (contactId) {
             try {
@@ -46,9 +58,8 @@ export default function Message() {
                             : contact
                     )
                 );
-
             } catch (error) {
-                throw (error);
+                throw error;
             }
         }
     };
@@ -64,29 +75,42 @@ export default function Message() {
         fetchMessages(selectedContact);
     }, [selectedContact]);
 
+    /**
+     * Handles the form submission to send a message.
+     *
+     * @param {React.FormEvent} event - The form submission event.
+     */
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault(); // Prevent the default form submission behavior
-        const message = currentMessage.current?.value; // Get the value of the textarea with null check
+        event.preventDefault(); // Prevent the default form submission behavior.
+        const message = currentMessage.current?.value; // Get the value of the textarea with null check.
         if (message) {
-            // Submit the message
-            await submitMessage(message, id, selectedContact, token);
-            // Fetch the updated messages
-            await fetchMessages(selectedContact);
-            // Clear the textarea after submitting
-            currentMessage.current.value = '';
+            await submitMessage(message, id, selectedContact, token); // Submit the message.
+            await fetchMessages(selectedContact); // Fetch the updated messages.
+            currentMessage.current.value = ''; // Clear the textarea after submitting.
         }
     };
 
+    /**
+     * Handles the key down event to submit the message when Enter key is pressed without Shift key.
+     *
+     * @param {React.KeyboardEvent<HTMLTextAreaElement>} event - The key down event.
+     */
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.key === 'Enter' && !event.shiftKey) { // Check if Enter key was pressed without shift
-            handleSubmit(event); // Call the handleSubmit function
+        if (event.key === 'Enter' && !event.shiftKey) { // Check if Enter key was pressed without shift.
+            handleSubmit(event); // Call the handleSubmit function.
         }
     };
 
+    /**
+     * Parses an ISO date string to a formatted date string (DD.MM).
+     *
+     * @param {string} isoDate - The ISO date string.
+     * @returns {string} - The formatted date string.
+     */
     const parseDate = (isoDate: string) => {
         const date = new Date(isoDate);
         const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth is zero-based
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth is zero-based.
         const formattedDate = `${day}.${month}`;
         return formattedDate;
     };
