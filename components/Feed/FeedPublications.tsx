@@ -27,6 +27,10 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
   const [updatePublications, setUpdatePublications] = useState(false)
 
   const fetchPublications = async (page: number) => {
+    // This line prevents to fetch data when you logout after load this component
+    if (!token) {
+      return
+    }
     const publicationsApiCall = await fetchFeedData(page, token);
     
     const publicationsWithComments = await Promise.all(publicationsApiCall.data.map(async (publication) => {
@@ -49,10 +53,6 @@ const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
     }));
     setPublications({ ...publicationsApiCall, data: publicationsWithComments });
   };
-
-  const redirect = (path: string) => () => {
-    router.push(path)
-  }
 
   const setUpdate = () => {
     setUpdatePublications(true)

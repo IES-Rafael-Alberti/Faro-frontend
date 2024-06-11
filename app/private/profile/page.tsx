@@ -1,23 +1,22 @@
 'use client'
 
-import { checkEducationExists, checkExperienceExists, fetchBasicUserInfo, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
+import { checkEducationExists, checkExperienceExists, fetchBasicUserInfo, fetchProfileData, fetchSenderRecommendations } from '@/utils/fetchData';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
-import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
-import { updateProfileData, updateUserData } from '../../utils/updateData';
+import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
+import { updateProfileData, updateUserData } from '@/utils/updateData';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitAvatar, submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
-import { montserrat } from '../ui/fonts';
+import { montserrat } from '@/app/ui/fonts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
 import { deleteData } from '@/utils/deleteData';
 import Image from 'next/image';
 import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
-import translateRol from '../context/translate';
-
+import translateRol from '@/app/context/translate';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);

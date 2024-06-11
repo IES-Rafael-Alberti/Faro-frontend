@@ -19,7 +19,7 @@ const Navbar = () => {
         setId('');
         setToken('');
         setIsLogged(false);
-        router.push('/login');
+        router.push('/public/login');
     }
 
     return (
@@ -34,31 +34,31 @@ const Navbar = () => {
             <nav className={isOpen ? styles.navOpen : styles.navClosed}>
                 <ul className={styles.navList}>
                     <li className={styles.navLink}>
-                        <Link href="/feed">
+                        <Link href="/private/feed">
                             <FontAwesomeIcon icon={faHouse} className={styles.icon} />
                             <p>Inicio</p>
                         </Link>
                     </li>
                     <li className={styles.navLink}>
-                        <Link href="/search">
+                        <Link href="/private/search">
                             <FontAwesomeIcon icon={faSearch} className={styles.icon} />
                             <p>Buscador</p>
                         </Link>
                     </li>
                     <li className={styles.navLink}>
-                        <Link href="/profile">
+                        <Link href="/private/profile">
                             <FontAwesomeIcon icon={faUser} className={styles.icon} />
                             <p>Perfil</p>
                         </Link>
                     </li>
                     <li className={styles.navLink}>
-                        <Link href="/message">
+                        <Link href="/private/message">
                             <FontAwesomeIcon icon={faEnvelope} className={styles.icon} />
                             <p>Mensaje</p>
                         </Link>
                     </li>
                     <li className={styles.navLink}>
-                        <Link href="/login" onClick={logout}>
+                        <Link href="/public/login" onClick={logout}>
                             <FontAwesomeIcon icon={faPowerOff} className={styles.icon} />
                             <p>Logout</p>
                         </Link>

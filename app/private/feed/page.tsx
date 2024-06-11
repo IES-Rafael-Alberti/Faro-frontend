@@ -1,6 +1,6 @@
 "use client"
 import { NextPage } from 'next'
-import FeedPublications from '../../components/Feed/FeedPublications'
+import FeedPublications from '@/components/Feed/FeedPublications'
 import BasicUserInfoCard from '@/components/Feed/BasicUserInfoCard'
 import CreatePublication from '@/components/Feed/CreatePublication'
 import { useContext, useState, useEffect } from 'react'

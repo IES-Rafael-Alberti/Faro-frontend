@@ -5,12 +5,12 @@
 import { useContext, useState } from "react";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
-import { montserrat } from "../ui/fonts";
+import { montserrat } from "@/app/ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/app/context/auth"
-import GenericInput from '../../components/shared/GenericInput'
-import { submitData } from "../../utils/submitData";
+import GenericInput from "@/components/buttons/GenericInput";
+import { submitData } from "@/utils/submitData";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
 
@@ -104,7 +104,7 @@ export default function Register () {
       try {
         const result = await authPost('auth/register', data);
         setToken(result.access_token);
-        router.push('/login');
+        router.push('/public/login');
       } catch (e : any) {
         if (e.response && e.response.data && e.response.data.message === "User already exists") {
           setErrors((prevErrors) => ({
@@ -189,14 +189,14 @@ export default function Register () {
               required
             />
             {errors.confirmPassword && <small className={styles.error}>{errors.confirmPassword}</small>}
-            <Link className={styles.linkToRegister} href="/login">¿Ya está registrado? Conéctese</Link>
+            <Link className={styles.linkToRegister} href="/public/login">¿Ya está registrado? Conéctese</Link>
             <button type="submit" className={[styles.registerButton, `${montserrat.className} antialiased`].join(' ')}>REGÍSTRESE</button>
           </form>
         </article>
         <aside className={styles.authInfo}>
           <h3 className={styles.authInfoTitle}>¿Ya está registrado?</h3>
           <p className={styles.authInfoText}>Si ya está registrado inicie sesión para acceder a su cuenta</p>
-          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/login" />
+          <Button className={styles.registerButton} text="INICIE SESIÓN" href="/public/login" />
         </aside>
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />

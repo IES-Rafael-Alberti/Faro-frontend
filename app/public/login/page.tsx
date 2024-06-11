@@ -1,13 +1,14 @@
 "use client";
 import styles from "./page.module.css";
 import Button from "@/components/buttons/button";
-import { montserrat } from "../ui/fonts";
+import { montserrat } from "@/app/ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useContext } from "react";
 import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/app/context/auth";
 import { useRouter } from 'next/navigation';
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ export default function Login() {
         setToken(response.access_token);
         setIsLogged(true);
         setId(response.id);
-        router.push('/feed');
+        router.push('/private/feed');
       }
     } catch (e) {
       setError("Credenciales inválidas");
@@ -63,14 +64,14 @@ export default function Login() {
               required
             />
             {error && <small className={styles.error}>{error}</small>}
-            <Link className={styles.linkToRegister} href="/register">¿Aún no tiene una cuenta? Regístrese</Link>
+            <Link className={styles.linkToRegister} href="/public/register">¿Aún no tiene una cuenta? Regístrese</Link>
             <button type="submit" className={[styles.loginButton, montserrat.className, "antialiased"].join(' ')}>INICIE SESIÓN</button>
           </form>
         </article>
         <aside className={styles.authInfo}>
           <h3 className={styles.authInfoTitle}>¿Nuevo en faro?</h3>
           <p className={styles.authInfoText}>Únase a nuestra comunidad y disfrute todas las ventajas que nuestra web le ofrece</p>
-          <Button className={styles.registerButton} text="REGÍSTRESE" href="/register" />
+          <Button className={styles.registerButton} text="REGÍSTRESE" href="/public/register" />
         </aside>
       </section>
       <Image className={styles.logo} src="/imgs/logoFaro.png" alt="logoFaro.png" width={100} height={100} />
