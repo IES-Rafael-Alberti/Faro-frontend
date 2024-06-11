@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { URL } from "@/types/consts"; 
+import { URL, PUBLICATIONS_COMMENTS_URL } from "@/types/consts"; 
 
 /**
  * Sends a DELETE request to the specified endpoint to delete data.
@@ -37,9 +37,8 @@ export async function deleteData(src: string, token: string): Promise<string> {
  * @throws Will throw an error if the request fails.
  */
 export async function deleteComment(id: string, user_id: string, publication_id: string, token: string): Promise<string> {
-    const src = 'comments';
     try {
-        const response: AxiosResponse = await axios.delete(`${URL}${src}`, {
+        const response: AxiosResponse = await axios.delete(`${PUBLICATIONS_COMMENTS_URL}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +50,6 @@ export async function deleteComment(id: string, user_id: string, publication_id:
                 publication_id
             }
         });
-        console.log('Comment deleted:', response);
       return '200';
     } catch (error) {
         console.error('Error deleting data:', error);
