@@ -156,6 +156,10 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
     const userConnections: UserMessageInterface[] = [];
     const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token);
     
+    if (!idList || idList.length === 0) {
+      return userConnections;
+    }
+
     for (const element of idList) {
       const basicUserInfo = await fetchBasicUserInfo(element, token);
       const user: UserMessageInterface = {
@@ -168,7 +172,6 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
       };
       userConnections.push(user);
     }
-
     return userConnections;
   } catch (error) {
     console.error(`Error fetching connections data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error);

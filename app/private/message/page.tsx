@@ -127,7 +127,9 @@ export default function Message() {
                     ))}
                 </article>
                 <form onSubmit={handleSubmit}>
-                    <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown}></textarea>
+                    <div className={styles.chatboxContainer}>
+                        <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown} className={styles.textarea}></textarea>
+                    </div>
                 </form>
             </section>
         </main>
