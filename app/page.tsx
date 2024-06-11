@@ -49,7 +49,7 @@ export default function Home() {
           <ul className={styles.linksFooter}>
             <li className={styles.link}><Link href="#">Política de privacidad</Link></li>
             <li className={styles.link}><Link href="#">Cookies</Link></li>
-            <li className={styles.link}><Link href="#">Contáctanos</Link></li>
+            <li className={styles.link}><Link href="mailto:faro@iesrafaelalberti.com">Contáctanos</Link></li>
             <li className={styles.link}><Link href="#">Autoría</Link></li>
           </ul>
         </footer>
