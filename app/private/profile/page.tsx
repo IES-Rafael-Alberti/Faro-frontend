@@ -298,33 +298,27 @@ export default function Profile() {
           <FontAwesomeIcon icon={faEdit} onClick={toggleEditProfile} className={styles.editIcon} />
 
           <div className={styles.currentSection}>
-            {
+            {currentSection === 'education' && (
               <DisplayedProfileSection
                 currentSection={currentSection}
                 profileData={profileData}
                 styles={styles}
               />
-            }
-            {
+            )}
+            {currentSection === 'experience' && (
               <DisplayedProfileSection
                 currentSection={currentSection}
                 profileData={profileData}
                 styles={styles}
               />
-            }
-            {
+            )}
+            {currentSection === 'recommendations' && (
               <DisplayedProfileSection
                 currentSection={currentSection}
                 profileData={profileData}
                 styles={styles}
               />
-            }
-            {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
-              <div key={index}>
-                <p>{rec.message}</p>
-                <p>{rec.date?.toString()}</p>
-              </div>
-            ))}
+            )}
             {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
               <div key={String(contact)}>
                 {String(contact)}

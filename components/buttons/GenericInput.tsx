@@ -19,7 +19,7 @@ const GenericInput = ({
   type = 'text',
   name = '',
   value = '',
-  onChange = () => {},
+  onChange = (any: any) => any,
   placeholder = '',
   containerClass = '',
   inputClass = '',
