@@ -1,15 +1,21 @@
-const translateRol = (rol : string) => {
+/**
+ * Translates a user role from its code to a human-readable format.
+ * 
+ * @param {string} rol - The role code to translate.
+ * @returns {string} - The translated role name.
+ */
+const translateRol = (rol: string): string => {
     switch (rol) {
         case "admin":
-            return "Administrador";
+            return "Administrator";
         case "student":
-            return "Estudiante";
+            return "Student";
         case "company":
-            return "Empresa";
+            return "Company";
         case "teacher":
-            return "Profesor";
+            return "Teacher";
         default:
-            return "Rol no definido";
+            return "Undefined role";
     }
 }
 

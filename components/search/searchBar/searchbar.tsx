@@ -9,10 +9,24 @@ interface SearchBarProps {
   reset: boolean; 
 }
 
+
+/**
+ * SearchBar component for entering search queries.
+ * 
+ * @component
+ * @param {function} onSearch - The function to call when a search query is entered.
+ * @param {boolean} reset - Flag indicating whether to reset the search bar to its initial state.
+ * @returns {JSX.Element} - The JSX element representing the search bar.
+ */
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, reset }) => {
   
   const [query, setQuery] = useState('');
 
+  /**
+   * Handler function called when the search query changes.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event object.
+   */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);

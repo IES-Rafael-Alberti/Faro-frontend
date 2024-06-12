@@ -1,7 +1,7 @@
 // components/AuthFormSection.tsx
 
 import React from 'react';
-import GenericInput from './GenericInput';
+import GenericInput from '../buttons/GenericInput';
 
 interface AuthFormSectionProps {
   type: string;
@@ -27,7 +27,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={onChange}
+          onChange={() => onChange}
           error={error}
           minLength={minLength}
           required={required}
@@ -42,7 +42,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={onChange}
+          onChange={() => onChange}
           error={error}
           minLength={minLength}
           required={required}

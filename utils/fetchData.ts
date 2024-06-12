@@ -42,6 +42,12 @@ export async function fetchData<T = any>(url: string, token: string = ''): Promi
         Authorization: `Bearer ${token}`
       }
     });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new TypeError("Oops, we haven't got JSON!");
+    }
+
     return await response.json() as T;
   } catch (error) {
     return Promise.reject(error);
@@ -158,6 +164,10 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
     const userConnections: UserMessageInterface[] = [];
     const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token);
     
+    if (!idList || idList.length === 0) {
+      return userConnections;
+    }
+
     for (const element of idList) {
       const basicUserInfo = await fetchBasicUserInfo(element, token);
       const user: UserMessageInterface = {
@@ -170,7 +180,6 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
       };
       userConnections.push(user);
     }
-
     return userConnections;
   } catch (error) {
     console.error(`Error fetching connections data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error);
@@ -187,7 +196,6 @@ export async function fetchAllConnectionsOfAnUser(token: string = '', id: string
  * @throws Will throw an error if the request fails.
  */
 export async function sendRequestToConnect(body: object, token: string = ''): Promise<number> {
-  console.log(body);
   try {
     const response: AxiosResponse = await axios.post(`${URL}connections/request`, body, {
       headers: {

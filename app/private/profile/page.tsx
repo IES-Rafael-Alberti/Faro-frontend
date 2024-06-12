@@ -3,13 +3,13 @@
 import { getProfileData, getUserBasicData } from '../../utils/fetchData';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
-import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
-import { updateProfileData, updateUserData } from '../../utils/updateData';
+import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
+import { updateProfileData, updateUserData } from '@/utils/updateData';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitAvatar, submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
-import { montserrat } from '../ui/fonts';
+import { montserrat } from '@/app/ui/fonts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
 import { deleteData } from '@/utils/deleteData';
 import Image from 'next/image';

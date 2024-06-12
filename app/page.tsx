@@ -6,6 +6,9 @@ import Icon  from "../components/icons";
 import Link from "next/link";
 import Button from "@/components/buttons/button";
 
+/** 
+ * The Home component represents the main landing page of the application.
+ */
 export default function Home() {
 
   return (
@@ -38,15 +41,15 @@ export default function Home() {
         <section className={styles.authContent}></section>
         <p className={styles.authInfo}>Disfrute de las ventajas de FARO autenticándose con su propia cuenta</p>
         <div className={styles.buttonsContainer}>
-          <Button className={styles.authButton} text="Inicie Sesión" href="/login"/>
-          <Button className={styles.authButton} text="Regístrese" href="/register"/>
+          <Button className={styles.authButton} text="Inicie Sesión" href="/public/login"/>
+          <Button className={styles.authButton} text="Regístrese" href="/public/register"/>
         </div>
 
         <footer className={styles.containerFooter}>
           <ul className={styles.linksFooter}>
             <li className={styles.link}><Link href="#">Política de privacidad</Link></li>
             <li className={styles.link}><Link href="#">Cookies</Link></li>
-            <li className={styles.link}><Link href="#">Contáctanos</Link></li>
+            <li className={styles.link}><Link href="mailto:faro@iesrafaelalberti.com">Contáctanos</Link></li>
             <li className={styles.link}><Link href="#">Autoría</Link></li>
           </ul>
         </footer>

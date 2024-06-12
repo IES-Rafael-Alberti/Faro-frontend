@@ -25,7 +25,6 @@ import { ExperienceInterface } from '@/types/profile/experience.interface';
  * @throws Will throw an error if the request fails.
  */
 export const submitData = async <Req, Res>(url: string, data: Req, token: string = '', verb: string = 'POST'): Promise<Res> => {
-  console.log(data);
   try {
     const response = await fetch(url, {
       method: verb,
@@ -36,7 +35,15 @@ export const submitData = async <Req, Res>(url: string, data: Req, token: string
       body: JSON.stringify(data)
     });
 
-    const responseData = await response.json();
+    const responseData = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
+
+    if (!response.ok) {
+      let errorMessage = `Error submitting data: ${response.status} ${response.statusText}`;
+      if (responseData) {
+        errorMessage += ` - ${responseData.message}`;
+      }
+    }
+
     return responseData;
   } catch (error) {
     return Promise.reject(error);
@@ -120,6 +127,10 @@ export const submitPublicationComment = async (publication_id: string, user_id: 
  */
 export const submitLike = async (publication_id: string, user_id: string, token: string = ''): Promise<any> => {
   return submitData<any, any>(PUBLICATIONS_LIKES_URL, { user_id, publication_id }, token);
+};
+
+export const submitDislike = async (publication_id: string, user_id: string, token: string = ''): Promise<any> => {
+  return submitData<any, any>(PUBLICATIONS_LIKES_URL, { user_id, publication_id }, token, 'DELETE');
 };
 
 /**
