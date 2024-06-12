@@ -69,11 +69,19 @@ export default function Message(): JSX.Element {
             await getUsersConnectedTo();
         };
         initialize();
-    }, []);
 
-    useEffect(() => {
+        // Fetch messages initially
         fetchMessages(selectedContact);
+
+        // Set up an interval to fetch messages every 500 milliseconds
+        const intervalId = setInterval(() => {
+            fetchMessages(selectedContact);
+        }, 500);
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(intervalId);
     }, [selectedContact]);
+
 
     /**
      * Handles the form submission to send a message.

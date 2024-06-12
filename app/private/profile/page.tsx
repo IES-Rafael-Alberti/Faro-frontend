@@ -395,7 +395,7 @@ export default function Profile() {
                     </div>
                   ))
                 ) : (
-                  <p>You don't have any education records.</p>
+                  <p>You don´t have any education records.</p>
                 )}
                 <button ref={educationEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
               </>
@@ -458,7 +458,7 @@ export default function Profile() {
                     </div>
                   ))
                 ) : (
-                  <p>You don't have any experience records.</p>
+                  <p>You don´t have any experience records.</p>
                 )}
                 <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
               </>
@@ -484,7 +484,7 @@ export default function Profile() {
                   </div>
                 ))
               ) : (
-                <p>You don't have any recommendations.</p>
+                <p>You don´t have any recommendations.</p>
               )
             )}
           </div>

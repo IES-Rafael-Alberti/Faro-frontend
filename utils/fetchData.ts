@@ -40,6 +40,12 @@ export async function fetchData<T = any>(url: string, token: string = ''): Promi
         Authorization: `Bearer ${token}`
       }
     });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new TypeError("Oops, we haven't got JSON!");
+    }
+
     return await response.json() as T;
   } catch (error) {
     return Promise.reject(error);
