@@ -19,6 +19,8 @@ import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/fre
 import translateRol from '../context/translate';
 import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
 import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredExperience, getFilteredEducation } from '@/utils/profileFunctions';
+import DisplayedProfileSection from '@/components/profile/DisplayedProfileSection';
+
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -93,7 +95,7 @@ export default function Profile() {
       setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
 
     }
-  }  
+  }
 
   const editProfile = async () => {
     try {
@@ -319,12 +321,6 @@ export default function Profile() {
                 />
               </>
             )}
-
-            {/*currentSection === 'recommendations' && (
-              <>
-                <DynamicProfileSection/>
-              </>
-            )*/}
           </div>
         </>
       ) : (
@@ -332,33 +328,27 @@ export default function Profile() {
           <FontAwesomeIcon icon={faEdit} onClick={toggleEditProfile} className={styles.editIcon} />
 
           <div className={styles.currentSection}>
-            {currentSection === 'profile' && (
-              <section className={styles.profile}>
-                <h3 className={styles.headline}>{profileData?.headline}</h3>
-                <p className={styles.biography}>{profileData?.description}</p>
-              </section>
-            )}
-            {currentSection === 'education' && Array.isArray(profileData?.education) && profileData.education.map((edu, index) => (
-              <section className={styles.education} key={index}>
-                <div className={styles.iconContainer}><Icon src='/icons/studentIcon.svg' width={40} height={40} /></div>
-                <div className={styles.studiesInfo}>
-                  <h3 className={styles.degree}>{edu.degree}</h3>
-                  <p className={styles.info}>{edu.institution}, {edu.start_date?.toString().slice(0, 4)} - {edu.end_date ? edu.end_date?.toString().slice(0, 4) : 'Actualidad'}</p>
-                </div>
-              </section>
-            ))}
-            {currentSection === 'experience' && Array.isArray(profileData?.experience) && profileData.experience.map((exp, index) => (
-              <section className={styles.expContainer} key={index}>
-                <div className={styles.experience}>
-                  <div className={styles.iconContainer}><FontAwesomeIcon icon={faBriefcase} className={styles.icon} /></div>
-                  <div className={styles.workInfo}>
-                    <h3 className={styles.company}>{exp.company}</h3>
-                    <p className={styles.info}>{exp.position}, {exp.startDate?.toString().slice(0, 4)} - {exp.endDate ? exp.endDate?.toString().slice(0, 4) : 'Actualidad'}</p>
-                  </div>
-                </div>
-                <p className={styles.description}>{exp.description}</p>
-              </section>
-            ))}
+            {
+              <DisplayedProfileSection
+                currentSection={currentSection}
+                profileData={profileData}
+                styles={styles}
+              />
+            }
+            {
+              <DisplayedProfileSection
+                currentSection={currentSection}
+                profileData={profileData}
+                styles={styles}
+              />
+            }
+            {
+              <DisplayedProfileSection
+                currentSection={currentSection}
+                profileData={profileData}
+                styles={styles}
+              />
+            }
             {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
               <div key={index}>
                 <p>{rec.message}</p>
