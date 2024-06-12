@@ -75,7 +75,7 @@ const DisplayedProfileSection = ({ currentSection, profileData, styles }: Displa
     }
 
     return (
-        <section className={styles.currentSection}>
+        <section>
             {sectionContent}
         </section>
     );
