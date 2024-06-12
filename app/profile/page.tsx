@@ -1,7 +1,7 @@
 'use client'
 
-import { fetchBasicUserInfo, fetchProfileData } from '../../utils/fetchData';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { getProfileData, getUserBasicData } from '../../utils/fetchData';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
 import { updateProfileData, updateUserData } from '../../utils/updateData';
@@ -20,11 +20,12 @@ import translateRol from '../context/translate';
 import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
 import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredExperience, getFilteredEducation } from '@/utils/profileFunctions';
 import DisplayedProfileSection from '@/components/profile/DisplayedProfileSection';
-
+import ProfileNavbar from '@/components/profile/ProfileNavbar';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('/imgs/no-user-image.jpg');
   const [isFocused, setIsFocused] = useState(false);
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
   const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
@@ -33,7 +34,7 @@ export default function Profile() {
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
   const [requests, setRequests] = useState<RequestInterface[]>([]);
   const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
-  const [formData, setFormData] = useState<EditableProfileData>({
+  const [ediatableProfileData, setEditableProfileData] = useState<EditableProfileData>({
     id: '',
     name: '',
     headline: '',
@@ -47,7 +48,7 @@ export default function Profile() {
   const toggleEditProfile = () => {
     setEditMode(!editMode);
     if (!editMode && profileData) {
-      setFormData({
+      setEditableProfileData({
         id: profileData.id,
         name: profileData.name,
         headline: profileData.headline || '',
@@ -77,30 +78,23 @@ export default function Profile() {
     }
   };
 
-  const scrollTo = (ref: any) => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const handleInputChange = (e: any, index?: number, type?: 'education' | 'experience' | 'recommendations') => {
     const { name, value } = e.target;
     if (type && index !== undefined) {
-      setFormData((prevFormData) => {
+      setEditableProfileData((prevFormData) => {
         const updatedArray = prevFormData[type].slice();
         updatedArray[index] = Object.assign({}, updatedArray[index], { [name]: value });
         return Object.assign({}, prevFormData, { [type]: updatedArray });
       });
     } else {
-      setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
-
+      setEditableProfileData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
     }
   }
 
   const editProfile = async () => {
     try {
       // First, update the profile with all data
-      const updatedFormData = { ...formData };
+      const updatedFormData = { ...ediatableProfileData };
       const response = await updateProfileData(id, updatedFormData, token);
       console.log("Response", response);
 
@@ -113,13 +107,13 @@ export default function Profile() {
       }
 
       // Filter and submit new education entries
-      const filteredEducation = await getFilteredEducation(formData, id, token);
+      const filteredEducation = await getFilteredEducation(ediatableProfileData, id, token);
       for (const edu of filteredEducation) {
         await submitEducation(edu, id, token);
       }
 
       // Filter and submit new experience entries
-      const filteredExperience = await getFilteredExperience(formData, id, token);
+      const filteredExperience = await getFilteredExperience(ediatableProfileData, id, token);
       for (const exp of filteredExperience) {
         await submitExperience(exp, id, token);
       }
@@ -142,7 +136,7 @@ export default function Profile() {
       setProfileData(response);
 
       // Refresh profile data
-      const updatedProfile = await getProfileData();
+      const updatedProfile = await getProfileData(id, token, setProfileData, setRequests);
       if (updatedProfile !== undefined) {
         console.log("Updated Profile", updatedProfile);
         if (userResponse && userResponse.name) {
@@ -161,99 +155,75 @@ export default function Profile() {
     }
   };
 
-  const getProfileData = async () => {
-    const response = await fetchProfileData(`${id}`, token);
-    const { receivedRequests } = response;
-    setProfileData(response);
-    setRequests(receivedRequests);
-    return response;
-  };
-
-
-  const getUserBasicData = async () => {
-    try {
-      const response = await fetchBasicUserInfo(id, token);
-      setProfileData((prevProfileData) => {
-        const updatedProfileData = {
-          id: id,
-          name: response.username || 'Default Name',
-          experience: prevProfileData?.experience || [],
-          education: prevProfileData?.education || [],
-          recommendations: prevProfileData?.recommendations || [],
-          contacts: prevProfileData?.contacts || [],
-          publications: prevProfileData?.publications || [],
-          receivedRequests: prevProfileData?.receivedRequests || []
-        };
-        return Object.assign({}, prevProfileData, updatedProfileData);
-      });
-      setUserInfo(response);
-    } catch (error) {
-      console.error('Error fetching user basic data:', error);
-      return null;
-    }
-  };
-
-  const handleImageUpload = (files: FileList | null) => {
+  const handleImageUpload = async (files: FileList | null) => {
     if (files && files.length > 0) {
       const file = files[0];
       setImageFile(file);
-      // Now call submitAvatar to upload the image
-      submitAvatar(file, id, token)
-        .then(response => {
-          console.log('Image uploaded successfully:', response);
-          // Update the profile data or UI as needed
-        })
-        .catch(error => {
-          console.error('Error uploading image:', error);
-        });
+      try {
+        const response = await submitAvatar(file, id, token);
+        console.log('Image uploaded successfully:', response);
+        // Set the new image URL
+        setImageUrl(URL.createObjectURL(file));
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const profileResponse = await getProfileData();
-      const userResponse = await getUserBasicData();
+      const profileResponse = await getProfileData(id, token, setProfileData, setRequests);
+      const userResponse = await getUserBasicData(id, token, setProfileData, setUserInfo);
       setProfileData(profileResponse);
       if (userResponse !== null) {
         setUserInfo(userResponse);
+        if (userResponse && userResponse.profile_picture) {
+          setImageUrl(userResponse.profile_picture); // assuming the avatar URL is stored in userResponse.avatar
+        }
       }
     };
 
     fetchData();
   }, [id, token]);
 
-  useEffect(() => {
-    // console.log("Received Requests from other users", requests);
-  }, [requests]);
-
   return (
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
-        {editMode ? (
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e.target.files)}
-          />
+      {editMode ? (
+          <div className={styles.imageUploadContainer}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e.target.files)}
+              className={styles.fileInput}
+            />
+            <Image
+              src={imageFile ? URL.createObjectURL(imageFile) : imageUrl}
+              alt="userImg"
+              width={120}
+              height={120}
+              className={styles.userImg}
+            />
+          </div>
         ) : (
           <Image
-            src={imageFile ? URL.createObjectURL(imageFile) : "/imgs/no-user-image.jpg"}
+            src={imageUrl}
             alt="userImg"
             width={120}
             height={120}
             className={styles.userImg}
-          />)}
+          />
+        )}
         <section className={styles.nameAndRol}>
           <h1 className={styles.name}>{userInfo?.username}</h1>
           <h2 className={styles.rol}>{translateRol(userInfo?.rol ? userInfo.rol : '')}</h2>
         </section>
       </header>
-      <div className={styles.buttonsContainer}>
-        <button className={currentSection === 'profile' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
-        <button className={currentSection === 'education' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
-        <button className={currentSection === 'experience' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
-        <button className={currentSection === 'recommendations' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
-      </div>
+      <ProfileNavbar 
+        currentSection={currentSection} 
+        setCurrentSection={setCurrentSection}
+        styles={styles}
+      />
       {editMode ? (
         <>
           <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon} />
@@ -265,7 +235,7 @@ export default function Profile() {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
+                  value={ediatableProfileData.name}
                   onChange={handleInputChange}
                   placeholder="Name"
                   className={styles.editInput}
@@ -273,7 +243,7 @@ export default function Profile() {
                 <input
                   type="text"
                   name="headline"
-                  value={formData.headline}
+                  value={ediatableProfileData.headline}
                   onChange={handleInputChange}
                   placeholder="Headline"
                   className={styles.editInput}
@@ -281,7 +251,7 @@ export default function Profile() {
                 <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
                   <textarea
                     name="description"
-                    value={formData.description}
+                    value={ediatableProfileData.description}
                     onChange={handleInputChange}
                     placeholder="Description"
                     rows={3}
@@ -295,8 +265,8 @@ export default function Profile() {
             {currentSection === 'education' && (
               <>
                 <DynamicProfileSection
-                  data={formData.education}
-                  setData={setFormData}
+                  data={ediatableProfileData.education}
+                  setData={setEditableProfileData}
                   setListIds={setDeletedEducationIds}
                   type={'education'}
                   onAdd={addEducation}
@@ -310,8 +280,8 @@ export default function Profile() {
             {currentSection === 'experience' && (
               <>
                 <DynamicProfileSection
-                  data={formData.experience}
-                  setData={setFormData}
+                  data={ediatableProfileData.experience}
+                  setData={setEditableProfileData}
                   setListIds={setDeletedExperienceIds}
                   type={'experience'}
                   onAdd={addExperience}
