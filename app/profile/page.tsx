@@ -1,6 +1,6 @@
 'use client'
 
-import { checkEducationExists, checkExperienceExists, fetchBasicUserInfo, fetchProfileData, fetchSenderRecommendations } from '../../utils/fetchData';
+import { fetchBasicUserInfo, fetchProfileData } from '../../utils/fetchData';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '../../types/profile/CompleteProfile.interface';
@@ -17,14 +17,12 @@ import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import translateRol from '../context/translate';
-
+import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
+import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredExperience, getFilteredEducation } from '@/utils/profileFunctions';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
-  const educationEndRef = useRef(null);
-  const experienceEndRef = useRef(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const topRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
   const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
@@ -77,19 +75,9 @@ export default function Profile() {
     }
   };
 
-  const scrollTo = (ref : any) => {
+  const scrollTo = (ref: any) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const getSenderRecommendations = async () => {
-    try {
-      const senderIds = profileData?.recommendations.map(rec => rec.senderId) || [];
-      const response = await fetchSenderRecommendations(senderIds, token);
-      // Handle response as needed
-    } catch (error) {
-      console.error('Error fetching sender recommendations:', error);
     }
   };
 
@@ -105,65 +93,7 @@ export default function Profile() {
       setFormData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
 
     }
-  }
-
-  const addEducation = () => {
-    setFormData((prevFormData) => {
-      const newEducation = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
-      return {
-        ...prevFormData,
-        education: [...prevFormData.education, newEducation]
-      };
-    });
-    setTimeout(() => scrollTo(educationEndRef), 100);
-}
-  
-  const addExperience = () => {
-    setFormData((prevFormData) => {
-      const newExperience = { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' };
-      return {
-        ...prevFormData,
-        experience: [...prevFormData.experience, newExperience]
-      };
-    });
-  };
-  
-  const deleteEducation = (id: string) => {
-    setDeletedEducationIds((prevDeletedIds) => [...prevDeletedIds, id]);
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        education: prevFormData.education.filter((edu) => edu.id !== id)
-      };
-    });
-  };
-
-
-  const deleteExperience = (id: string) => {
-    setDeletedExperienceIds((prevDeletedIds) => [...prevDeletedIds, id]);
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        experience: prevFormData.experience.filter((ex) => ex.id !== id)
-      };
-    });
-  };
-
-  const getFilteredEducation = async () => {
-    const newEducation = await Promise.all(formData.education.map(async (ed) => {
-      const exists = await checkEducationExists(id, ed, token);
-      return { entry: ed, exists };
-    }));
-    return newEducation.filter(({ exists }) => !exists).map(({ entry }) => entry);
-  };
-
-  const getFilteredExperience = async () => {
-    const newExperience = await Promise.all(formData.experience.map(async (exp) => {
-      const exists = await checkExperienceExists(id, exp, token);
-      return { entry: exp, exists };
-    }));
-    return newExperience.filter(({ exists }) => !exists).map(({ entry }) => entry);
-  };
+  }  
 
   const editProfile = async () => {
     try {
@@ -179,15 +109,15 @@ export default function Profile() {
       for (const id of deletedExperienceIds) {
         await deleteData(`experience/${id}`, token);
       }
-  
+
       // Filter and submit new education entries
-      const filteredEducation = await getFilteredEducation();
+      const filteredEducation = await getFilteredEducation(formData, id, token);
       for (const edu of filteredEducation) {
         await submitEducation(edu, id, token);
       }
 
       // Filter and submit new experience entries
-      const filteredExperience = await getFilteredExperience();
+      const filteredExperience = await getFilteredExperience(formData, id, token);
       for (const exp of filteredExperience) {
         await submitExperience(exp, id, token);
       }
@@ -278,8 +208,16 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    getProfileData();
-    getUserBasicData();
+    const fetchData = async () => {
+      const profileResponse = await getProfileData();
+      const userResponse = await getUserBasicData();
+      setProfileData(profileResponse);
+      if (userResponse !== null) {
+        setUserInfo(userResponse);
+      }
+    };
+
+    fetchData();
   }, [id, token]);
 
   useEffect(() => {
@@ -309,15 +247,15 @@ export default function Profile() {
         </section>
       </header>
       <div className={styles.buttonsContainer}>
-          <button className={currentSection === 'profile' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
-          <button className={currentSection === 'education' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
-          <button className={currentSection === 'experience' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
-          <button className={currentSection === 'recommendations' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
+        <button className={currentSection === 'profile' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('profile')}>Perfil</button>
+        <button className={currentSection === 'education' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('education')}>Educación</button>
+        <button className={currentSection === 'experience' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('experience')}>Experiencia</button>
+        <button className={currentSection === 'recommendations' ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised` : `${styles.sectionButton} ${montserrat.className} antialised`} onClick={() => setCurrentSection('recommendations')}>Recomendaciones</button>
       </div>
       {editMode ? (
         <>
-          <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon}/>
-          <FontAwesomeIcon icon={faSave} onClick={editProfile} className={styles.editIcon}/>
+          <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon} />
+          <FontAwesomeIcon icon={faSave} onClick={editProfile} className={styles.editIcon} />
 
           <div className={styles.currentSection}>
             {currentSection === 'profile' && (
@@ -354,140 +292,39 @@ export default function Profile() {
             )}
             {currentSection === 'education' && (
               <>
-                <button ref={topRef} onClick={addEducation} className={`${styles.addButton} ${montserrat.className} antialised`}>Añade nuevos estudios</button>
-
-                {formData.education.length > 0 ? (
-                  formData.education.map((edu, index) => (
-                    <div key={index} className={styles.editContainer}>
-                      <h3 className={styles.titleContainer}>Estudio {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={() => deleteEducation(edu.id ?? '')} className={`${styles.editIcon} ${styles.deleteIcon}`} />
-                      <input
-                        type="text"
-                        name="degree"
-                        value={edu.degree}
-                        onChange={(e) => handleInputChange(e, index, 'education')}
-                        placeholder="Degree"
-                        className={styles.editInput}
-                      />
-                      <input
-                        type="text"
-                        name="institution"
-                        value={edu.institution}
-                        onChange={(e) => handleInputChange(e, index, 'education')}
-                        placeholder="Institution"
-                        className={styles.editInput}
-                      />
-                      <input
-                        type="date"
-                        name="start_date"
-                        value={edu.start_date.toString()}
-                        onChange={(e) => handleInputChange(e, index, 'education')}
-                        placeholder="Start Date"
-                        className={`${styles.editInput} ${styles.dateInput}`}
-                      />
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={edu.end_date?.toString() || ''}
-                        onChange={(e) => handleInputChange(e, index, 'education')}
-                        placeholder="End Date"
-                        className={`${styles.editInput} ${styles.dateInput}`}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p>You don't have any education records.</p>
-                )}
-                <button ref={educationEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
+                <DynamicProfileSection
+                  data={formData.education}
+                  setData={setFormData}
+                  setListIds={setDeletedEducationIds}
+                  type={'education'}
+                  onAdd={addEducation}
+                  onDelete={deleteEducation}
+                  onChange={(e, index, type) => handleInputChange(e, index, type as "education" | "experience" | "recommendations")}
+                  styles={styles}
+                />
               </>
             )}
 
             {currentSection === 'experience' && (
               <>
-                <button ref={topRef} onClick={addExperience} className={`${styles.addButton} ${montserrat.className} antialised`}>Añade nueva experiencia</button>
-
-                {formData.experience.length > 0 ? (
-                  formData.experience.map((exp, index) => (
-                    <div key={index} className={styles.editContainer}>
-                      <h3 className={styles.titleContainer}>Experiencia {index + 1}</h3>
-                      <FontAwesomeIcon icon={faTrash} onClick={deleteExperience(id)} className={`${styles.editIcon} ${styles.deleteIcon}`} />
-                      <input
-                        type="text"
-                        name="company"
-                        value={exp.company}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="Company"
-                        className={styles.editInput}
-                      />
-                      <input
-                        type="text"
-                        name="position"
-                        value={exp.position}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="Position"
-                        className={styles.editInput}
-                      />
-                      <input
-                        type="date"
-                        name="startDate"
-                        value={exp.startDate.toString()}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="Start Date"
-                        className={`${styles.editInput} ${styles.dateInput}`}
-                      />
-                      <input
-                        type="date"
-                        name="endDate"
-                        value={exp.endDate?.toString() || ''}
-                        onChange={(e) => handleInputChange(e, index, 'experience')}
-                        placeholder="End Date"
-                        className={`${styles.editInput} ${styles.dateInput}`}
-                      />
-
-                      <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
-                        <textarea
-                          name="description"
-                          value={exp.description}
-                          onChange={(e) => handleInputChange(e, index, 'experience')}
-                          placeholder="Description"
-                          rows={3}
-                          className={`${styles.textarea} ${montserrat.className} antialiased`}
-                          onFocus={() => setIsFocused(true)}
-                          onBlur={() => setIsFocused(false)}
-                        />
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>You don't have any experience records.</p>
-                )}
-                <button ref={experienceEndRef} onClick={() => scrollTo(topRef)} className={`${styles.scrollButton} ${montserrat.className} antialised`}>Ir arriba</button> {/* Reference for scroll */}
+                <DynamicProfileSection
+                  data={formData.experience}
+                  setData={setFormData}
+                  setListIds={setDeletedExperienceIds}
+                  type={'experience'}
+                  onAdd={addExperience}
+                  onDelete={deleteExperience}
+                  onChange={(e, index, type) => handleInputChange(e, index, type as "education" | "experience" | "recommendations")}
+                  styles={styles}
+                />
               </>
             )}
 
-            {currentSection === 'recommendations' && (
-              formData.recommendations.length > 0 ? (
-                formData.recommendations.map((rec, index) => (
-                  <div key={index}>
-                    <textarea
-                      name="message"
-                      value={rec.message}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Message"
-                    />
-                    <input
-                      type="date"
-                      name="date"
-                      value={rec.date.toString()}
-                      onChange={(e) => handleInputChange(e, index, 'recommendations')}
-                      placeholder="Date"
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>You don't have any recommendations.</p>
-              )
-            )}
+            {/*currentSection === 'recommendations' && (
+              <>
+                <DynamicProfileSection/>
+              </>
+            )*/}
           </div>
         </>
       ) : (
