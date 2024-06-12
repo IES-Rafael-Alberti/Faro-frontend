@@ -23,6 +23,8 @@ import { EducationInterface } from '@/types/profile/education.interface';
 import { ExperienceInterface } from '@/types/profile/experience.interface';
 import { PublicationCommentsInterface } from '@/types/PublicationComments.interface';
 import { UserMessageInterface } from '@/types/user-message.interface';
+import { Dispatch, SetStateAction } from 'react';
+import { RequestInterface } from '@/types/profile/requests.interface';
 
 /**
  * Sends a GET request to the specified URL and returns the parsed JSON response.
@@ -343,4 +345,45 @@ export async function fetchLikesCount(publicationId: string, token: string = '')
  */
 export const fetchMessagesFromUser = async (senderId: string, receiverId: string, token: string = ''): Promise<any> => {
   return fetchData(`${MESSAGE_URL}sender/${senderId}/receiver/${receiverId}`, token);
+};
+
+export const getUserBasicData = async (
+  id: string,
+  token: string,
+  setProfileData: Dispatch<SetStateAction<CompleteProfile | undefined>>,
+  setUserInfo: Dispatch<SetStateAction<BasicUserInfoInterface | undefined>>
+) => {
+  try {
+    const response = await fetchBasicUserInfo(id, token);
+    setProfileData((prevProfileData) => {
+      const updatedProfileData = {
+        id: id,
+        name: response.username || 'Default Name',
+        experience: prevProfileData?.experience || [],
+        education: prevProfileData?.education || [],
+        recommendations: prevProfileData?.recommendations || [],
+        contacts: prevProfileData?.contacts || [],
+        publications: prevProfileData?.publications || [],
+        receivedRequests: prevProfileData?.receivedRequests || []
+      };
+      return Object.assign({}, prevProfileData, updatedProfileData);
+    });
+    setUserInfo(response);
+  } catch (error) {
+    console.error('Error fetching user basic data:', error);
+    return null;
+  }
+};
+
+export const getProfileData = async (
+  id: string,
+  token: string,
+  setProfileData: Dispatch<SetStateAction<CompleteProfile | undefined>>,
+  setRequests:  Dispatch<SetStateAction<RequestInterface[]>>
+) => {
+  const response = await fetchProfileData(`${id}`, token);
+  const { receivedRequests } = response;
+  setProfileData(response);
+  setRequests(receivedRequests);
+  return response;
 };

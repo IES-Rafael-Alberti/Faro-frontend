@@ -9,7 +9,6 @@ export interface ProfileInterface {
     users_profile_profile_picture?: Buffer | null;
     headline?: string;
     description?: string;
-    occupation_status?: 'Working' | 'Studying' | 'Looking for a job' | null;
     recommendations: RecommendationInterface[];
     experience: ExperienceInterface[];
     education: EducationInterface[];
