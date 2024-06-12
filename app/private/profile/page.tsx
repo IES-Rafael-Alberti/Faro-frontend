@@ -39,9 +39,9 @@ export default function Profile() {
     name: '',
     headline: '',
     description: '',
-    education: [{ id: '', degree: '', institution: '', start_date: '', end_date: null }],
-    experience: [{ id: '', company: '', position: '', startDate: '', endDate: null, description: '' }],
-    recommendations: [{ message: '', date: '', senderId: '' }],
+    education: [{ id: '', profile: id, degree: '', institution: '', start_date: '', end_date: null }],
+    experience: [{ id: '',profile: id, company: '', position: '', startDate: '', endDate: null, description: '' }],
+    recommendations: [{ profile: id, message: '', date: '', senderId: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
@@ -55,6 +55,7 @@ export default function Profile() {
         description: profileData.description || '',
         education: profileData.education.map(ed => ({
           id: ed.id || '',
+          profile: id,
           degree: ed.degree || '',
           institution: ed.institution || '',
           start_date: ed.start_date.toString() || '',
@@ -62,6 +63,7 @@ export default function Profile() {
         })),
         experience: profileData.experience.map(ex => ({
           id: ex.id || '',
+          profile: id,
           company: ex.company || '',
           position: ex.position || '',
           startDate: ex.startDate.toString() || '',
@@ -69,6 +71,7 @@ export default function Profile() {
           description: ex.description || ''
         })),
         recommendations: profileData.recommendations.map(rec => ({
+          profile: id,
           message: rec.message || '',
           date: rec.date || '',
           senderId: rec.senderId || ''
@@ -109,12 +112,14 @@ export default function Profile() {
       // Filter and submit new education entries
       const filteredEducation = await getFilteredEducation(ediatableProfileData, id, token);
       for (const edu of filteredEducation) {
+        edu.profile = id
         await submitEducation(edu, id, token);
       }
 
       // Filter and submit new experience entries
       const filteredExperience = await getFilteredExperience(ediatableProfileData, id, token);
       for (const exp of filteredExperience) {
+        exp.profile = id
         await submitExperience(exp, id, token);
       }
 
