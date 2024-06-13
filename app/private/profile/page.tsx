@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { getProfileData, getUserBasicData } from '@/utils/fetchData';
 import { useContext, useEffect, useState } from 'react';
@@ -13,7 +13,6 @@ import { montserrat } from '@/app/ui/fonts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
 import { deleteData } from '@/utils/deleteData';
 import Image from 'next/image';
-import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import translateRol from '@/app/context/translate';
@@ -29,19 +28,20 @@ export default function Profile() {
   const [isFocused, setIsFocused] = useState(false);
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
   const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
-  const [profileData, setProfileData] = useState<CompleteProfile | undefined>();
+  const [profileData, setProfileData] = useState<CompleteProfile | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
   const [requests, setRequests] = useState<RequestInterface[]>([]);
-  const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
-  const [ediatableProfileData, setEditableProfileData] = useState<EditableProfileData>({
+  const [userInfo, setUserInfo] = useState<BasicUserInfoInterface | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [editableProfileData, setEditableProfileData] = useState<EditableProfileData>({
     id: '',
     name: '',
     headline: '',
     description: '',
-    education: [{ id: '', profile: id, degree: '', institution: '', start_date: '', end_date: null }],
-    experience: [{ id: '',profile: id, company: '', position: '', startDate: '', endDate: null, description: '' }],
-    recommendations: [{ profile: id, message: '', date: '', senderId: '' }],
+    education: [{ id: '', degree: '', institution: '', start_date: '', end_date: null }],
+    experience: [{ id: '', company: '', position: '', startDate: '', endDate: null, description: '' }],
+    recommendations: [{  message: '', date: '', senderId: '' }],
     publications: [{ user_publication_msg: '', users_publications_created_at: '' }]
   });
 
@@ -55,7 +55,6 @@ export default function Profile() {
         description: profileData.description || '',
         education: profileData.education.map(ed => ({
           id: ed.id || '',
-          profile: id,
           degree: ed.degree || '',
           institution: ed.institution || '',
           start_date: ed.start_date.toString() || '',
@@ -63,7 +62,6 @@ export default function Profile() {
         })),
         experience: profileData.experience.map(ex => ({
           id: ex.id || '',
-          profile: id,
           company: ex.company || '',
           position: ex.position || '',
           startDate: ex.startDate.toString() || '',
@@ -86,20 +84,19 @@ export default function Profile() {
     if (type && index !== undefined) {
       setEditableProfileData((prevFormData) => {
         const updatedArray = prevFormData[type].slice();
-        updatedArray[index] = Object.assign({}, updatedArray[index], { [name]: value });
-        return Object.assign({}, prevFormData, { [type]: updatedArray });
+        updatedArray[index] = { ...updatedArray[index], [name]: value };
+        return { ...prevFormData, [type]: updatedArray };
       });
     } else {
-      setEditableProfileData((prevFormData) => (Object.assign({}, prevFormData, { [name]: value })));
+      setEditableProfileData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-  }
+  };
 
   const editProfile = async () => {
     try {
-      // First, update the profile with all data
-      const updatedFormData = { ...ediatableProfileData };
+      setLoading(true);
+      const updatedFormData = { ...editableProfileData };
       const response = await updateProfileData(id, updatedFormData, token);
-      console.log("Response", response);
 
       for (const id of deletedEducationIds) {
         await deleteData(`education/${id}`, token);
@@ -109,42 +106,31 @@ export default function Profile() {
         await deleteData(`experience/${id}`, token);
       }
 
-      // Filter and submit new education entries
-      const filteredEducation = await getFilteredEducation(ediatableProfileData, id, token);
+      const filteredEducation = await getFilteredEducation(editableProfileData, id, token);
       for (const edu of filteredEducation) {
-        edu.profile = id
         await submitEducation(edu, id, token);
       }
 
-      // Filter and submit new experience entries
-      const filteredExperience = await getFilteredExperience(ediatableProfileData, id, token);
+      const filteredExperience = await getFilteredExperience(editableProfileData, id, token);
       for (const exp of filteredExperience) {
-        exp.profile = id
         await submitExperience(exp, id, token);
       }
 
-      // If there is additional user info to update
       let userResponse;
-      if (userInfo !== undefined) {
-        console.log("User Info", userInfo);
+      if (userInfo) {
         userResponse = await updateUserData(id, userInfo, token);
         setUserInfo(userResponse);
-        console.log("User Response", userResponse);
       }
 
-      // Update the response name with the name from userResponse if userResponse is defined
-      if (userResponse && userResponse.name) {
+      if (userResponse?.name) {
         response.name = userResponse.name;
       }
 
-      // Update the profile data in the state
       setProfileData(response);
 
-      // Refresh profile data
       const updatedProfile = await getProfileData(id, token, setProfileData, setRequests);
-      if (updatedProfile !== undefined) {
-        console.log("Updated Profile", updatedProfile);
-        if (userResponse && userResponse.name) {
+      if (updatedProfile) {
+        if (userResponse?.name) {
           updatedProfile.name = userResponse.name;
         }
         setProfileData(updatedProfile);
@@ -152,11 +138,10 @@ export default function Profile() {
 
       setDeletedEducationIds([]);
       setDeletedExperienceIds([]);
-      // Toggle edit mode
       toggleEditProfile();
+      setLoading(false);
     } catch (error) {
       console.error('Error updating profile:', error);
-
     }
   };
 
@@ -166,8 +151,6 @@ export default function Profile() {
       setImageFile(file);
       try {
         const response = await submitAvatar(file, id, token);
-        console.log('Image uploaded successfully:', response);
-        // Set the new image URL
         setImageUrl(URL.createObjectURL(file));
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -177,24 +160,34 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const profileResponse = await getProfileData(id, token, setProfileData, setRequests);
-      const userResponse = await getUserBasicData(id, token, setProfileData, setUserInfo);
-      setProfileData(profileResponse);
-      if (userResponse !== null) {
-        setUserInfo(userResponse);
-        if (userResponse && 'profile_picture' in userResponse) {
-          setImageUrl(userResponse.profile_picture); // assuming the avatar URL is stored in userResponse.avatar
+      try {
+        const profileResponse = await getProfileData(id, token, setProfileData, setRequests);
+        const userResponse = await getUserBasicData(id, token, setProfileData, setUserInfo);
+        setProfileData(profileResponse);
+        if (userResponse) {
+          setUserInfo(userResponse);
+          if ('profile_picture' in userResponse) {
+            setImageUrl(userResponse.profile_picture);
+          }
         }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [id, token]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
-      {editMode ? (
+        {editMode ? (
           <div className={styles.imageUploadContainer}>
             <input
               type="file"
@@ -220,8 +213,8 @@ export default function Profile() {
           />
         )}
         <section className={styles.nameAndRol}>
-          <h1 className={styles.name}>{userInfo?.username}</h1>
-          <h2 className={styles.rol}>{translateRol(userInfo?.rol ? userInfo.rol : '')}</h2>
+          <h1 className={styles.name}>{userInfo?.name || profileData?.name}</h1>
+          <h2 className={styles.rol}>{translateRol(userInfo?.rol || '')}</h2>
         </section>
       </header>
       <ProfileNavbar 
@@ -240,7 +233,7 @@ export default function Profile() {
                 <input
                   type="text"
                   name="name"
-                  value={ediatableProfileData.name}
+                  value={editableProfileData.name}
                   onChange={handleInputChange}
                   placeholder="Name"
                   className={styles.editInput}
@@ -248,7 +241,7 @@ export default function Profile() {
                 <input
                   type="text"
                   name="headline"
-                  value={ediatableProfileData.headline}
+                  value={editableProfileData.headline}
                   onChange={handleInputChange}
                   placeholder="Headline"
                   className={styles.editInput}
@@ -256,7 +249,7 @@ export default function Profile() {
                 <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
                   <textarea
                     name="description"
-                    value={ediatableProfileData.description}
+                    value={editableProfileData.description}
                     onChange={handleInputChange}
                     placeholder="Description"
                     rows={3}
@@ -268,33 +261,28 @@ export default function Profile() {
               </>
             )}
             {currentSection === 'education' && (
-              <>
-                <DynamicProfileSection
-                  data={ediatableProfileData.education}
-                  setData={setEditableProfileData}
-                  setListIds={setDeletedEducationIds}
-                  type={'education'}
-                  onAdd={addEducation}
-                  onDelete={deleteEducation}
-                  onChange={(e, index, type) => handleInputChange(e, index, type as "education" | "experience" | "recommendations")}
-                  styles={styles}
-                />
-              </>
+              <DynamicProfileSection
+                data={editableProfileData.education}
+                setData={setEditableProfileData}
+                setListIds={setDeletedEducationIds}
+                type={'education'}
+                onAdd={addEducation}
+                onDelete={deleteEducation}
+                onChange={(e, index, type) => handleInputChange(e, index, type as 'education' | 'experience' | 'recommendations')}
+                styles={styles}
+              />
             )}
-
             {currentSection === 'experience' && (
-              <>
-                <DynamicProfileSection
-                  data={ediatableProfileData.experience}
-                  setData={setEditableProfileData}
-                  setListIds={setDeletedExperienceIds}
-                  type={'experience'}
-                  onAdd={addExperience}
-                  onDelete={deleteExperience}
-                  onChange={(e, index, type) => handleInputChange(e, index, type as "education" | "experience" | "recommendations")}
-                  styles={styles}
-                />
-              </>
+              <DynamicProfileSection
+                data={editableProfileData.experience}
+                setData={setEditableProfileData}
+                setListIds={setDeletedExperienceIds}
+                type={'experience'}
+                onAdd={addExperience}
+                onDelete={deleteExperience}
+                onChange={(e, index, type) => handleInputChange(e, index, type as 'education' | 'experience' | 'recommendations')}
+                styles={styles}
+              />
             )}
           </div>
         </>
@@ -329,7 +317,6 @@ export default function Profile() {
                 {String(contact)}
               </div>
             ))}
-            {/* <h2>Request recibidas de otros usuarios</h2> */}
             {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
               <div key={String(req)}>
                 {String(req)}

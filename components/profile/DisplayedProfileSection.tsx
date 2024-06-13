@@ -5,7 +5,7 @@ import { CompleteProfile } from "@/types/profile/CompleteProfile.interface";
 
 interface DisplayedProfileSectionInterface {
     currentSection: string,
-    profileData: CompleteProfile | undefined,
+    profileData: CompleteProfile | null,
     styles: any
 }
 

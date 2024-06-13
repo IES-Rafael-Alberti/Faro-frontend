@@ -1,5 +1,5 @@
 export interface RecommendationInterface {
-    profile: string;
+    profile?: string;
     senderId: string;
     message: string;
     date: string | Date;

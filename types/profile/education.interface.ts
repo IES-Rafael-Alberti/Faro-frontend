@@ -1,6 +1,6 @@
 export interface EducationInterface {
     id?: string;
-    profile: string ;
+    profile?: string ;
     institution: string;
     degree: string;
     start_date: Date | string;
