@@ -17,6 +17,7 @@ import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import translateRol from '@/app/context/translate';
+import { profile } from 'console';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -108,7 +109,7 @@ export default function Profile() {
 
   const addEducation = () => {
     setFormData((prevFormData) => {
-      const newEducation = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
+      const newEducation = { degree: '', profile:id, institution: '', start_date: '2024-08-09', end_date: null };
       return {
         ...prevFormData,
         education: [...prevFormData.education, newEducation]
@@ -119,7 +120,7 @@ export default function Profile() {
   
   const addExperience = () => {
     setFormData((prevFormData) => {
-      const newExperience = { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' };
+      const newExperience = { company: '', profile:id, position: '', startDate: '2024-08-09', endDate: null, description: '' };
       return {
         ...prevFormData,
         experience: [...prevFormData.experience, newExperience]
