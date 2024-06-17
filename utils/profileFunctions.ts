@@ -1,58 +1,57 @@
-import { EditableProfileData } from "@/types/profile/editableProfileData.interface";
+
 import { Dispatch, SetStateAction } from "react";
-import { checkEducationExists, checkExperienceExists, fetchData } from "./fetchData";
+import { fetchData } from "./fetchData";
 import { ExperienceInterface } from "@/types/profile/experience.interface";
 import { EducationInterface } from "@/types/profile/education.interface";
-import { EDUCATION_URL } from "@/types/consts";
+import { EDUCATION_URL, EXPERIENCE_URL } from "@/types/consts";
 
-export const addEducation = (setFormData: Dispatch<SetStateAction<EditableProfileData>>) => {
-    setFormData((prevFormData) => {
+export const addEducation = (setEducation: Dispatch<SetStateAction<EducationInterface[]>>) => {
+    setEducation((experiences) => {
       const newEducation: EducationInterface = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
       return {
-        ...prevFormData,
-        education: [...prevFormData.education, newEducation]
+        ...experiences,
+        education: [...experiences, newEducation]
       };
     });
   }
 
-export const addExperience = (setFormData: Dispatch<SetStateAction<EditableProfileData>>) => {
-    setFormData((prevFormData: EditableProfileData) => {
+export const addExperience = (setFormData: Dispatch<SetStateAction<ExperienceInterface[]>>) => {
+    setFormData((education) => {
       const newExperience: ExperienceInterface = { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' };
       return {
-        ...prevFormData,
-        experience: [...prevFormData.experience, newExperience]
+        ...education,
+        experience: [...education, newExperience]
       };
     });
 };
 
 export const deleteEducation = (
         setDeletedEducationIds: Dispatch<SetStateAction<string[]>>,
-        setFormData: Dispatch<SetStateAction<EditableProfileData>>,
+        setFormData: Dispatch<SetStateAction<EducationInterface[]>>,
         id: string) => {
     setDeletedEducationIds((prevDeletedIds: string[]) => [...prevDeletedIds, id]);
-    setFormData((prevFormData: EditableProfileData) => {
+    setFormData((education) => {
       return {
-        ...prevFormData,
-        education: prevFormData.education.filter((edu) => edu.id !== id)
+        ...education,
+        education: education.filter((edu) => edu.id !== id)
       };
     });
 };
 
 export const deleteExperience = (
     setDeletedExperienceIds: Dispatch<SetStateAction<string[]>>, 
-    setFormData: Dispatch<SetStateAction<EditableProfileData>>,
+    setFormData: Dispatch<SetStateAction<ExperienceInterface[]>>,
     id: string) => {
     setDeletedExperienceIds((prevDeletedIds: string[]) => [...prevDeletedIds, id]);
-    setFormData((prevFormData: EditableProfileData) => {
+    setFormData((experience) => {
       return {
-        ...prevFormData,
-        experience: prevFormData.experience.filter((ex) => ex.id !== id)
+        ...experience,
+        experience: experience.filter((ex) => ex.id !== id)
       };
     });
 };
 
 export const getFilteredEducation = async (
-    formData: EditableProfileData,
     id: string,
     token: string
   ) => {
@@ -60,14 +59,9 @@ export const getFilteredEducation = async (
 };
 
 export const getFilteredExperience = async (
-    formData: EditableProfileData,
     id: string,
     token: string
   ) => {
-    const newExperience = await Promise.all(formData.experience.map(async (exp) => {
-      const exists = await checkExperienceExists(id, exp, token);
-      return { entry: exp, exists };
-    }));
-    return newExperience.filter(({ exists }) => !exists).map(({ entry }) => entry);
+    return await fetchData(`${EXPERIENCE_URL}${id}`, token);
 };
 

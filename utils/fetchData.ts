@@ -211,56 +211,6 @@ export async function sendRequestToConnect(body: object, token: string = ''): Pr
 }
 
 /**
- * Checks if a specific experience already exists for a user.
- * 
- * @param {string} userId - The ID of the user whose experiences are to be checked.
- * @param {ExperienceInterface} newExperience - The new experience to check against existing experiences.
- * @param {string} [token=''] - The optional authentication token to be included in the request headers.
- * @returns {Promise<boolean>} - A promise that resolves to true if the experience exists, false otherwise.
- * @throws Will throw an error if the request fails.
- */
-export async function checkExperienceExists(userId: string, newExperience: ExperienceInterface, token: string = ''): Promise<boolean> {
-  try {
-    const existingExperiences: ExperienceInterface[] = await fetchData<ExperienceInterface[]>(`${EXPERIENCE_URL}${userId}`, token);
-
-    return existingExperiences.some(exp => 
-      exp.company === newExperience.company &&
-      exp.position === newExperience.position &&
-      exp.startDate === newExperience.startDate 
-    );
-  } catch (error) {
-    console.error('Error checking experience:', error);
-    return false;
-  }
-}
-
-/**
- * Checks if a specific education record already exists for a user.
- * 
- * @param {string} userId - The ID of the user whose education records are to be checked.
- * @param {EducationInterface} newEducation - The new education record to check against existing records.
- * @param {string} [token=''] - The optional authentication token to be included in the request headers.
- * @returns {Promise<boolean>} - A promise that resolves to true if the education record exists, false otherwise.
- * @throws Will throw an error if the request fails.
- */
-export async function checkEducationExists(userId: string, newEducation: EducationInterface, token: string = ''): Promise<boolean> {
-  try {
-    const existingEducations: EducationInterface[] = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${userId}`, token);
-
-    const filteredEducation = existingEducations.some(edu => 
-      edu.institution === newEducation.institution &&
-      edu.degree === newEducation.degree &&
-      new Date(edu.start_date).toISOString() === new Date(newEducation.start_date).toISOString()
-    );
-    
-    return filteredEducation;
-  } catch (error) {
-    console.error('Error checking education:', error);
-    return false;
-  }
-}
-
-/**
  * Fetches basic user information for a list of user IDs.
  * 
  * @param {string[]} userIds - The list of user IDs whose basic information is to be fetched.

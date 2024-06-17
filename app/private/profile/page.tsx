@@ -28,6 +28,7 @@ import ImageInput from '@/components/profile/image/ImageInput';
 
 export default function Profile() {
   const { id, token, setId } = useContext(AuthContext);
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [education, setEducation] = useState<EducationInterface[]>([]);
