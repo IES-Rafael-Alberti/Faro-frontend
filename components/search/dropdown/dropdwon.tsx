@@ -31,6 +31,12 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, reset }) => {
     onSelect(option);
   };
 
+  useEffect(() => {
+    if (reset) {
+      setSelectedOption("");
+    }
+  }, [reset]);
+
   return (
     <select
       value={reset ? '' : selectedOption}

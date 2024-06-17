@@ -33,6 +33,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, reset }) => {
     onSearch(newQuery);
   };
 
+  useEffect(() => {
+    if (reset) {
+      setQuery("");
+      onSearch("");
+    }
+  }, [reset]);
+
+
   return (
     <div className={styles.searchContainer}>
       <Icon src="/icons/search.svg" className={styles.searchIcon} width={25} height={25} />
