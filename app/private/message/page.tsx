@@ -8,6 +8,7 @@ import { fetchAllConnectionsOfAnUser, fetchMessagesFromUser } from "@/utils/fetc
 import { MessageInterface } from "@/types/message.interface";
 import { UserMessageInterface } from "@/types/user-message.interface";
 import { submitMessage } from "@/utils/submitData";
+import Icon from "@/components/icons";
 
 /**
  * This component provides a messaging interface where users can chat with their contacts.
@@ -31,6 +32,7 @@ export default function Message(): JSX.Element {
         try {
             const response = await fetchAllConnectionsOfAnUser(token, id);
             setContacts(response);
+            console.log(contacts)
             if (response.length > 0) {
                 const lastContact = response[response.length - 1];
                 setSelectedContact(lastContact.id);
@@ -77,11 +79,9 @@ export default function Message(): JSX.Element {
         const intervalId = setInterval(() => {
             fetchMessages(selectedContact);
         }, 500);
-
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
     }, [selectedContact]);
-
 
     /**
      * Handles the form submission to send a message.
@@ -163,6 +163,7 @@ export default function Message(): JSX.Element {
                     <form onSubmit={handleSubmit}>
                         <div className={styles.chatboxContainer}>
                             <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown} className={styles.textarea}></textarea>
+                            <div className={styles.iconContainer}><Icon src="/icons/sendIcon.png" width={25} height={25}/></div>
                         </div>
                     </form>
                 </section>

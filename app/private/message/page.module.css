@@ -125,15 +125,34 @@
             }
         }
 
-        && textarea{
-            border: none;
-            outline: none;
-            width: 100%;
-            background: var(--darkgray);
-            padding: 2vh;
-            border-radius: 24px;
-            resize: none;
+        && .chatboxContainer{
+            display: flex;
+            gap:1vh;
+
+            && .iconContainer{
+                background-color: var(--secondary);
+                padding: 1vh;
+                border-radius: 100%;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+    
+            && textarea{
+                border: none;
+                outline: none;
+                width: 100%;
+                background: var(--darkgray);
+                padding: 2vh;
+                border-radius: 24px;
+                resize: none;
+            }
         }
+
+        
         
     }
 
@@ -251,6 +270,17 @@
 
         && .messageContainer{
             width: 50vw;
+
+            && .chatboxContainer {
+                && .iconContainer{
+                    height:35.5px;
+
+                    && > img{
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
         }
 
     }
