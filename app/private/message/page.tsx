@@ -32,7 +32,6 @@ export default function Message(): JSX.Element {
         try {
             const response = await fetchAllConnectionsOfAnUser(token, id);
             setContacts(response);
-            console.log(contacts)
             if (response.length > 0) {
                 const lastContact = response[response.length - 1];
                 setSelectedContact(lastContact.id);
@@ -55,7 +54,7 @@ export default function Message(): JSX.Element {
                 const lastMessage = fetchedMessages.length > 0 ? fetchedMessages[fetchedMessages.length - 1] : { date: null, message: '' };
                 setContacts(prevContacts =>
                     prevContacts.map(contact =>
-                        contact.id === selectedContact
+                        contact.id === contactId
                             ? { ...contact, last_msg: lastMessage.msg, last_msg_date: lastMessage.date }
                             : contact
                     )
@@ -71,17 +70,25 @@ export default function Message(): JSX.Element {
             await getUsersConnectedTo();
         };
         initialize();
+    }, []);
 
-        // Fetch messages initially
-        fetchMessages(selectedContact);
-
+    useEffect(() => {
+        if (selectedContact) {
+            fetchMessages(selectedContact);
+        }
         // Set up an interval to fetch messages every 500 milliseconds
         const intervalId = setInterval(() => {
-            fetchMessages(selectedContact);
+            if (selectedContact) {
+                fetchMessages(selectedContact);
+            }
         }, 500);
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
     }, [selectedContact]);
+
+    useEffect(() => {
+        console.log(messages)
+    },[messages])
 
     /**
      * Handles the form submission to send a message.
@@ -143,12 +150,12 @@ export default function Message(): JSX.Element {
 
                 <section className={styles.messageContainer}>
                     <header className={styles.userInfo}>
-                        {contacts[0] && (
+                        {contacts.find(contact => contact.id === selectedContact) && (
                             <>
-                                <Image className={styles.userImgMessage} src={contacts[0].avatar} alt={contacts[0].name as string} width={75} height={75} />
+                                <Image className={styles.userImgMessage} src={contacts.find(contact => contact.id === selectedContact)?.avatar} alt={contacts.find(contact => contact.id === selectedContact)?.name as string} width={75} height={75} />
                                 <div className={styles.flex}>
-                                    <h1 className={styles.usernameMessage}>{contacts[0].name}</h1>
-                                    <p className={styles.messageInfo}>{translateRol(contacts[0].rol as string)}</p>
+                                    <h1 className={styles.usernameMessage}>{contacts.find(contact => contact.id === selectedContact)?.name}</h1>
+                                    <p className={styles.messageInfo}>{translateRol(contacts.find(contact => contact.id === selectedContact)?.rol as string)}</p>
                                 </div>
                             </>
                         )}

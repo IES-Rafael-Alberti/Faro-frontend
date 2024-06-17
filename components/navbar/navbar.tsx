@@ -75,7 +75,7 @@ const Navbar = () => {
                     <li className={styles.navLink}>
                         <Link href="/public/login" onClick={logout}>
                             <FontAwesomeIcon icon={faPowerOff} className={styles.icon} />
-                            <p>Logout</p>
+                            <p>Cerrar sesión</p>
                         </Link>
                     </li>
                 </ul>

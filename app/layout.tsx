@@ -11,6 +11,9 @@ import { montserrat } from "./ui/fonts";
 export const metadata: Metadata = {
   title: "Faro",
   description: "La mejor web para encontrar prácticas de ciclo formativo.",
+  icons: {
+    icon: "/icons/faroFavicon.png", 
+  },
 };
 
 /**
