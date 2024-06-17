@@ -1,8 +1,9 @@
 import { EditableProfileData } from "@/types/profile/editableProfileData.interface";
 import { Dispatch, SetStateAction } from "react";
-import { checkEducationExists, checkExperienceExists } from "./fetchData";
+import { checkEducationExists, checkExperienceExists, fetchData } from "./fetchData";
 import { ExperienceInterface } from "@/types/profile/experience.interface";
 import { EducationInterface } from "@/types/profile/education.interface";
+import { EDUCATION_URL } from "@/types/consts";
 
 export const addEducation = (setFormData: Dispatch<SetStateAction<EditableProfileData>>) => {
     setFormData((prevFormData) => {
@@ -55,11 +56,7 @@ export const getFilteredEducation = async (
     id: string,
     token: string
   ) => {
-    const newEducation = await Promise.all(formData.education.map(async (ed) => {
-      const exists = await checkEducationExists(id, ed, token);
-      return { entry: ed, exists };
-    }));
-    return newEducation.filter(({ exists }) => !exists).map(({ entry }) => entry);
+    return  await fetchData(`${EDUCATION_URL}${id}`, token);
 };
 
 export const getFilteredExperience = async (

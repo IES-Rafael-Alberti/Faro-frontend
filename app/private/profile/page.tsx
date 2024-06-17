@@ -1,4 +1,6 @@
-'use client'
+
+'use client';
+
 import { getProfileData, getUserBasicData } from '@/utils/fetchData';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
@@ -12,6 +14,7 @@ import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import translateRol from '@/app/context/translate';
+
 import DisplayedProfileSection from '@/components/profile/DisplayedProfileSection';
 import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
 import ProfileNavbar from '@/components/profile/ProfileNavbar';
@@ -32,7 +35,9 @@ export default function Profile() {
   const [profileData, setProfileData] = useState<ProfileInterface>();
   const [basicUserInfo, setBasicUserInfo] = useState<BasicUserInfoInterface>();
 
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className={styles.wrapper}>
@@ -44,6 +49,7 @@ export default function Profile() {
         <section className={styles.nameAndRol}>
           <h1 className={styles.name}>{basicUserInfo?.username}</h1>
           <h2 className={styles.rol}>{translateRol(basicUserInfo?.rol ? basicUserInfo.rol : '')}</h2>
+
         </section>
       </header>
       <ProfileNavbar
@@ -100,7 +106,6 @@ export default function Profile() {
                 styles={styles}
               />
             )}
-
             {currentSection === 'experience' && (
               <DynamicProfileSection
                 data={editableProfileData.experience}

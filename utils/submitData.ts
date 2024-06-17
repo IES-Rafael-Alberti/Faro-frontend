@@ -34,7 +34,7 @@ export const submitData = async <Req, Res>(url: string, data: Req, token: string
       },
       body: JSON.stringify(data)
     });
-
+    
     const responseData = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
 
     if (!response.ok) {

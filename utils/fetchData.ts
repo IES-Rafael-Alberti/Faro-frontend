@@ -350,11 +350,13 @@ export const fetchMessagesFromUser = async (senderId: string, receiverId: string
 export const getUserBasicData = async (
   id: string,
   token: string,
-  setProfileData: Dispatch<SetStateAction<CompleteProfile | undefined>>,
-  setUserInfo: Dispatch<SetStateAction<BasicUserInfoInterface | undefined>>
+  setProfileData: Dispatch<SetStateAction<CompleteProfile | null>>,
+  setUserInfo: Dispatch<SetStateAction<BasicUserInfoInterface | null>>
 ) => {
   try {
     const response = await fetchBasicUserInfo(id, token);
+    console.log('User basic data:', response);
+    
     setProfileData((prevProfileData) => {
       const updatedProfileData = {
         id: id,
@@ -378,7 +380,7 @@ export const getUserBasicData = async (
 export const getProfileData = async (
   id: string,
   token: string,
-  setProfileData: Dispatch<SetStateAction<CompleteProfile | undefined>>,
+  setProfileData: Dispatch<SetStateAction<CompleteProfile | null>>,
   setRequests:  Dispatch<SetStateAction<RequestInterface[]>>
 ) => {
   const response = await fetchProfileData(`${id}`, token);
