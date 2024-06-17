@@ -109,7 +109,7 @@ const PublicationFooter: React.FC<Props> = ({ authId, publication, token, onComm
     <footer>
       <section className={styles.counters}>
         <FontAwesomeIcon className={`${styles.footerIcon} ${styles.likeIcon}`} icon={faHeart} />
-        Likes <span className={styles.counterSeparation}>{likeCount}</span>
+        Me gusta <span className={styles.counterSeparation}>{likeCount}</span>
         <FontAwesomeIcon className={`${styles.footerIcon} ${styles.commentsIcon}`} icon={faComments} />
         Comentarios {commentCount}
         <p className={styles.date}>{parseTime(publication.created_at)}, {parseDate(publication.created_at)}</p>

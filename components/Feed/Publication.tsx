@@ -12,6 +12,7 @@ interface Props {
   token: string,
   updatePublications : () => any,
   onCommentAdded : () => any
+  handleUpdateFeed : () => any
 }
 
 /**
@@ -23,7 +24,7 @@ interface Props {
  * @param {function} updatePublications - Function to call after updating the publications.
  * @param {function} onCommentAdded - Function to call after a comment is added.
  */
-const Publication: React.FC<Props> = ({ id, publication, token, updatePublications, onCommentAdded }) => {
+const Publication: React.FC<Props> = ({ id, publication, token, updatePublications, onCommentAdded, handleUpdateFeed }) => {
 
   /**
    * Function to parse multiline message and render as paragraphs.
@@ -43,6 +44,7 @@ const Publication: React.FC<Props> = ({ id, publication, token, updatePublicatio
     try {
       await deleteData(`publications/user/${id}/msg/${publication.id}`, token);
       updatePublications();
+      handleUpdateFeed();
     } catch (error) {
       console.error('Error deleting publication:', error);
     }

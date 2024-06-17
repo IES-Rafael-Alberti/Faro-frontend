@@ -44,7 +44,7 @@ const Page: NextPage<Props> = () => {
         setIsLoading(false);
       }, 1000);
     });
-  }, [id, token]);
+  }, [id, token, updateFeed]);
 
   /**
    * Function to handle feed update.
@@ -69,7 +69,7 @@ const Page: NextPage<Props> = () => {
         </div>}
       </aside>
       {!isLoading && <CreatePublication userImg={user.profile_picture} onUpdateFeed={handleUpdateFeed}/>}
-      {!isLoading && <FeedPublications token={token} id={id} updateFeed={updateFeed} />}
+      {!isLoading && <FeedPublications token={token} id={id} updateFeed={updateFeed} handleUpdateFeed={handleUpdateFeed} />}
 
     </main>
   )

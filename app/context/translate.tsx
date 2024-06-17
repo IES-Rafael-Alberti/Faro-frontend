@@ -9,13 +9,13 @@ const translateRol = (rol: string): string => {
         case "admin":
             return "Administrator";
         case "student":
-            return "Student";
+            return "Estudiante";
         case "company":
-            return "Company";
+            return "Empresa";
         case "teacher":
-            return "Teacher";
+            return "Profesor";
         default:
-            return "Undefined role";
+            return "Sin rol asignado";
     }
 }
 

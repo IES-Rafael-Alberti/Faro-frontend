@@ -1,6 +1,6 @@
 'use client'
 
-import { getProfileData, getUserBasicData } from '../../utils/fetchData';
+import { getProfileData, getUserBasicData } from '@/utils/fetchData';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
@@ -16,7 +16,7 @@ import Image from 'next/image';
 import Icon from '@/components/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
-import translateRol from '../context/translate';
+import translateRol from '@/app/context/translate';
 import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
 import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredExperience, getFilteredEducation } from '@/utils/profileFunctions';
 import DisplayedProfileSection from '@/components/profile/DisplayedProfileSection';

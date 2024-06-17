@@ -31,9 +31,9 @@ export const AuthContext = createContext<AuthContextType>({
  * @returns {JSX.Element} - The JSX element representing the authentication provider.
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isLogged, setIsLogged] = useState(false); // State to track login status.
-  const [token, setToken] = useState<string>(''); // State to store authentication token.
-  const [id, setId] = useState<string>(''); // State to store user ID.
+  const [isLogged, setIsLogged] = useState(true); // State to track login status.
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIyY2RhYzk2LWY3ODYtNGNjOC1hZWE5LTBiMzRmNzA5YWU3MCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE4NjM4MDg2LCJleHAiOjE3MTg2NDE2ODZ9.rFcuaefA1JI1k6sMNknxe5Y_ner6zx0JowszyKX8SMo'); // State to store authentication token.
+  const [id, setId] = useState<string>('b2cdac96-f786-4cc8-aea9-0b34f709ae70'); // State to store user ID.
   const router = useRouter();
 
   /**
