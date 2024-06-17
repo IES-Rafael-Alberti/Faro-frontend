@@ -5,7 +5,7 @@ import { CompleteProfile } from "@/types/profile/CompleteProfile.interface";
 
 interface DisplayedProfileSectionInterface {
     currentSection: string,
-    profileData: CompleteProfile | undefined,
+    profileData: CompleteProfile | null,
     styles: any
 }
 
@@ -75,7 +75,7 @@ const DisplayedProfileSection = ({ currentSection, profileData, styles }: Displa
     }
 
     return (
-        <section className={styles.currentSection}>
+        <section>
             {sectionContent}
         </section>
     );

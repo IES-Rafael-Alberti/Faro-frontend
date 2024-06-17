@@ -14,7 +14,7 @@ interface AuthFormSectionProps {
   required?: boolean;
   styles: any;
   montserratClassName: string;
-  hasOutsideDiv: boolean 
+  hasOutsideDiv: boolean
 }
 
 const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placeholder, value, onChange, error, minLength, required, styles, montserratClassName, hasOutsideDiv }) => (
