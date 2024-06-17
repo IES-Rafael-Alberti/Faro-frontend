@@ -125,45 +125,48 @@ export default function Message(): JSX.Element {
 
     return (
         <main className={styles.wrapper}>
-            <section className={styles.chatsContainer}>
-                <div className={styles.overflowActive}>
-                    {contacts.map(contact => (
-                        <article className={styles.chat} key={contact.id} onClick={() => setSelectedContact(contact.id)}>
-                            <Image className={styles.userImg} src={contact.avatar} alt={contact.name as string} width={50} height={50} />
-                            <div className={styles.flex}>
-                                <h2 className={styles.username}>{contact.name}</h2>
-                                <p className={styles.messageInfo}><span>{contact.last_msg_date ? parseDate(contact.last_msg_date.toString()) : ''}</span> - {contact.last_msg}</p>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
-            <section className={styles.messageContainer}>
-                <header className={styles.userInfo}>
-                    {contacts[0] && (
-                        <>
-                            <Image className={styles.userImgMessage} src={contacts[0].avatar} alt={contacts[0].name as string} width={75} height={75} />
-                            <div className={styles.flex}>
-                                <h1 className={styles.usernameMessage}>{contacts[0].name}</h1>
-                                <p className={styles.messageInfo}>{translateRol(contacts[0].rol as string)}</p>
-                            </div>
-                        </>
-                    )}
-                </header>
-                <article className={styles.messages}>
-                    {sortedMessages.map((msg) => (
-                        <p key={msg.message_id} className={`${styles.msg} ${msg.sender_id === id ? styles.sender : styles.receiver}`}>
-                            {msg.msg} - <span className={styles.date}>{parseDate(msg.date as string)}</span>
-                        </p>
-                    ))}
-                </article>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.chatboxContainer}>
-                        <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown} className={styles.textarea}></textarea>
+            {(contacts.length < 1) ? <p>No hay contactos.</p> : (
+            <>
+                <section className={styles.chatsContainer}>
+                    <div className={styles.overflowActive}>
+                        {contacts.map(contact => (
+                            <article className={styles.chat} key={contact.id} onClick={() => setSelectedContact(contact.id)}>
+                                <Image className={styles.userImg} src={contact.avatar} alt={contact.name as string} width={50} height={50} />
+                                <div className={styles.flex}>
+                                    <h2 className={styles.username}>{contact.name}</h2>
+                                    <p className={styles.messageInfo}><span>{contact.last_msg_date ? parseDate(contact.last_msg_date.toString()) : ''}</span> - {contact.last_msg}</p>
+                                </div>
+                            </article>
+                        ))}
                     </div>
-                </form>
-            </section>
+                </section>
+
+                <section className={styles.messageContainer}>
+                    <header className={styles.userInfo}>
+                        {contacts[0] && (
+                            <>
+                                <Image className={styles.userImgMessage} src={contacts[0].avatar} alt={contacts[0].name as string} width={75} height={75} />
+                                <div className={styles.flex}>
+                                    <h1 className={styles.usernameMessage}>{contacts[0].name}</h1>
+                                    <p className={styles.messageInfo}>{translateRol(contacts[0].rol as string)}</p>
+                                </div>
+                            </>
+                        )}
+                    </header>
+                    <article className={styles.messages}>
+                        {sortedMessages.map((msg) => (
+                            <p key={msg.message_id} className={`${styles.msg} ${msg.sender_id === id ? styles.sender : styles.receiver}`}>
+                                {msg.msg} - <span className={styles.date}>{parseDate(msg.date as string)}</span>
+                            </p>
+                        ))}
+                    </article>
+                    <form onSubmit={handleSubmit}>
+                        <div className={styles.chatboxContainer}>
+                            <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown} className={styles.textarea}></textarea>
+                        </div>
+                    </form>
+                </section>
+            </>)}
         </main>
     );
 }
