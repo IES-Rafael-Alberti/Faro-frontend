@@ -4,6 +4,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
+import { profile } from 'console';
 
 interface DynamicProfileSectionProps {
   data: Array<any>;
@@ -11,8 +12,7 @@ interface DynamicProfileSectionProps {
   setListIds: Dispatch<SetStateAction<string[]>>;
   type: 'profile' | 'education' | 'recommendations' | 'experience';
   onAdd: (setFormData: Dispatch<SetStateAction<EditableProfileData>>) => void;
-  onDelete: (setDeletedEducationIds: Dispatch<SetStateAction<string[]>>,
-    setFormData: Dispatch<SetStateAction<EditableProfileData>>,id: string) => void;
+  onDelete: (id: string) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number, property: string) => void;
   styles: any
 }
@@ -35,11 +35,11 @@ const DynamicProfileSection = ({ data, setData, setListIds, type, onAdd, onDelet
             <h3 className={styles.titleContainer}>{type.charAt(0).toUpperCase() + type.slice(1)} {index + 1}</h3>
             <FontAwesomeIcon 
               icon={faTrash} 
-              onClick={() => onDelete(setListIds, setData, item.id ?? '')} 
+              onClick={() => onDelete(item.id ?? '')} 
               className={`${styles.editIcon} ${styles.deleteIcon}`} 
             />
 
-            {Object.keys(item).filter(property => property !== 'id').map((property) => (
+            {Object.keys(item).filter(property => property !== 'id' && property !== 'profile' ).map((property) => (
               <input
                 key={property}
                 type={property.includes('date') ? 'date' : 'text'}

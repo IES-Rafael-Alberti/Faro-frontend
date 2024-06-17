@@ -14,7 +14,7 @@ interface AuthFormSectionProps {
   required?: boolean;
   styles: any;
   montserratClassName: string;
-  hasOutsideDiv: boolean 
+  hasOutsideDiv: boolean
 }
 
 const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placeholder, value, onChange, error, minLength, required, styles, montserratClassName, hasOutsideDiv }) => (
@@ -27,7 +27,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={() => onChange}
+          onChange={(e) => onChange(e)}
           error={error}
           minLength={minLength}
           required={required}
@@ -42,7 +42,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={() => onChange}
+          onChange={(e) => onChange(e)}
           error={error}
           minLength={minLength}
           required={required}

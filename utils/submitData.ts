@@ -86,7 +86,7 @@ export const submitFriendRequest = async (userId: string, profileId: string, tok
  * @throws Will throw an error if the request fails.
  */
 export const submitEducation = async (education: EducationInterface, id: string, token: string = ''): Promise<any> => {
-  return submitData<EducationInterface, any>(CREATE_EDUCATION_URL, { ...education, profileId: id }, token);
+  return submitData<EducationInterface, any>(CREATE_EDUCATION_URL, { ...education, profile: id }, token);
 };
 
 /**
