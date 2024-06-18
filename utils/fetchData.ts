@@ -162,7 +162,7 @@ export async function fetchAllUsers(token: string = ''): Promise<User[]> {
 export async function fetchAllConnectionsOfAnUser(token: string = '', id: string): Promise<UserMessageInterface[]> {
   try {
     const userConnections: UserMessageInterface[] = [];
-    const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token);
+    const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token) || [];
     
     if (!idList || idList.length === 0) {
       return userConnections;
