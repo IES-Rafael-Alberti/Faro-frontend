@@ -81,7 +81,7 @@ export default function Message(): JSX.Element {
             if (selectedContact) {
                 fetchMessages(selectedContact);
             }
-        }, 500);
+        }, 2000);
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
     }, [selectedContact]);
@@ -117,17 +117,19 @@ export default function Message(): JSX.Element {
     };
 
     /**
-     * Parses an ISO date string to a formatted date string (DD.MM).
+     * Parses an ISO date string to a formatted date string hour:minutes and in case it's not today, to day/month
      *
      * @param {string} isoDate - The ISO date string.
      * @returns {string} - The formatted date string.
      */
     const parseDate = (isoDate: string) => {
-        const date = new Date(isoDate);
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth is zero-based.
-        const formattedDate = `${day}.${month}`;
-        return formattedDate;
+    const date = new Date(isoDate);
+    const today = new Date();
+    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+        return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2);
+    } else {
+        return ('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2);
+    }
     };
 
     return (
