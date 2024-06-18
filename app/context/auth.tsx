@@ -32,16 +32,27 @@ export const AuthContext = createContext<AuthContextType>({
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true); // State to track login status.
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIyY2RhYzk2LWY3ODYtNGNjOC1hZWE5LTBiMzRmNzA5YWU3MCIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNzE4NzMxNzEwLCJleHAiOjE3MTg3MzUzMTB9.e9iJYX7HXL2kNcjhEOi9nppwx9I6qw23Sqq6Pxu7jiU'); // State to store authentication token.
-  const [id, setId] = useState<string>('b2cdac96-f786-4cc8-aea9-0b34f709ae70'); // State to store user ID.
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjODhmMzhkLTZmNGItNGJkZC1iOGU4LWNlOGY2N2EwNjhkYSIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE4NzM3MDc3LCJleHAiOjE3MTg3NDA2Nzd9.p8322qw8JG6aYYcje_EFvDVHL9PMrZVPzmfc56DgB_Y'); // State to store authentication token.
+  const [id, setId] = useState<string>('2c88f38d-6f4b-4bdd-b8e8-ce8f67a068da'); // State to store user ID.
   const router = useRouter();
-
+  
   /**
    * Redirects to the homepage if not logged in.
    */
   useEffect(() => {
-    if(!isLogged && !token && !id){
+    if(!isLogged || !token || !id){
       router.push('/');
+    } else {
+      // Set a timer to log out the user after 1 hour of inactivity
+      const timer = setTimeout(() => {
+        setIsLogged(false);
+        setToken('');
+        setId('');
+        router.push('/');
+      }, 60 * 60 * 1000); // 1 hour
+
+      // Cleanup function to clear the timer if the component unmounts or the token changes
+      return () => clearTimeout(timer);
     }
   }, [isLogged, token, id, router])
 
