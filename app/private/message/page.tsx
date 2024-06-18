@@ -154,7 +154,7 @@ export default function Message(): JSX.Element {
                     <header className={styles.userInfo}>
                         {contacts.find(contact => contact.id === selectedContact) && (
                             <>
-                                <Image className={styles.userImgMessage} src={contacts.find(contact => contact.id === selectedContact)?.avatar} alt={contacts.find(contact => contact.id === selectedContact)?.name as string} width={75} height={75} />
+                                <Image className={styles.userImgMessage} src={contacts.find(contact => contact.id === selectedContact)?.avatar || ''} alt={contacts.find(contact => contact.id === selectedContact)?.name as string} width={75} height={75} />
                                 <div className={styles.flex}>
                                     <h1 className={styles.usernameMessage}>{contacts.find(contact => contact.id === selectedContact)?.name}</h1>
                                     <p className={styles.messageInfo}>{translateRol(contacts.find(contact => contact.id === selectedContact)?.rol as string)}</p>
