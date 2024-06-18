@@ -170,7 +170,7 @@ export default function Message(): JSX.Element {
                     <form onSubmit={handleSubmit}>
                         <div className={styles.chatboxContainer}>
                             <textarea rows={4} ref={currentMessage} placeholder="Escribe un mensaje..." onKeyDown={handleKeyDown} className={styles.textarea}></textarea>
-                            <div className={styles.iconContainer}><Icon src="/icons/sendIcon.png" width={25} height={25}/></div>
+                            <div onClick={handleSubmit} className={styles.iconContainer}><Icon src="/icons/sendIcon.png" width={25} height={25}/></div>
                         </div>
                     </form>
                 </section>
