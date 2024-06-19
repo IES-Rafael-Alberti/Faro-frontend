@@ -23,9 +23,7 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
     const response = await submitFriendRequest(id, profileId, token)
   }
 
-
   return (
-
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
         <section className={styles.nameAndRol}>
@@ -38,60 +36,6 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
         setCurrentSection={setCurrentSection}
         styles={styles}
       />
-      <div className={styles.currentSection}>
-        <DisplayedProfileSection
-          currentSection={currentSection}
-          profileData={profileData}
-          styles={styles}
-        />
-      </div>
-    </main >
-      ) : (
-      <>
-        <FontAwesomeIcon icon={faEdit} onClick={toggleEditProfile} className={styles.editIcon} />
-
-        <div className={styles.currentSection}>
-          {
-            <DisplayedProfileSection
-              currentSection={currentSection}
-              profileData={profileData}
-              styles={styles}
-            />
-          }
-          {
-            <DisplayedProfileSection
-              currentSection={currentSection}
-              profileData={profileData}
-              styles={styles}
-            />
-          }
-          {
-            <DisplayedProfileSection
-              currentSection={currentSection}
-              profileData={profileData}
-              styles={styles}
-            />
-          }
-          {currentSection === 'recommendations' && Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
-            <div key={index}>
-              <p>{rec.message}</p>
-              <p>{rec.date?.toString()}</p>
-            </div>
-          ))}
-          {currentSection === 'recommendations' && Array.isArray(profileData?.contacts) && profileData.contacts.map((contact) => (
-            <div key={String(contact)}>
-              {String(contact)}
-            </div>
-          ))}
-          {/* <h2>Request recibidas de otros usuarios</h2> */}
-          {currentSection === 'recommendations' && Array.isArray(requests) && requests.map((req) => (
-            <div key={String(req)}>
-              {String(req)}
-            </div>
-          ))}
-        </div>
-      </>
-      )}
     </main>
   )
 }

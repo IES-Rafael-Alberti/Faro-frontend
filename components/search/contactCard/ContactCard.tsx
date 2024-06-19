@@ -72,7 +72,8 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
      * Function to check if the user is connected and update button label and style accordingly.
      */
     const checkIfConnected = () => {
-      if (connections.includes(user.user_id)) {
+      // FIXME this never is not okay...
+      if (connections.includes(user.user_id as never)) {
           setConnected(true);
           setLabel("Conectado");
           setButtonClass(`${styles.connectButton} ${styles.connectButtonIsConnected}`);
