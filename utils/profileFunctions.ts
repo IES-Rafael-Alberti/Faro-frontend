@@ -10,20 +10,14 @@ import { submitEducation, submitExperience } from "./submitData";
 export const addEducation = (setEducation: Dispatch<SetStateAction<EducationInterface[]>>) => {
   setEducation((education) => {
     const newEducation: EducationInterface = { degree: '', institution: '', start_date: '2024-08-09', end_date: null };
-    return {
-      ...education,
-      education: [...education, newEducation]
-    };
+    return [...education, newEducation];
   });
 }
 
 export const addExperience = (setFormData: Dispatch<SetStateAction<ExperienceInterface[]>>) => {
   setFormData((experience) => {
     const newExperience: ExperienceInterface = { company: '', position: '', startDate: '2024-08-09', endDate: null, description: '' };
-    return {
-      ...experience,
-      experience: [...experience, newExperience]
-    };
+    return [...experience, newExperience]
   });
 };
 
