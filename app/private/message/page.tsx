@@ -4,7 +4,7 @@ import Image from "next/image";
 import translateRol from "@/app/context/translate";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/app/context/auth";
-import { fetchAllConnectionsOfAnUser, fetchMessagesFromUser } from "@/utils/fetchData";
+import { fetchAllConnectionsToMessage, fetchMessagesFromUser } from "@/utils/fetchData";
 import { MessageInterface } from "@/types/message.interface";
 import { UserMessageInterface } from "@/types/user-message.interface";
 import { submitMessage } from "@/utils/submitData";
@@ -30,7 +30,7 @@ export default function Message(): JSX.Element {
      */
     const getUsersConnectedTo = async () => {
         try {
-            const response = await fetchAllConnectionsOfAnUser(token, id);
+            const response = await fetchAllConnectionsToMessage(token, id);
             setContacts(response);
             if (response.length > 0) {
                 const lastContact = response[response.length - 1];

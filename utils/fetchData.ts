@@ -167,6 +167,43 @@ export async function fetchAllConnectionsOfAnUser (token: string = '', id: strin
   }
 }
 
+
+/**
+ * Fetches all connections of a user by their ID.
+ * 
+ * @param {string} token - The authentication token to be included in the request headers.
+ * @param {string} id - The ID of the user whose connections are to be fetched.
+ * @returns {Promise<UserMessageInterface[]>} - A promise that resolves to the list of user connections.
+ * @throws Will throw an error if the request fails.
+ */
+export async function fetchAllConnectionsToMessage(token: string = '', id: string): Promise<UserMessageInterface[]> {
+  try {
+    const userConnections: UserMessageInterface[] = [];
+    const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token) || [];
+    
+    if (!idList || idList.length === 0) {
+      return userConnections;
+    }
+
+    for (const element of idList) {
+      const basicUserInfo = await fetchBasicUserInfo(element, token);
+      const user: UserMessageInterface = {
+        id: element,
+        name: basicUserInfo.username,
+        avatar: basicUserInfo.profile_picture,
+        rol: 'Student', 
+        last_msg_date: null,  
+        last_msg: ''          
+      };
+      userConnections.push(user);
+    }
+    return userConnections;
+  } catch (error) {
+    console.error(`Error fetching connections data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error);
+    return Promise.reject(error);
+  }
+}
+
 /**
  * Sends a request to connect with another user.
  * 
