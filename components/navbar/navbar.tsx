@@ -34,7 +34,7 @@ const Navbar = () => {
         setId('');
         setToken('');
         setIsLogged(false);
-        router.push('/public/login');
+        router.push('/');
         setTimeout(() => {
             toast.success('Has cerrado sesión correctamente.')
         }, 200);
