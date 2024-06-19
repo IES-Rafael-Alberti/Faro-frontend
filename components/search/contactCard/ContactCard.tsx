@@ -116,7 +116,7 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Publicaciones <span>{user.count_of_publications}</span></p>
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Contactos <span>{user.count_of_connections}</span></p>
             </div>
-            <GenericButton label={label} onClick={connected ? deleteUser : connectUser} className={buttonClass}></GenericButton>
+            <GenericButton label={label} onClick={connected ? deleteUser : connectUser} className={buttonClass} disabled={label === "¡Enviado!" ? true : false}></GenericButton>
         </article>
     );
 }

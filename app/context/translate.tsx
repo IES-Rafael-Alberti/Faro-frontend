@@ -5,7 +5,7 @@
  * @returns {string} - The translated role name.
  */
 const translateRol = (rol: string): string => {
-    switch (rol.toLowerCase()) {
+    switch (rol?.toLowerCase()) {
         case "admin":
             return "Administrator";
         case "student":
