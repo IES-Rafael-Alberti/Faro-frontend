@@ -1,9 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { profile } from 'console';
 import { AuthContext } from '@/app/context/auth';
-
 
 interface DynamicProfileSectionProps {
   data: Array<any>;
@@ -12,17 +10,21 @@ interface DynamicProfileSectionProps {
   type: 'profile' | 'education' | 'recommendations' | 'experience';
   onAdd: (setFormData: Dispatch<SetStateAction<any>>) => void;
   onDelete: (id: string) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number, property: string) => void;
-  styles: any
+  styles: any;
 }
 
-const DynamicProfileSection = ({ data, setData, setListIds, type, onAdd, onDelete, onChange, styles }: DynamicProfileSectionProps) => {
+const DynamicProfileSection = ({ data, setData, setListIds, type, onAdd, onDelete, styles }: DynamicProfileSectionProps) => {
   const sectionEndRef = useRef<HTMLButtonElement>(null);
   const topRef = useRef<HTMLButtonElement>(null);
-  const { id } = useContext(AuthContext);
 
   const scrollToTop = () => {
     topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number, property: string) => {
+    const updatedData = [...data];
+    updatedData[index][property] = e.target.value;
+    setData(updatedData);
   };
 
   return (
@@ -39,13 +41,13 @@ const DynamicProfileSection = ({ data, setData, setListIds, type, onAdd, onDelet
               className={`${styles.editIcon} ${styles.deleteIcon}`} 
             />
 
-            {Object.keys(item).filter(property => property !== 'id' && property !== 'profile' ).map((property) => (
+            {Object.keys(item).filter(property => property !== 'id' && property !== 'profile').map((property) => (
               <input
                 key={property}
                 type={property.includes('date') ? 'date' : 'text'}
                 name={property}
                 value={item[property]?.toString() || ''}
-                onChange={(e) => onChange(e, index, property)}
+                onChange={(e) => handleChange(e, index, property)}
                 placeholder={property.charAt(0).toUpperCase() + property.slice(1)}
                 className={`${styles.editInput} ${property.includes('date') ? styles.dateInput : ''}`}
               />

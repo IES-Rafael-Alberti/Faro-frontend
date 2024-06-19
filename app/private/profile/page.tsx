@@ -1,11 +1,10 @@
 
 'use client';
 
-import { getProfileData, getUserBasicData } from '@/utils/fetchData';
-import { useContext, useEffect, useState } from 'react';
+import { fetchBasicUserInfo, fetchProfileData, getUserBasicData } from '@/utils/fetchData';
+import { use, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { updateProfileData, updateUserData } from '@/utils/updateData';
-import { EditableProfileData } from '@/types/profile/editableProfileData.interface';
 import { RequestInterface } from '@/types/profile/requests.interface';
 import { submitAvatar, submitEducation, submitExperience } from '@/utils/submitData';
 import styles from './page.module.css';
@@ -21,20 +20,98 @@ import ProfileNavbar from '@/components/profile/ProfileNavbar';
 import { CREATE_EDUCATION_URL, CREATE_EXPERIENCE_URL } from '@/types/consts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
 import { deleteData } from '@/utils/deleteData';
-import { getFilteredEducation, getFilteredExperience } from '@/utils/profileFunctions';
+import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredEducation, getFilteredExperience } from '@/utils/profileFunctions';
 import { EducationInterface } from '@/types/profile/education.interface';
 import { ProfileInterface } from '@/types/profile/Profile.interface';
 import ImageInput from '@/components/profile/image/ImageInput';
+import { ExperienceInterface } from '@/types/profile/experience.interface';
+import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
+import { UpdateProfileData } from '@/types/profile/UpdateProfileData.interface';
+import { RecommendationInterface } from '@/types/profile/recomendation.interface';
 
 export default function Profile() {
-  const { id, token, setId } = useContext(AuthContext);
+  const { id, token } = useContext(AuthContext);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [education, setEducation] = useState<EducationInterface[]>([]);
-  const [experience, setExperience] = useState<EducationInterface[]>([]);
+  const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
+  const [experience, setExperience] = useState<ExperienceInterface[]>([]);
+  const [deletedExperienceIds, setDeletedExperienceIds] = useState<string[]>([]);
+  const [recommendations, setRecommendations] = useState<RecommendationInterface[]>([]);
+  const [requests, setRequests] = useState<RequestInterface[]>([]);
   const [profileData, setProfileData] = useState<ProfileInterface>();
   const [basicUserInfo, setBasicUserInfo] = useState<BasicUserInfoInterface>();
+  const [combinedProfileData, setCombinedProfileData] = useState<CompleteProfile>();
+
+  const toggleEditProfile = () => {
+    setEditMode(!editMode);
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProfileData((prevData) => {
+      if (prevData) {
+        return {
+          ...prevData,
+          [name]: value,
+        };
+      }
+      // This should not normally happen if the initial state is properly set
+      return undefined;
+    });
+  };
+  
+  const saveProfileData = async () => {
+    toggleEditProfile();
+    
+    const completeProfileData : UpdateProfileData = {
+      ...profileData,
+      id: profileData?.id ?? '',
+      name: profileData?.name ?? '',
+      education: education,
+      receivedRequests: requests,
+      experience: experience,
+      recommendations: recommendations,
+      contacts: [],
+      publications: []
+    }
+    const response = await updateProfileData(id, completeProfileData, token);
+  }
+  
+
+  const fetchData = async () => {
+    setLoading(true);
+    console.log("BRO");
+    const response = await fetchProfileData(`${id}`, token);
+    const userInfoResponse = await fetchBasicUserInfo(`${id}`, token);
+    setBasicUserInfo(userInfoResponse);
+    setProfileData(response.profile);
+    setEducation(response.education);
+    setExperience(response.experience);
+    setRequests(response.receivedRequests);
+    const completeProfileData = {
+      profile: response.profile,
+      education: response.education,
+      experience: response.experience,
+      receivedRequests: response.receivedRequests,
+      contacts: response.contacts || [], 
+      publications: response.publications || [],
+      recommendations: response.recommendations || [], // Add the 'recommendations' property
+    };
+    setCombinedProfileData(completeProfileData)
+    console.log("BRO",profileData);
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated section", currentSection);
+  }, [currentSection]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -61,14 +138,14 @@ export default function Profile() {
       {editMode ? (
         <>
           <FontAwesomeIcon icon={faCancel} onClick={toggleEditProfile} className={styles.editIcon} />
-          <FontAwesomeIcon icon={faSave} onClick={editProfile} className={styles.editIcon} />
+          <FontAwesomeIcon icon={faSave} onClick={saveProfileData} className={styles.editIcon} />
           <div className={styles.currentSection}>
             {currentSection === 'profile' && (
               <>
                 <input
                   type="text"
                   name="name"
-                  value={editableProfileData.name}
+                  value={profileData?.name ?? ''}
                   onChange={(e) => handleInputChange(e)}
                   placeholder="Name"
                   className={styles.editInput}
@@ -76,7 +153,7 @@ export default function Profile() {
                 <input
                   type="text"
                   name="headline"
-                  value={editableProfileData.headline}
+                  value={profileData?.headline ?? ''}
                   onChange={(e) => handleInputChange(e)}
                   placeholder="Headline"
                   className={styles.editInput}
@@ -84,7 +161,7 @@ export default function Profile() {
                 <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
                   <textarea
                     name="description"
-                    value={editableProfileData.description}
+                    value={profileData?.description ?? ''}
                     onChange={(e) => handleInputChange(e)}
                     placeholder="Description"
                     rows={3}
@@ -97,25 +174,23 @@ export default function Profile() {
             )}
             {currentSection === 'education' && (
               <DynamicProfileSection
-                data={editableProfileData.education}
-                setData={setEditableProfileData}
+                data={education}
+                setData={setEducation}
                 setListIds={setDeletedEducationIds}
                 type={'education'}
                 onAdd={addEducation}
-                onDelete={deleteEducation}
-                onChange={(e, index) => handleInputChange(e, index, 'education')}
+                onDelete={(id) => deleteEducation(setDeletedEducationIds, setEducation,id)}
                 styles={styles}
               />
             )}
             {currentSection === 'experience' && (
               <DynamicProfileSection
-                data={editableProfileData.experience}
-                setData={setEditableProfileData}
+                data={experience}
+                setData={setExperience}
                 setListIds={setDeletedExperienceIds}
                 type={'experience'}
                 onAdd={addExperience}
-                onDelete={deleteExperience}
-                onChange={(e, index) => handleInputChange(e, index, 'experience')}
+                onDelete={(id) => deleteExperience(setDeletedExperienceIds, setExperience, id)}
                 styles={styles}
               />
             )}
@@ -128,7 +203,7 @@ export default function Profile() {
           <div className={styles.currentSection}>
             <DisplayedProfileSection
               currentSection={currentSection}
-              profileData={profileData}
+              profileData={combinedProfileData}
               styles={styles}
             />
           </div>

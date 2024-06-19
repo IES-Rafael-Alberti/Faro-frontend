@@ -6,8 +6,7 @@ import { ProfileInterface } from "./Profile.interface";
 import { RecommendationInterface } from "./recomendation.interface";
 import { RequestInterface } from "./requests.interface";
 
-export interface CompleteProfile {
-    profile: ProfileInterface;
+export interface UpdateProfileData extends ProfileInterface {
     experience: ExperienceInterface[];
     education: EducationInterface[];
     recommendations: RecommendationInterface[];

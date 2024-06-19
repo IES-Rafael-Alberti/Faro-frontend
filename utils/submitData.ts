@@ -8,9 +8,11 @@ import {
   REQUEST_URL, 
   MESSAGE_URL, 
   UPLOAD_IMAGE_URL,
-  PUBLICATIONS_LIKES_URL 
+  PUBLICATIONS_LIKES_URL, 
+  PROFILE_URL
 } from '../types/consts';
 import { ExperienceInterface } from '@/types/profile/experience.interface';
+import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
 
 /**
  * Submits data to a specified URL using the provided HTTP verb.
@@ -196,3 +198,7 @@ export const submitAvatar = async (avatar: File, id: string, token: string = '')
     throw error;
   }
 };
+
+export const submitProfileData = async (id: string, data: CompleteProfile, token: string = ''): Promise<any> => {
+  return submitData<CompleteProfile, any>(`${PROFILE_URL}${id}`, data, token, 'PUT');
+}

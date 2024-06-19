@@ -25,6 +25,7 @@ import { PublicationCommentsInterface } from '@/types/PublicationComments.interf
 import { UserMessageInterface } from '@/types/user-message.interface';
 import { Dispatch, SetStateAction } from 'react';
 import { RequestInterface } from '@/types/profile/requests.interface';
+import { ProfileInterface } from '@/types/profile/Profile.interface';
 
 /**
  * Sends a GET request to the specified URL and returns the parsed JSON response.
@@ -63,7 +64,7 @@ export async function fetchData<T = any>(url: string, token: string = ''): Promi
  * @throws Will throw an error if the request fails.
  */
 export async function fetchProfileData(id: string, token: string = ''): Promise<CompleteProfile> {
-  try {
+  try {    
     const urls = [
       { url: `${PROFILE_URL}${id}`, type: 'profile' },
       { url: `${EXPERIENCE_URL}${id}`, type: 'experience' },
@@ -74,7 +75,10 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
       { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ];
 
+    console.log("URLS", urls)
+
     const fetchPromises = urls.map(({ url }) => fetchData(url, token));
+    
 
     const [
       profile,
@@ -87,7 +91,7 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
     ] = await Promise.all(fetchPromises);
 
     return {
-      ...profile,
+      profile,
       experience,
       education,
       recommendations,
@@ -327,15 +331,3 @@ export const getUserBasicData = async (
   }
 };
 
-export const getProfileData = async (
-  id: string,
-  token: string,
-  setProfileData: Dispatch<SetStateAction<CompleteProfile | null>>,
-  setRequests:  Dispatch<SetStateAction<RequestInterface[]>>
-) => {
-  const response = await fetchProfileData(`${id}`, token);
-  const { receivedRequests } = response;
-  setProfileData(response);
-  setRequests(receivedRequests);
-  return response;
-};
