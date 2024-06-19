@@ -9,6 +9,7 @@ import { BasicUserInfoWithIdInterface } from '@/types/BasicUserInfoWithId.interf
 import { AuthContext } from '@/app/context/auth';
 import { deleteConnectionWithAnUser } from '@/utils/deleteData';
 import { toast } from 'react-hot-toast';
+import Link from 'next/link';
 
 interface Props {
     user: BasicUserInfoWithIdInterface;
@@ -109,8 +110,10 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     return (
         <article className={styles.contentUserInfo}>
             {/* TO DO TAKE ALWAYS THE IMG FROM RESPONSE */}
-            <Image className={styles.userImage} src={user.profile_picture} alt={`${user.username}_image`} width={100} height={100}/>
-            <h1 className={styles.infoHighlight}>{user.username}</h1>
+            <Link href={`/private/profile/${user.user_id}`}>
+              <Image className={styles.userImage} src={user.profile_picture} alt={`${user.username}_image`} width={100} height={100}/>
+              <h1 className={styles.infoHighlight}>{user.username}</h1>
+            </Link>
             <p className={styles.info}>{translateRol(user.rol)}</p>
             <div className={styles.stadistics}>
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Publicaciones <span>{user.count_of_publications}</span></p>

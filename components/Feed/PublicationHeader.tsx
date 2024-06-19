@@ -1,9 +1,10 @@
 import Image from 'next/image'
 import styles from './feedPublications.module.css'
 import translateRol from '@/app/context/translate'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
-import { width } from '@fortawesome/free-solid-svg-icons/fa0'
+import Link from 'next/link'
+import { AuthContext } from '@/app/context/auth'
 
 interface Props {
   publication: any,
@@ -17,6 +18,7 @@ interface Props {
  */
 const PublicationHeader: React.FC<Props> = ({ publication, token }) => {
   const [userImg, setUserImg] = useState<string>('')
+  const { id } = useContext(AuthContext)
 
   useEffect(() => {
     fetchBasicUserInfo(publication.user_id, token)
@@ -26,12 +28,20 @@ const PublicationHeader: React.FC<Props> = ({ publication, token }) => {
       .catch(error => console.error('Error fetching user image:', error))
   }, [userImg, publication.user_id, token])
 
+  useEffect(() => {
+    console.log(id, publication.user_id)
+  }, [])
+
   return (
     <header>
       <section className={styles.postInfo}>
+      <Link href={id === publication.user_id ? `/private/profile` : `/private/profile/${publication.user_id}`}>
         <Image src={userImg ? userImg : '/imgs/no-user-image.jpg'} className={styles.userImg} alt="user_image" width={75} height={75} />
+      </Link>
         <div className={styles.userInfo}>
-          <h2 className={`${styles.postName}`}>{publication.name}</h2>
+          <Link href={id === publication.user_id ? `/private/profile` : `/private/profile/${publication.user_id}`}>
+            <h2 className={`${styles.postName}`}>{publication.name}</h2>
+          </Link>
           <p className={`${styles.postRol} ${styles.infoPost}`}>{translateRol(publication.user_role)}</p>
         </div>
       </section>
