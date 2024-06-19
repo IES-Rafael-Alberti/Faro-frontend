@@ -40,8 +40,7 @@ const ImageInput = ({ styles, setBasicUserInfo }: ImageInputProps) => {
       setBasicUserInfo((prevUserInfo: BasicUserInfoInterface) => ({
         ...prevUserInfo,
         profile_picture: choosedFile
-      }))
-      console.log(choosedFile);
+      }));
       
       submitAvatar(choosedFile, id, token)
     }

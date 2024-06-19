@@ -12,8 +12,6 @@ interface DisplayedProfileSectionInterface {
 const DisplayedProfileSection = ({ currentSection, profileData, styles }: DisplayedProfileSectionInterface) => {
     let sectionContent;
 
-    console.log("DISPLAYED DATA: ", profileData);
-
     switch (currentSection) {
         case 'profile':
             sectionContent = (

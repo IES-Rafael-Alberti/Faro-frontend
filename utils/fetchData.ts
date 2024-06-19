@@ -75,8 +75,6 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
       { url: `${REQUEST_URL}${id}`, type: 'requests'}
     ];
 
-    console.log("URLS", urls)
-
     const fetchPromises = urls.map(({ url }) => fetchData(url, token));
     
 
@@ -309,7 +307,6 @@ export const getUserBasicData = async (
 ) => {
   try {
     const response = await fetchBasicUserInfo(id, token);
-    console.log('User basic data:', response);
     
     setProfileData((prevProfileData) => {
       const updatedProfileData = {

@@ -6,7 +6,7 @@ import { use, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '@/app/context/auth';
 import { updateProfileData, updateUserData } from '@/utils/updateData';
 import { RequestInterface } from '@/types/profile/requests.interface';
-import { submitAvatar, submitEducation, submitExperience } from '@/utils/submitData';
+import { submitAvatar, submitEducation, submitExperience, submitProfileData } from '@/utils/submitData';
 import styles from './page.module.css';
 import { montserrat } from '@/app/ui/fonts';
 import Image from 'next/image';
@@ -20,7 +20,7 @@ import ProfileNavbar from '@/components/profile/ProfileNavbar';
 import { CREATE_EDUCATION_URL, CREATE_EXPERIENCE_URL } from '@/types/consts';
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface';
 import { deleteData } from '@/utils/deleteData';
-import { addEducation, addExperience, deleteEducation, deleteExperience, getFilteredEducation, getFilteredExperience } from '@/utils/profileFunctions';
+import { addEducation, addExperience, deleteEducation, deleteEducationExperience, deleteExperience, getFilteredEducation, getFilteredExperience, submitNewEducations, submitNewExperience } from '@/utils/profileFunctions';
 import { EducationInterface } from '@/types/profile/education.interface';
 import { ProfileInterface } from '@/types/profile/Profile.interface';
 import ImageInput from '@/components/profile/image/ImageInput';
@@ -65,6 +65,10 @@ export default function Profile() {
   
   const saveProfileData = async () => {
     toggleEditProfile();
+    console.log("SAAVING DATA", education)
+    deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
+    submitNewExperience(experience, id, token);
+    submitNewEducations(education, id, token);
     
     const completeProfileData : UpdateProfileData = {
       ...profileData,
@@ -77,13 +81,15 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
-    const response = await updateProfileData(id, completeProfileData, token);
+    await updateProfileData(id, completeProfileData, token);
+
+    fetchData();
+
   }
   
 
   const fetchData = async () => {
     setLoading(true);
-    console.log("BRO");
     const response = await fetchProfileData(`${id}`, token);
     const userInfoResponse = await fetchBasicUserInfo(`${id}`, token);
     setBasicUserInfo(userInfoResponse);
@@ -101,17 +107,12 @@ export default function Profile() {
       recommendations: response.recommendations || [], // Add the 'recommendations' property
     };
     setCombinedProfileData(completeProfileData)
-    console.log("BRO",profileData);
     setLoading(false)
   }
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log("Updated section", currentSection);
-  }, [currentSection]);
 
   if (loading) {
     return <div>Loading...</div>;

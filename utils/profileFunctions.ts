@@ -61,27 +61,37 @@ export const getFilteredExperience = async (
   return await fetchData(`${EXPERIENCE_URL}${id}`, token);
 };
 
-export const handleExperienceEducationUpdate = async (
-  deletedEducationIds: string[],
-  deletedExperienceIds: string[],
+export const submitNewExperience = async (
+  experience: ExperienceInterface[],
   id: string,
   token: string
 ) => {
-  const filteredEducation = await getFilteredEducation(id, token);
-  const filteredExperience = await getFilteredExperience(id, token);
+  for (const exp of experience) {
+    await submitExperience(exp, id, token);
+  }
+}
 
+export const submitNewEducations = async (
+  educations: EducationInterface[],
+  id: string,
+  token: string
+) => {
+  for (const edu of educations) {
+    if (!edu.id) {
+      await submitEducation(edu, id, token);
+    }
+  }
+}
+
+export const deleteEducationExperience = async (
+  deletedEducationIds: string[],
+  deletedExperienceIds: string[],
+  token: string
+) => {
   for (const id of deletedEducationIds) {
     await deleteData(`education/${id}`, token);
   }
   for (const id of deletedExperienceIds) {
     await deleteData(`experience/${id}`, token);
-  }
-
-  for (const edu of filteredEducation) {
-    await submitEducation(edu, id, token);
-  }
-
-  for (const exp of filteredExperience) {
-    await submitExperience(exp, id, token);
   }
 }
