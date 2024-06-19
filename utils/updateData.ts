@@ -1,4 +1,4 @@
-import { EditableProfileData } from "@/types/profile/editableProfileData.interface";
+import { UpdateProfileData } from "@/types/profile/UpdateProfileData.interface";
 import { PROFILE_URL, UPDATE_USER_URL } from "../types/consts";
 import { CompleteProfile } from "../types/profile/CompleteProfile.interface";
 import { BasicUserInfoInterface } from "@/types/BasicUserInfo.interface";
@@ -75,13 +75,13 @@ export const patchData = async <Req, Res>(url: string, data: Req, token: string 
  * Updates profile data by sending a PUT request to the profile URL.
  * 
  * @param {string} id - The user ID.
- * @param {EditableProfileData} profile - The profile data to be updated.
+ * @param {UpdateProfileData} profile - The profile data to be updated.
  * @param {string} [token=''] - The optional authentication token to be included in the request headers.
  * @returns {Promise<CompleteProfile>} - A promise that resolves to the updated complete profile data.
  * @throws Will throw an error if the request fails.
  */
-export const updateProfileData = async (id: string, profile: EditableProfileData, token: string = ''): Promise<CompleteProfile> => {
-  return updateData<EditableProfileData, CompleteProfile>(`${PROFILE_URL}${id}`, profile, token);
+export const updateProfileData = async (id: string, profile: UpdateProfileData, token: string = ''): Promise<CompleteProfile> => {
+  return updateData<UpdateProfileData, CompleteProfile>(`${PROFILE_URL}${id}`, profile, token);
 };
 
 /**

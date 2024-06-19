@@ -25,6 +25,7 @@ import { PublicationCommentsInterface } from '@/types/PublicationComments.interf
 import { UserMessageInterface } from '@/types/user-message.interface';
 import { Dispatch, SetStateAction } from 'react';
 import { RequestInterface } from '@/types/profile/requests.interface';
+import { ProfileInterface } from '@/types/profile/Profile.interface';
 
 /**
  * Sends a GET request to the specified URL and returns the parsed JSON response.
@@ -63,7 +64,7 @@ export async function fetchData<T = any>(url: string, token: string = ''): Promi
  * @throws Will throw an error if the request fails.
  */
 export async function fetchProfileData(id: string, token: string = ''): Promise<CompleteProfile> {
-  try {
+  try {    
     const urls = [
       { url: `${PROFILE_URL}${id}`, type: 'profile' },
       { url: `${EXPERIENCE_URL}${id}`, type: 'experience' },
@@ -75,6 +76,7 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
     ];
 
     const fetchPromises = urls.map(({ url }) => fetchData(url, token));
+    
 
     const [
       profile,
@@ -87,7 +89,7 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
     ] = await Promise.all(fetchPromises);
 
     return {
-      ...profile,
+      profile,
       experience,
       education,
       recommendations,
@@ -211,56 +213,6 @@ export async function sendRequestToConnect(body: object, token: string = ''): Pr
 }
 
 /**
- * Checks if a specific experience already exists for a user.
- * 
- * @param {string} userId - The ID of the user whose experiences are to be checked.
- * @param {ExperienceInterface} newExperience - The new experience to check against existing experiences.
- * @param {string} [token=''] - The optional authentication token to be included in the request headers.
- * @returns {Promise<boolean>} - A promise that resolves to true if the experience exists, false otherwise.
- * @throws Will throw an error if the request fails.
- */
-export async function checkExperienceExists(userId: string, newExperience: ExperienceInterface, token: string = ''): Promise<boolean> {
-  try {
-    const existingExperiences: ExperienceInterface[] = await fetchData<ExperienceInterface[]>(`${EXPERIENCE_URL}${userId}`, token);
-
-    return existingExperiences.some(exp => 
-      exp.company === newExperience.company &&
-      exp.position === newExperience.position &&
-      exp.startDate === newExperience.startDate 
-    );
-  } catch (error) {
-    console.error('Error checking experience:', error);
-    return false;
-  }
-}
-
-/**
- * Checks if a specific education record already exists for a user.
- * 
- * @param {string} userId - The ID of the user whose education records are to be checked.
- * @param {EducationInterface} newEducation - The new education record to check against existing records.
- * @param {string} [token=''] - The optional authentication token to be included in the request headers.
- * @returns {Promise<boolean>} - A promise that resolves to true if the education record exists, false otherwise.
- * @throws Will throw an error if the request fails.
- */
-export async function checkEducationExists(userId: string, newEducation: EducationInterface, token: string = ''): Promise<boolean> {
-  try {
-    const existingEducations: EducationInterface[] = await fetchData<EducationInterface[]>(`${EDUCATION_URL}${userId}`, token);
-
-    const filteredEducation = existingEducations.some(edu => 
-      edu.institution === newEducation.institution &&
-      edu.degree === newEducation.degree &&
-      new Date(edu.start_date).toISOString() === new Date(newEducation.start_date).toISOString()
-    );
-    
-    return filteredEducation;
-  } catch (error) {
-    console.error('Error checking education:', error);
-    return false;
-  }
-}
-
-/**
  * Fetches basic user information for a list of user IDs.
  * 
  * @param {string[]} userIds - The list of user IDs whose basic information is to be fetched.
@@ -355,7 +307,6 @@ export const getUserBasicData = async (
 ) => {
   try {
     const response = await fetchBasicUserInfo(id, token);
-    console.log('User basic data:', response);
     
     setProfileData((prevProfileData) => {
       const updatedProfileData = {
@@ -377,15 +328,3 @@ export const getUserBasicData = async (
   }
 };
 
-export const getProfileData = async (
-  id: string,
-  token: string,
-  setProfileData: Dispatch<SetStateAction<CompleteProfile | null>>,
-  setRequests:  Dispatch<SetStateAction<RequestInterface[]>>
-) => {
-  const response = await fetchProfileData(`${id}`, token);
-  const { receivedRequests } = response;
-  setProfileData(response);
-  setRequests(receivedRequests);
-  return response;
-};
