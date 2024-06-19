@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AuthContext } from '@/app/context/auth';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 /**
  * Component for the navigation bar.
@@ -34,6 +35,9 @@ const Navbar = () => {
         setToken('');
         setIsLogged(false);
         router.push('/public/login');
+        setTimeout(() => {
+            toast.success('Has cerrado sesión correctamente.')
+        }, 200);
     }
 
 

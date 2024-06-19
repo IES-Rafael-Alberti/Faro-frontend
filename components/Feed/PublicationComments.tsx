@@ -4,7 +4,7 @@ import CommentForm from './CommentForm'
 import styles from './publicationComments.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { deleteComment } from '@/utils/deleteData'
 
 interface Props {
@@ -35,8 +35,10 @@ const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, 
     try {
       await deleteComment(comment.id, comment.user_id, publication.id, token)
       onCommentUpdate()
+      toast.success("Se ha eliminado el comentario correctamente.");
+
     } catch (error) {
-      console.error('Error deleting comment:', error)
+      toast.error('Error: No se ha podido eliminar el comentario.')
     }
   }
 

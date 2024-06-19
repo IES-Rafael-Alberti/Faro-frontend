@@ -4,7 +4,7 @@ import PublicationFooter from './PublicatonFooter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { deleteData } from '@/utils/deleteData'
-import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 
 interface Props {
   id : string,
@@ -45,8 +45,10 @@ const Publication: React.FC<Props> = ({ id, publication, token, updatePublicatio
       await deleteData(`publications/user/${id}/msg/${publication.id}`, token);
       updatePublications();
       handleUpdateFeed();
+      toast.success("Se ha eliminado la publicación correctamente.");
+
     } catch (error) {
-      console.error('Error deleting publication:', error);
+      toast.error('Error:  No se ha podido eliminar la publicación.');
     }
   }
   return (

@@ -6,13 +6,11 @@ import { montserrat } from "@/app/ui/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { AuthContext } from "@/app/context/auth"
-import GenericInput from "@/components/buttons/GenericInput";
-import { submitData } from "@/utils/submitData";
 import { authPost } from "@/utils/authApi";
 import { useRouter } from "next/navigation";
 import FormHeader from "@/components/shared/FormHeader";
 import AuthFormSection from "@/components/shared/AuthFormSection";
-import AuthInfoAside from "@/components/shared/AuthInfoAside";
+import toast from "react-hot-toast";
 
 /**
  * Component for user registration.
@@ -132,6 +130,8 @@ const Register = () => {
         const result = await authPost('auth/register', data);
         setToken(result.access_token);
         router.push('/public/login');
+        toast.success('Registro realizado con éxito.')
+
       } catch (e : any) {
         if (e.response && e.response.data && e.response.data.message === "User already exists") {
           setErrors((prevErrors) => ({

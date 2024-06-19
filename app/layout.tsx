@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/app/context/auth";
 import { montserrat } from "./ui/fonts";
+import { Toaster } from "react-hot-toast";
 
 /**
  * Metadata for the document head.
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
+      <Toaster position="top-right" />
         <AuthProvider>
           {children}
         </AuthProvider>

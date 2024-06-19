@@ -19,13 +19,10 @@ import { FeedPublicationInterface } from '../types/FeedPublication.interface';
 import { BasicUserInfoInterface } from '../types/BasicUserInfo.interface';
 import { CompleteProfile } from '../types/profile/CompleteProfile.interface';
 import { User } from '@/types/User.interface';
-import { EducationInterface } from '@/types/profile/education.interface';
-import { ExperienceInterface } from '@/types/profile/experience.interface';
 import { PublicationCommentsInterface } from '@/types/PublicationComments.interface';
 import { UserMessageInterface } from '@/types/user-message.interface';
 import { Dispatch, SetStateAction } from 'react';
-import { RequestInterface } from '@/types/profile/requests.interface';
-import { ProfileInterface } from '@/types/profile/Profile.interface';
+
 
 /**
  * Sends a GET request to the specified URL and returns the parsed JSON response.
@@ -158,34 +155,15 @@ export async function fetchAllUsers(token: string = ''): Promise<User[]> {
  * 
  * @param {string} token - The authentication token to be included in the request headers.
  * @param {string} id - The ID of the user whose connections are to be fetched.
- * @returns {Promise<UserMessageInterface[]>} - A promise that resolves to the list of user connections.
+ * @returns {Promise<string[]>} - A promise that resolves to the list of user connections.
  * @throws Will throw an error if the request fails.
  */
-export async function fetchAllConnectionsOfAnUser(token: string = '', id: string): Promise<UserMessageInterface[]> {
+export async function fetchAllConnectionsOfAnUser (token: string = '', id: string): Promise<string[]> {
   try {
-    const userConnections: UserMessageInterface[] = [];
-    const idList = await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token) || [];
-    
-    if (!idList || idList.length === 0) {
-      return userConnections;
-    }
-
-    for (const element of idList) {
-      const basicUserInfo = await fetchBasicUserInfo(element, token);
-      const user: UserMessageInterface = {
-        id: element,
-        name: basicUserInfo.username,
-        avatar: basicUserInfo.profile_picture,
-        rol: 'Student', 
-        last_msg_date: null,  
-        last_msg: ''          
-      };
-      userConnections.push(user);
-    }
-    return userConnections;
+    return await fetchData<string[]>(`${CONNECTIONS_OF_AN_USER_URL}${id}`, token)
   } catch (error) {
-    console.error(`Error fetching connections data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error);
-    return Promise.reject(error);
+    console.error(`Error fetching feed data from ${CONNECTIONS_OF_AN_USER_URL}${id}:`, error)
+    return Promise.reject(error)
   }
 }
 

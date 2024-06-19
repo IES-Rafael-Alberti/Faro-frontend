@@ -7,7 +7,9 @@ import translateRol from '@/app/context/translate';
 import { sendRequestToConnect, fetchAllConnectionsOfAnUser } from '@/utils/fetchData';
 import { BasicUserInfoWithIdInterface } from '@/types/BasicUserInfoWithId.interface';
 import { AuthContext } from '@/app/context/auth';
-import { UserMessageInterface } from '@/types/user-message.interface';
+import { deleteConnectionWithAnUser } from '@/utils/deleteData';
+import { toast } from 'react-hot-toast';
+
 interface Props {
     user: BasicUserInfoWithIdInterface;
     isConnected: boolean;
@@ -24,8 +26,8 @@ interface Props {
 const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
     const {id, token} = useContext(AuthContext);
     const [connected, setConnected] = useState(isConnected);
-    const [connections, setConnections] = useState<UserMessageInterface[]>([]);
-    const [label, setLabel] = useState(connected ? "Conectado" : "Conectar");
+    const [connections, setConnections] = useState<string[]>([]);
+    const [label, setLabel] = useState(connected ? "Eliminar" : "Conectar");
     const [buttonClass, setButtonClass] = useState(connected ? `${styles.connectButton} ${styles.connectButtonIsConnected}` : styles.connectButton);
     const [buttonClicked, setButtonClicked] = useState(false);
 
@@ -41,9 +43,29 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
             await sendRequestToConnect(body, token);
             fetchConnections(token, id);
             setButtonClicked(true);
-        } catch (error) {
-            console.error("Failed to connect user:", error);
+        } catch (error : any) {
+            if(error.response.data.statusCode === 400){
+              toast.error("Ya enviaste una solicitud de conexión a este usuario.");
+            } else {
+              toast.error("Error al enviar solicitud de conexión.");
+            }
         }
+    }
+
+    /**
+     * Function to delete connection with an user.
+     */
+    const deleteUser = async () => {
+      try {
+        await deleteConnectionWithAnUser(token, id, user.user_id);
+        fetchConnections(token, id);
+        setConnected(false);
+        setLabel("Conectar");
+        setButtonClass(styles.connectButton);
+        toast.success("Se ha eliminado la conexión con el usuario.");
+      } catch (error) {
+        toast.error("Error al eliminar conexión con el usuario.");
+      }
     }
 
     /**
@@ -68,6 +90,7 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
       checkIfConnected();
     }, [connections]);
 
+
     /**
      * Function to check if the user is connected and update button label and style accordingly.
      */
@@ -75,11 +98,12 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
       // FIXME this never is not okay...
       if (connections.includes(user.user_id as never)) {
           setConnected(true);
-          setLabel("Conectado");
+          setLabel("Eliminar");
           setButtonClass(`${styles.connectButton} ${styles.connectButtonIsConnected}`);
       } else if(buttonClicked) {
           setLabel("¡Enviado!");
           setButtonClass(`${styles.connectButton} ${styles.connectionIsSending}`);
+          fetchConnections(token, id);
       }
     }
     return (
@@ -92,7 +116,7 @@ const ContactCard: React.FC<Props> = ({ user, isConnected }) => {
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Publicaciones <span>{user.count_of_publications}</span></p>
                 <p className={[styles.info, styles.flexInfo].join(' ')}>Contactos <span>{user.count_of_connections}</span></p>
             </div>
-            <GenericButton label={label} onClick={connectUser} className={buttonClass} disabled={connected}></GenericButton>
+            <GenericButton label={label} onClick={connected ? deleteUser : connectUser} className={buttonClass}></GenericButton>
         </article>
     );
 }

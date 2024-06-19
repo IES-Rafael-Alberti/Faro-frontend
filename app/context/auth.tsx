@@ -32,8 +32,8 @@ export const AuthContext = createContext<AuthContextType>({
  */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogged, setIsLogged] = useState(true); // State to track login status.
-  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJjODhmMzhkLTZmNGItNGJkZC1iOGU4LWNlOGY2N2EwNjhkYSIsImVtYWlsIjoicG9sbGFAYWRtaW4uY29tIiwiaWF0IjoxNzE4NzM3MDc3LCJleHAiOjE3MTg3NDA2Nzd9.p8322qw8JG6aYYcje_EFvDVHL9PMrZVPzmfc56DgB_Y'); // State to store authentication token.
-  const [id, setId] = useState<string>('2c88f38d-6f4b-4bdd-b8e8-ce8f67a068da'); // State to store user ID.
+  const [token, setToken] = useState<string>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc4ZGQyM2Y0LTFjOGEtNDE2NC1iM2M0LTE0ZGYwZTg1YjkwOSIsImVtYWlsIjoibWFudWVsQGFkbWluLmNvbSIsImlhdCI6MTcxODgyMTg2NCwiZXhwIjoxNzE4ODI1NDY0fQ.TxWrzoaox7guM5l41g9L6Py0r0dUdgsGldcX64y9qSc'); // State to store authentication token.
+  const [id, setId] = useState<string>('78dd23f4-1c8a-4164-b3c4-14df0e85b909'); // State to store user ID.
   const router = useRouter();
   
   /**
