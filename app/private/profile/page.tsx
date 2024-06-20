@@ -27,12 +27,13 @@ import { ExperienceInterface } from '@/types/profile/experience.interface';
 import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
 import { UpdateProfileData } from '@/types/profile/UpdateProfileData.interface';
 import { RecommendationInterface } from '@/types/profile/recomendation.interface';
+import { UpdateBasicUserInfoInterface } from '@/types/UpdateBasicUserInfo.interface';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
+  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience'>('profile');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [education, setEducation] = useState<EducationInterface[]>([]);
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
@@ -75,6 +76,7 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
+    
     await updateProfileData(id, completeProfileData, token);
     fetchData();
   }
@@ -154,18 +156,10 @@ export default function Profile() {
               <>
                 <input
                   type="text"
-                  name="name"
-                  value={profileData?.name ?? ''}
-                  onChange={(e) => handleInputChange(e)}
-                  placeholder="Name"
-                  className={styles.editInput}
-                />
-                <input
-                  type="text"
                   name="headline"
                   value={profileData?.headline ?? ''}
                   onChange={(e) => handleInputChange(e)}
-                  placeholder="Headline"
+                  placeholder="Titulo"
                   className={styles.editInput}
                 />
                 <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
@@ -186,7 +180,6 @@ export default function Profile() {
               <DynamicProfileSection
                 data={education}
                 setData={setEducation}
-                setListIds={setDeletedEducationIds}
                 type={'education'}
                 onAdd={addEducation}
                 onDelete={(id) => deleteEducation(setDeletedEducationIds, setEducation,id)}
@@ -197,7 +190,6 @@ export default function Profile() {
               <DynamicProfileSection
                 data={experience}
                 setData={setExperience}
-                setListIds={setDeletedExperienceIds}
                 type={'experience'}
                 onAdd={addExperience}
                 onDelete={(id) => deleteExperience(setDeletedExperienceIds, setExperience, id)}

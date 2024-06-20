@@ -9,7 +9,6 @@ import { RequestInterface } from "./requests.interface";
 export interface UpdateProfileData extends ProfileInterface {
     experience: ExperienceInterface[];
     education: EducationInterface[];
-    recommendations: RecommendationInterface[];
     contacts: ContactInterface[];
     publications: PublicationInterface[];
     receivedRequests: RequestInterface[];

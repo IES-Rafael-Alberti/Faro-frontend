@@ -2,6 +2,7 @@ import { UpdateProfileData } from "@/types/profile/UpdateProfileData.interface";
 import { PROFILE_URL, UPDATE_USER_URL } from "../types/consts";
 import { CompleteProfile } from "../types/profile/CompleteProfile.interface";
 import { BasicUserInfoInterface } from "@/types/BasicUserInfo.interface";
+import { UpdateBasicUserInfoInterface } from "@/types/UpdateBasicUserInfo.interface";
 
 /**
  * Updates data by sending a PUT request to the specified URL.
@@ -93,6 +94,6 @@ export const updateProfileData = async (id: string, profile: UpdateProfileData, 
  * @returns {Promise<any>} - A promise that resolves to the updated user data.
  * @throws Will throw an error if the request fails.
  */
-export const updateUserData = async (id: string, user: BasicUserInfoInterface, token: string = ''): Promise<any> => {
-  return patchData<BasicUserInfoInterface, any>(`${UPDATE_USER_URL}${id}`, user, token);
+export const updateUserData = async (id: string, user: UpdateBasicUserInfoInterface, token: string = ''): Promise<any> => {
+  return patchData<UpdateBasicUserInfoInterface, any>(`${UPDATE_USER_URL}${id}`, user, token);
 };

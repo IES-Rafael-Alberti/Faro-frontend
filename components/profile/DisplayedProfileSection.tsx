@@ -33,10 +33,10 @@ const DisplayedProfileSection = ({ currentSection, profileData, styles }: Displa
                             <div className={styles.studiesInfo}>
                                 <h3 className={styles.degree}>{edu.degree}</h3>
                                 <p className={styles.info}>{edu.institution}, {edu.start_date?.toString().slice(0, 4)} - {edu.end_date ? edu.end_date?.toString().slice(0, 4) : 'Actualidad'}</p>
+
                             </div>
-                        </div>
-                    </section>
-                ))}
+                        </section>
+                    ))}
                 </>
             );
             break;
@@ -58,20 +58,6 @@ const DisplayedProfileSection = ({ currentSection, profileData, styles }: Displa
                 </>
               );
               break;
-        case 'recommendations':
-            sectionContent = (
-                <>
-                    {Array.isArray(profileData?.recommendations) && profileData.recommendations.map((rec, index) => (
-                        <div className={styles.recommendations} key={index}>
-                            <div className={styles.sectionItem}>
-                                <p>{rec.message}</p>
-                                <p>{rec.date?.toString()}</p>
-                            </div>
-                        </div>
-                    ))}
-                </>
-            );
-            break;
         default:
             sectionContent = null;
     }

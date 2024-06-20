@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface ProfileNavbarProps {
     currentSection: string;
-    setCurrentSection: Dispatch<SetStateAction<"profile" | "education" | "experience" | "recommendations">>;
+    setCurrentSection: Dispatch<SetStateAction<"profile" | "education" | "experience" >>;
     styles: any;
   }
   
@@ -12,7 +12,6 @@ interface ProfileNavbarProps {
       { name: 'profile', label: 'Perfil' },
       { name: 'education', label: 'Educación' },
       { name: 'experience', label: 'Experiencia' },
-      { name: 'recommendations', label: 'Recomendaciones' }
     ];
   
     return (
@@ -25,7 +24,7 @@ interface ProfileNavbarProps {
                         ? `${styles.sectionButton} ${styles.focus} ${montserrat.className} antialised`
                         : `${styles.sectionButton} ${montserrat.className} antialised`
                 }
-                onClick={() => setCurrentSection(section.name as "profile" | "education" | "experience" | "recommendations")}
+                onClick={() => setCurrentSection(section.name as "profile" | "education" | "experience")}
             >
                 {section.label}
             </button>
