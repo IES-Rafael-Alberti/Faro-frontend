@@ -38,6 +38,13 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
         setCurrentSection={setCurrentSection}
         styles={styles}
       />
-    </main>
-  )
+      <div className={styles.currentSection}>
+        <DisplayedProfileSection
+          currentSection={currentSection}
+          profileData={profileData}
+          styles={styles}
+        />
+      </div>
+    </main >
+  ) 
 }
