@@ -58,16 +58,13 @@ export default function Profile() {
           [name]: value,
         };
       }
-      // This should not normally happen if the initial state is properly set
       return undefined;
     });
   };
   
   const saveProfileData = async () => {
     toggleEditProfile();
-    console.log("SAAVING Profile DATA", profileData)
     await deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
-    
     const completeProfileData : UpdateProfileData = {
       ...profileData,
       id: profileData?.id ?? '',
@@ -79,12 +76,8 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
-    console.log("COMPLETE PROFILE DATA", completeProfileData);
-    
     await updateProfileData(id, completeProfileData, token);
-
     fetchData();
-
   }
   
 
@@ -105,16 +98,14 @@ export default function Profile() {
       const userInfoResponse = await fetchBasicUserInfo(`${id}`, token);
   
       const completeProfileData = {
-        profile: profileDataWithoutPicture, // Profile data without the picture
+        profile: profileDataWithoutPicture, 
         education: response.education,
         experience: response.experience,
         receivedRequests: response.receivedRequests,
         contacts: response.contacts || [],
         publications: response.publications || [],
-        recommendations: response.recommendations || [], // Add the 'recommendations' property
+        recommendations: response.recommendations || [], 
       };
-      console.log("ATTEMPT TO FIX THE IMAGE ISSUE 1: ", completeProfileData);
-  
       setBasicUserInfo(userInfoResponse);
       setProfileData(profileDataWithoutPicture);
       setEducation(response.education);
