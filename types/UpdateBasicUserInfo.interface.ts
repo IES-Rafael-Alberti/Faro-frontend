@@ -1,3 +1,3 @@
 export interface UpdateBasicUserInfoInterface {
-    name: string;
+    name: string | undefined;
 }

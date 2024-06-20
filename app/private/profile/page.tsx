@@ -77,13 +77,7 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
-    console.log("BASIC NAME: ",basicUserInfo?.username);
     
-    const userBasicInformation : UpdateBasicUserInfoInterface = {
-      name: profileData?.name ?? ''
-    }
-
-    await updateUserData(id, userBasicInformation, token);
     await updateProfileData(id, completeProfileData, token);
     fetchData();
   }
@@ -163,18 +157,10 @@ export default function Profile() {
               <>
                 <input
                   type="text"
-                  name="name"
-                  value={profileData?.name ?? ''}
-                  onChange={(e) => handleInputChange(e)}
-                  placeholder="Name"
-                  className={styles.editInput}
-                />
-                <input
-                  type="text"
                   name="headline"
                   value={profileData?.headline ?? ''}
                   onChange={(e) => handleInputChange(e)}
-                  placeholder="Headline"
+                  placeholder="Titulo"
                   className={styles.editInput}
                 />
                 <div className={isFocused ? `${styles.editTextArea} ${styles.focusTextArea}` : styles.editTextArea}>
