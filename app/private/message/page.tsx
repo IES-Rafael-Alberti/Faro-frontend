@@ -1,7 +1,7 @@
 'use client'
 import styles from "./page.module.css";
 import Image from "next/image";
-import translateRol from "@/app/context/translate";
+import { translateRol } from "@/app/context/translate";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/app/context/auth";
 import { fetchAllConnectionsToMessage, fetchMessagesFromUser } from "@/utils/fetchData";

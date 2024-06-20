@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { AuthContext } from '@/app/context/auth';
+import { translateType } from '@/app/context/translate';
 
 interface DynamicProfileSectionProps {
   data: Array<any>;
@@ -28,7 +28,7 @@ const DynamicProfileSection = ({ data, setData, type, onAdd, onDelete, styles }:
 
   return (
     <>
-      <button ref={topRef} onClick={() => onAdd(setData)} className={`${styles.addButton} antialised`}>Add New {type}</button>
+      <button ref={topRef} onClick={() => onAdd(setData)} className={`${styles.addButton} antialised`}>Añade {translateType(type)}</button>
 
       {data.length > 0 ? (
         data.map((item, index) => (
@@ -57,10 +57,10 @@ const DynamicProfileSection = ({ data, setData, type, onAdd, onDelete, styles }:
           </div>
         ))
       ) : (
-        <p>You don&apos;t have any {type} records.</p>
+        <p>No tienes {translateType(type)} guardados.</p>
       )}
 
-      <button ref={sectionEndRef} onClick={scrollToTop} className={`${styles.scrollButton} antialised`}>Scroll to Top</button>
+      <button ref={sectionEndRef} onClick={scrollToTop} className={`${styles.scrollButton} antialised`}>Volver arriba</button>
     </>
   );
 };

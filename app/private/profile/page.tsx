@@ -12,8 +12,7 @@ import { montserrat } from '@/app/ui/fonts';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faCancel, faEdit, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
-import translateRol from '@/app/context/translate';
-
+import { translateRol } from '@/app/context/translate';
 import DisplayedProfileSection from '@/components/profile/DisplayedProfileSection';
 import DynamicProfileSection from '@/components/profile/DynamicProfileSection';
 import ProfileNavbar from '@/components/profile/ProfileNavbar';
