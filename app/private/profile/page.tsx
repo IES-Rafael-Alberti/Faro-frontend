@@ -65,7 +65,7 @@ export default function Profile() {
   
   const saveProfileData = async () => {
     toggleEditProfile();
-    console.log("SAAVING DATA", education)
+    console.log("SAAVING Profile DATA", profileData)
     deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
     submitNewExperience(experience, id, token);
     submitNewEducations(education, id, token);
@@ -81,6 +81,8 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
+    console.log("COMPLETE PROFILE DATA", completeProfileData);
+    
     await updateProfileData(id, completeProfileData, token);
 
     fetchData();
@@ -90,29 +92,48 @@ export default function Profile() {
 
   const fetchData = async () => {
     setLoading(true);
-    const response = await fetchProfileData(`${id}`, token);
-    const userInfoResponse = await fetchBasicUserInfo(`${id}`, token);
-    setBasicUserInfo(userInfoResponse);
-    setProfileData(response.profile);
-    setEducation(response.education);
-    setExperience(response.experience);
-    setRequests(response.receivedRequests);
-    const completeProfileData = {
-      profile: response.profile,
-      education: response.education,
-      experience: response.experience,
-      receivedRequests: response.receivedRequests,
-      contacts: response.contacts || [], 
-      publications: response.publications || [],
-      recommendations: response.recommendations || [], // Add the 'recommendations' property
-    };
-    setCombinedProfileData(completeProfileData)
-    setLoading(false)
-  }
-
+    try {
+      const response = await fetchProfileData(`${id}`, token);
+  
+      // Extract the profile picture separately
+      let profilePicture = null;
+      if ('users_profile_profile_picture' in response.profile) {
+        profilePicture = response.profile.users_profile_profile_picture;
+      }
+  
+      // Remove the profile picture from the profile data
+      const { users_profile_profile_picture, ...profileDataWithoutPicture } = response.profile;
+  
+      const userInfoResponse = await fetchBasicUserInfo(`${id}`, token);
+  
+      const completeProfileData = {
+        profile: profileDataWithoutPicture, // Profile data without the picture
+        education: response.education,
+        experience: response.experience,
+        receivedRequests: response.receivedRequests,
+        contacts: response.contacts || [],
+        publications: response.publications || [],
+        recommendations: response.recommendations || [], // Add the 'recommendations' property
+      };
+      console.log("ATTEMPT TO FIX THE IMAGE ISSUE 1: ", completeProfileData);
+  
+      setBasicUserInfo(userInfoResponse);
+      setProfileData(profileDataWithoutPicture);
+      setEducation(response.education);
+      setExperience(response.experience);
+      setRequests(response.receivedRequests);
+      setCombinedProfileData(completeProfileData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
     fetchData();
   }, []);
+  
 
   if (loading) {
     return <div>Loading...</div>;

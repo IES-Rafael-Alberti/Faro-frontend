@@ -77,7 +77,6 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
 
     const fetchPromises = urls.map(({ url }) => fetchData(url, token));
     
-
     const [
       profile,
       experience,
@@ -88,19 +87,33 @@ export async function fetchProfileData(id: string, token: string = ''): Promise<
       receivedRequests
     ] = await Promise.all(fetchPromises);
 
+    // Clean the profile data to only include profile ID
+    const cleanedEducation = cleanProfileData(id, education);
+    const cleanedExperience = cleanProfileData(id, experience);
+    const cleanedContacts = cleanProfileData(id, contacts);
+    const cleanedPublications = cleanProfileData(id, publications);
+    const cleanedRecommendations = cleanProfileData(id, recommendations);
+
+    console.log("COMPLETE PROFILE DATA", profile, experience, cleanedEducation, recommendations, contacts, publications, receivedRequests);
     return {
       profile,
-      experience,
-      education,
-      recommendations,
-      contacts,
-      publications, 
+      experience: cleanedExperience,
+      education: cleanedEducation,
+      recommendations: cleanedRecommendations,
+      contacts: cleanedContacts,
+      publications: cleanedPublications, 
       receivedRequests
     };
   } catch (error) {
     console.error('Error fetching complete profile data:', error);
     return Promise.reject(error);
   }
+}
+
+function cleanProfileData(id: string, data: any): any {
+  return data.map((item: any) => {
+    return { ...item, profile: { id } };
+  });
 }
 
 /**
