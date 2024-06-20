@@ -19,7 +19,7 @@ import { CompleteProfile } from "@/types/profile/CompleteProfile.interface";
 export default function OtherUsersProfile({ params }: { params: { profileId: string; }; }) {
   const { profileId } = params
   const { id, token, setId } = useContext(AuthContext)
-  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
+  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience'>('profile');
   const [profileData, setProfileData] = useState<CompleteProfile>();
   const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
 
