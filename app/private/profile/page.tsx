@@ -131,6 +131,7 @@ export default function Profile() {
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
         <ImageInput
+          profile_picture={basicUserInfo?.profile_picture ?? null}
           setBasicUserInfo={setBasicUserInfo}
           styles={styles}
         />

@@ -1,16 +1,17 @@
 import Image from 'next/image'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import './image.css'
 import { BasicUserInfoInterface } from '@/types/BasicUserInfo.interface'
 import { submitAvatar } from '@/utils/submitData'
 import { AuthContext } from '@/app/context/auth'
 
 interface ImageInputProps {
+  profile_picture: string | ArrayBuffer | null,
   setBasicUserInfo:any,
   styles: any
 }
 
-const ImageInput = ({ styles, setBasicUserInfo }: ImageInputProps) => {
+const ImageInput = ({ styles, setBasicUserInfo, profile_picture }: ImageInputProps) => {
   const {id, token} = useContext(AuthContext)
   const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,6 +46,11 @@ const ImageInput = ({ styles, setBasicUserInfo }: ImageInputProps) => {
       submitAvatar(choosedFile, id, token)
     }
   };
+
+  useEffect(() => {
+    setImageSrc(profile_picture)
+  }, [profile_picture])
+
   return (
 
     <div
