@@ -6,7 +6,7 @@ import { AuthContext } from '@/app/context/auth';
 interface DynamicProfileSectionProps {
   data: Array<any>;
   setData: Dispatch<SetStateAction<any>>;
-  type: 'profile' | 'education' | 'recommendations' | 'experience';
+  type: 'profile' | 'education' | 'experience';
   onAdd: (setFormData: Dispatch<SetStateAction<any>>) => void;
   onDelete: (id: string) => void;
   styles: any;

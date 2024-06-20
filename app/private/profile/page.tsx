@@ -28,6 +28,7 @@ import { ExperienceInterface } from '@/types/profile/experience.interface';
 import { CompleteProfile } from '@/types/profile/CompleteProfile.interface';
 import { UpdateProfileData } from '@/types/profile/UpdateProfileData.interface';
 import { RecommendationInterface } from '@/types/profile/recomendation.interface';
+import { UpdateBasicUserInfoInterface } from '@/types/UpdateBasicUserInfo.interface';
 
 export default function Profile() {
   const { id, token } = useContext(AuthContext);
@@ -76,6 +77,13 @@ export default function Profile() {
       contacts: [],
       publications: []
     }
+    console.log("BASIC NAME: ",basicUserInfo?.username);
+    
+    const userBasicInformation : UpdateBasicUserInfoInterface = {
+      name: profileData?.name ?? ''
+    }
+
+    await updateUserData(id, userBasicInformation, token);
     await updateProfileData(id, completeProfileData, token);
     fetchData();
   }
