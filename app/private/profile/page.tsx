@@ -67,8 +67,6 @@ export default function Profile() {
     toggleEditProfile();
     console.log("SAAVING Profile DATA", profileData)
     await deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
-    submitNewExperience(experience, id, token);
-    submitNewEducations(education, id, token);
     
     const completeProfileData : UpdateProfileData = {
       ...profileData,
@@ -133,10 +131,6 @@ export default function Profile() {
   useEffect(() => {
     fetchData();
   }, []);
-  
-  useEffect(() => {
-    console.log("DELETED EDUCATIONS IDS: ", deletedEducationIds);
-  }, [deletedEducationIds]);
 
   if (loading) {
     return <div>Loading...</div>;

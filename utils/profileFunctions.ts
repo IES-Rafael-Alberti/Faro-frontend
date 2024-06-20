@@ -66,7 +66,9 @@ export const submitNewEducations = async (
   id: string,
   token: string
 ) => {
+  console.log("LOGGING THE EDUCATIONS PASSED TO SUBMIT",educations)
   for (const edu of educations) {
+    console.log("EDUCATION TEST 1", edu)
     if (!edu.id) {
       await submitEducation(edu, id, token);
     }
