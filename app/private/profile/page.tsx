@@ -66,7 +66,7 @@ export default function Profile() {
   const saveProfileData = async () => {
     toggleEditProfile();
     console.log("SAAVING Profile DATA", profileData)
-    deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
+    await deleteEducationExperience(deletedEducationIds, deletedExperienceIds, token);
     submitNewExperience(experience, id, token);
     submitNewEducations(education, id, token);
     
@@ -134,6 +134,9 @@ export default function Profile() {
     fetchData();
   }, []);
   
+  useEffect(() => {
+    console.log("DELETED EDUCATIONS IDS: ", deletedEducationIds);
+  }, [deletedEducationIds]);
 
   if (loading) {
     return <div>Loading...</div>;

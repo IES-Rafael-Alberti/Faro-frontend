@@ -26,12 +26,7 @@ export const deleteEducation = (
   setFormData: Dispatch<SetStateAction<EducationInterface[]>>,
   id: string) => {
   setDeletedEducationIds((prevDeletedIds: string[]) => [...prevDeletedIds, id]);
-  setFormData((education) => {
-    return {
-      ...education,
-      education: education.filter((edu) => edu.id !== id)
-    };
-  });
+  setFormData((education) => education.filter((edu) => edu.id !== id));
 };
 
 export const deleteExperience = (
@@ -39,12 +34,7 @@ export const deleteExperience = (
   setFormData: Dispatch<SetStateAction<ExperienceInterface[]>>,
   id: string) => {
   setDeletedExperienceIds((prevDeletedIds: string[]) => [...prevDeletedIds, id]);
-  setFormData((experience) => {
-    return {
-      ...experience,
-      experience: experience.filter((ex) => ex.id !== id)
-    };
-  });
+  setFormData((experience) => experience.filter((exp) => exp.id !== id));
 };
 
 export const getFilteredEducation = async (
