@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import styles from './feedPublications.module.css'
-import translateRol from '@/app/context/translate'
+import { translateRol } from '@/app/context/translate'
 import { useContext, useEffect, useState } from 'react'
 import { fetchBasicUserInfo } from '@/utils/fetchData'
 import Link from 'next/link'
