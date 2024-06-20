@@ -33,7 +33,7 @@ export default function Profile() {
   const { id, token } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
+  const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience'>('profile');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [education, setEducation] = useState<EducationInterface[]>([]);
   const [deletedEducationIds, setDeletedEducationIds] = useState<string[]>([]);
@@ -187,7 +187,6 @@ export default function Profile() {
               <DynamicProfileSection
                 data={education}
                 setData={setEducation}
-                setListIds={setDeletedEducationIds}
                 type={'education'}
                 onAdd={addEducation}
                 onDelete={(id) => deleteEducation(setDeletedEducationIds, setEducation,id)}
@@ -198,7 +197,6 @@ export default function Profile() {
               <DynamicProfileSection
                 data={experience}
                 setData={setExperience}
-                setListIds={setDeletedExperienceIds}
                 type={'experience'}
                 onAdd={addExperience}
                 onDelete={(id) => deleteExperience(setDeletedExperienceIds, setExperience, id)}
