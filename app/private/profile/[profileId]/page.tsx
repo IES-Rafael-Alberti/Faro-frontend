@@ -3,7 +3,7 @@ import { AuthContext } from "@/app/context/auth";
 import { submitFriendRequest } from "@/utils/submitData";
 
 import { log } from "console";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from '../page.module.css';
 import translateRol from "@/app/context/translate";
 import DisplayedProfileSection from "@/components/profile/DisplayedProfileSection";
@@ -11,17 +11,28 @@ import ProfileNavbar from "@/components/profile/ProfileNavbar";
 import { BasicUserInfoInterface } from "@/types/BasicUserInfo.interface";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UpdateProfileData } from "@/types/profile/UpdateProfileData.interface";
+import { ProfileInterface } from "@/types/profile/Profile.interface";
+import { fetchProfileData } from "@/utils/fetchData";
+import { CompleteProfile } from "@/types/profile/CompleteProfile.interface";
 
 export default function OtherUsersProfile({ params }: { params: { profileId: string; }; }) {
   const { profileId } = params
   const { id, token, setId } = useContext(AuthContext)
   const [currentSection, setCurrentSection] = useState<'profile' | 'education' | 'experience' | 'recommendations'>('profile');
-
+  const [profileData, setProfileData] = useState<CompleteProfile>();
   const [userInfo, setUserInfo] = useState<BasicUserInfoInterface>();
 
   const sendFriendRequest = async () => {
     const response = await submitFriendRequest(id, profileId, token)
   }
+
+  useEffect(() => {
+    fetchProfileData(profileId, token).then((response) => {
+      setProfileData(response)
+    })
+  },[])
+
 
   return (
     <main className={styles.wrapper}>
@@ -36,6 +47,13 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
         setCurrentSection={setCurrentSection}
         styles={styles}
       />
-    </main>
-  )
+      <div className={styles.currentSection}>
+        <DisplayedProfileSection
+          currentSection={currentSection}
+          profileData={profileData}
+          styles={styles}
+        />
+      </div>
+    </main >
+  ) 
 }
