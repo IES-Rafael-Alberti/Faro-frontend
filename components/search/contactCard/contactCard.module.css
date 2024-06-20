@@ -58,8 +58,18 @@
         width: 75%;
     }
 
-    && button.connectButton:hover, && button.connectButtonIsConnected{
+    && button.connectButton:hover{
         background-color: var(--secondary);
+        color: var(--white);
+    }
+
+    && button.connectButtonIsConnected {
+        border-color: var(--delete);
+        color: var(--delete);
+    }
+
+    && button.connectButtonIsConnected:hover {
+        background-color: var(--delete);
         color: var(--white);
     }
 
@@ -68,10 +78,6 @@
         border-color: var(--terciary);
         color: var(--white);
         cursor:initial;
-    }
-
-    && button.connectButtonIsConnected{
-        cursor: initial;
     }
 
 }

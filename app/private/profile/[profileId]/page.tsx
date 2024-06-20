@@ -35,7 +35,6 @@ export default function OtherUsersProfile({ params }: { params: { profileId: str
 
 
   return (
-
     <main className={styles.wrapper}>
       <header className={styles.basicInfo}>
         <section className={styles.nameAndRol}>

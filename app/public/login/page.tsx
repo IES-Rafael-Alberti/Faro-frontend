@@ -8,6 +8,7 @@ import { useState, useContext } from "react";
 import { authPost } from "@/utils/authApi";
 import { AuthContext } from "@/app/context/auth";
 import { useRouter } from 'next/navigation';
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ export default function Login() {
         setIsLogged(true);
         setId(response.id);
         router.push('/private/feed');
+        toast.success('Inicio de sesión realizado con éxito.')
       }
     } catch (e) {
       setError("Credenciales inválidas");

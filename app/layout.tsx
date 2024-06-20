@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/app/context/auth";
 import { montserrat } from "./ui/fonts";
+import { Toaster } from "react-hot-toast";
 
 /**
  * Metadata for the document head.
@@ -11,6 +12,9 @@ import { montserrat } from "./ui/fonts";
 export const metadata: Metadata = {
   title: "Faro",
   description: "La mejor web para encontrar prácticas de ciclo formativo.",
+  icons: {
+    icon: "/icons/faroFavicon.png", 
+  },
 };
 
 /**
@@ -30,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className} antialiased`} suppressHydrationWarning={true}>
+      <Toaster position="top-right" />
         <AuthProvider>
           {children}
         </AuthProvider>

@@ -35,13 +35,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string>(''); // State to store authentication token.
   const [id, setId] = useState<string>(''); // State to store user ID.
   const router = useRouter();
-
+  
   /**
    * Redirects to the homepage if not logged in.
    */
   useEffect(() => {
-    if(!isLogged && !token && !id){
+    if(!isLogged || !token || !id){
       router.push('/');
+    } else {
+      // Set a timer to log out the user after 1 hour of inactivity
+      const timer = setTimeout(() => {
+        setIsLogged(false);
+        setToken('');
+        setId('');
+        router.push('/');
+      }, 60 * 60 * 1000); // 1 hour
+
+      // Cleanup function to clear the timer if the component unmounts or the token changes
+      return () => clearTimeout(timer);
     }
   }, [isLogged, token, id, router])
 

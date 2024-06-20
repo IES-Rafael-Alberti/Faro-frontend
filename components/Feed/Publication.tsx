@@ -4,7 +4,7 @@ import PublicationFooter from './PublicatonFooter'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { deleteData } from '@/utils/deleteData'
-import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 
 interface Props {
   id : string,
@@ -12,6 +12,7 @@ interface Props {
   token: string,
   updatePublications : () => any,
   onCommentAdded : () => any
+  handleUpdateFeed : () => any
 }
 
 /**
@@ -23,7 +24,7 @@ interface Props {
  * @param {function} updatePublications - Function to call after updating the publications.
  * @param {function} onCommentAdded - Function to call after a comment is added.
  */
-const Publication: React.FC<Props> = ({ id, publication, token, updatePublications, onCommentAdded }) => {
+const Publication: React.FC<Props> = ({ id, publication, token, updatePublications, onCommentAdded, handleUpdateFeed }) => {
 
   /**
    * Function to parse multiline message and render as paragraphs.
@@ -43,8 +44,11 @@ const Publication: React.FC<Props> = ({ id, publication, token, updatePublicatio
     try {
       await deleteData(`publications/user/${id}/msg/${publication.id}`, token);
       updatePublications();
+      handleUpdateFeed();
+      toast.success("Se ha eliminado la publicación correctamente.");
+
     } catch (error) {
-      console.error('Error deleting publication:', error);
+      toast.error('Error:  No se ha podido eliminar la publicación.');
     }
   }
   return (

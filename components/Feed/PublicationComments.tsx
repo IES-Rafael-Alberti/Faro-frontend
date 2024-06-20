@@ -4,8 +4,11 @@ import CommentForm from './CommentForm'
 import styles from './publicationComments.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { deleteComment } from '@/utils/deleteData'
+import Link from 'next/link'
+import { useContext } from 'react'
+import { AuthContext } from '@/app/context/auth'
 
 interface Props {
   publication: any
@@ -25,6 +28,7 @@ interface Props {
  * @param {function} onCommentUpdate - Function to call after updating comments.
  */
 const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, userId, token, onCommentUpdate }) => {
+  const { id } = useContext(AuthContext)
 
   /**
    * Function to delete a comment by ID.
@@ -35,8 +39,10 @@ const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, 
     try {
       await deleteComment(comment.id, comment.user_id, publication.id, token)
       onCommentUpdate()
+      toast.success("Se ha eliminado el comentario correctamente.");
+
     } catch (error) {
-      console.error('Error deleting comment:', error)
+      toast.error('Error: No se ha podido eliminar el comentario.')
     }
   }
 
@@ -49,7 +55,9 @@ const PublicationComments: React.FC<Props> = ({ publication, isCommentsVisible, 
             {comment.user_id === userId &&
               <FontAwesomeIcon icon={faXmark} className={styles.deleteCommentIcon} onClick={() => deleteCommentbyId(comment)}/>
             }
-              <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={50} height={50} />
+              <Link href={id === comment.user_id ? `/private/profile` : `/private/profile/${comment.user_id}`}>
+                <Image src={comment.image ? comment.image : '/imgs/no-user-image.jpg' } className={styles.userImg} alt="user_image" width={50} height={50} />
+              </Link>
               <section className={styles.commentAndName}>
                 <h4 className={styles.name}>{comment.name}</h4>
                 <p className={styles.comment}>{comment.comment}</p>

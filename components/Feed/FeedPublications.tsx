@@ -16,6 +16,7 @@ interface Props {
   token : string
   id: string
   updateFeed: boolean
+  handleUpdateFeed: () => any
 }
 
 /**
@@ -25,7 +26,7 @@ interface Props {
  * @param {string} id - User ID.
  * @param {boolean} updateFeed - Boolean indicating whether to update the feed.
  */
-  const FeedPublications: NextPage<Props> = ({ token, id, updateFeed }) => {
+  const FeedPublications: NextPage<Props> = ({ token, id, updateFeed, handleUpdateFeed }) => {
   const [publications, setPublications] = useState<FeedPublicationInterface>({ data: [], currentPage: 0, totalPages: 0 })
   const [page, setPage] = useState(1)
   const [commentAdded, setCommentAdded] = useState(false)
@@ -98,7 +99,7 @@ interface Props {
         }
       >
       {publications.data.map((publication, index) => (
-          <Publication key={index} id={id} token={token} publication={publication} updatePublications={setUpdate} onCommentAdded={onCommentAdded}/>
+          <Publication key={index} id={id} token={token} handleUpdateFeed={handleUpdateFeed} publication={publication} updatePublications={setUpdate} onCommentAdded={onCommentAdded}/>
         ))}
       </InfiniteScroll>
     </div>

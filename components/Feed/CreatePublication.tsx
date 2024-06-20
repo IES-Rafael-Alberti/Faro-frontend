@@ -63,7 +63,7 @@ const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
             rows={2}
             className={styles.chatbox}
             value={publication}
-            placeholder="Create a publication"
+            placeholder="Crea una publicación"
             onChange={e => {
               setPublication(e.target.value)
               validateInput(e.target.value)
@@ -72,7 +72,7 @@ const CreatePublication: NextPage<Props> = ({ userImg, onUpdateFeed }) => {
           />
         </div>
         <button className={`${styles.submitButton} ${montserrat.className}`} type="submit" disabled={!isValid}>
-          Publish
+          Publicar
         </button>
       </form>
     </article>

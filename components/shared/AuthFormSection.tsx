@@ -8,7 +8,7 @@ interface AuthFormSectionProps {
   name: string;
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: any;
   error?: string;
   minLength?: number;
   required?: boolean;
@@ -27,7 +27,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e)}
+          onChange={onChange}
           error={error}
           minLength={minLength}
           required={required}
@@ -42,7 +42,7 @@ const AuthFormSection: React.FC<AuthFormSectionProps> = ({ type, name, placehold
           name={name}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e)}
+          onChange={onChange}
           error={error}
           minLength={minLength}
           required={required}

@@ -26,8 +26,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ onLike, onDislike }) => {
       className={`${styles.btn} ${montserrat.className} antialised`} 
       onClick={handleClick}
     >
+      {/* <FontAwesomeIcon className={liked ? `${styles.footerIcon} ${styles.isLiked}` : styles.footerIcon} icon={faHeart} /> */}
       <FontAwesomeIcon className={styles.footerIcon} icon={faHeart} />
-      {liked ? 'No me gusta' : 'Me gusta'}
+      {liked ? 'Quitar me  gusta' : 'Me gusta'}
     </button>
   );
 };

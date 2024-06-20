@@ -133,6 +133,13 @@ export default function Search() {
     setReset(true);
   };
 
+
+  useEffect(() => {
+    if(reset){
+      setReset(false);
+    }
+  }, [reset]);
+
   return (
     <main className={styles.wrapper}>
       <section className={styles.searchItems}>

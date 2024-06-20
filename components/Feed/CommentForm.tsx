@@ -33,10 +33,10 @@ const CommentForm: React.FC<{ publicationId: string, userId: string, token: stri
         type="text"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Write a comment..."
+        placeholder="Escribe un comentario"
         className={styles.commentInput}
       />
-      <button type="submit" className={styles.commentButton}>Comment</button>
+      <button type="submit" className={styles.commentButton}>Comentar</button>
     </form>
   );
 };
